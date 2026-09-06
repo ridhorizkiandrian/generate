@@ -247,7 +247,9 @@ const SYSTEM_INSTRUCTION = [
 
   '13. JANGAN menghasilkan informasi apapun tentang tampilan: layout kolom, posisi soal di halaman, posisi jawaban, pagination, ukuran kertas, HTML, atau CSS. Kamu HANYA menghasilkan data soal; pengaturan tata letak sepenuhnya ditangani aplikasi.',
 
-  '14. Keluarkan HANYA JSON valid sesuai skema. Tanpa teks, penjelasan, atau format lain di luar JSON.'
+  '14. Aplikasi ini TIDAK memiliki renderer LaTeX/MathJax/KaTeX — semua teks soal ditampilkan APA ADANYA sebagai teks biasa di dokumen PDF. Oleh karena itu, untuk notasi matematika, fisika, atau kimia, JANGAN PERNAH menggunakan sintaks LaTeX atau markdown-math dalam bentuk apa pun. Ini termasuk (tapi tidak terbatas pada): tanda dolar ($...$ atau $$...$$), delimiter \\( ... \\) atau \\[ ... \\], perintah backslash seperti \\frac, \\sqrt, \\alpha, \\beta, \\times, \\cdot, \\left, \\right, \\begin{...}, penulisan pangkat/subskrip dengan ^ atau _ (misalnya x^2, a_1), maupun kurung kurawal {}. Sebagai gantinya, tulis notasi tersebut sebagai teks biasa yang langsung terbaca manusia menggunakan karakter Unicode standar, contoh: pangkat dua/tiga ditulis "x²" atau "x pangkat 2" (bukan x^2), akar ditulis "√x" atau "akar dari x" (bukan \\sqrt{x}), pecahan ditulis "a/b" atau "a per b" (bukan \\frac{a}{b}), huruf Yunani ditulis sebagai karakter aslinya seperti "α", "β", "θ", "π", "Δ", "Σ" (bukan \\alpha, \\beta), perkalian ditulis "×" atau "a·b" (bukan \\times atau \\cdot). Contoh kalimat soal yang BENAR: "Sebuah fungsi kuadrat f(x) = ax² + bx + c memiliki akar α dan β dengan α + β = 4 dan α × β = 3. Jika nilai f(2) = -1, berapakah nilai a?" — perhatikan tidak ada tanda backslash, dolar, kurung kurawal, ^, atau _ sama sekali.',
+
+  '15. Keluarkan HANYA JSON valid sesuai skema. Tanpa teks, penjelasan, atau format lain di luar JSON.'
 
 ].join('\n');
 
@@ -470,6 +472,70 @@ function normalizeSignature(question) {
     .slice(0, 120);
 }
 
+/*
+ * Jaring pengaman: aplikasi TIDAK punya renderer LaTeX, jadi kalau model
+ * masih lolos menuliskan sintaks LaTeX walau sudah dilarang di system
+ * instruction, teks ini akan dikonversi ke notasi teks biasa (Unicode)
+ * supaya tetap terbaca normal di dokumen soal, bukan muncul sebagai
+ * "\alpha", "x^2", "\frac{a}{b}", dsb.
+ */
+const GREEK_LATEX_MAP = {
+  alpha: 'α', beta: 'β', gamma: 'γ', delta: 'δ', Delta: 'Δ', epsilon: 'ε',
+  varepsilon: 'ε', zeta: 'ζ', eta: 'η', theta: 'θ', Theta: 'Θ', iota: 'ι',
+  kappa: 'κ', lambda: 'λ', Lambda: 'Λ', mu: 'μ', nu: 'ν', xi: 'ξ', Xi: 'Ξ',
+  pi: 'π', Pi: 'Π', rho: 'ρ', sigma: 'σ', Sigma: 'Σ', tau: 'τ', phi: 'φ',
+  Phi: 'Φ', chi: 'χ', psi: 'ψ', Psi: 'Ψ', omega: 'ω', Omega: 'Ω'
+};
+const SUP_DIGIT_MAP = { '0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','+':'⁺','-':'⁻' };
+const SUB_DIGIT_MAP = { '0':'₀','1':'₁','2':'₂','3':'₃','4':'₄','5':'₅','6':'₆','7':'₇','8':'₈','9':'₉' };
+
+function convertLatexToPlainText(input) {
+  if (typeof input !== 'string' || !input) return input;
+  let s = input;
+
+  // Delimiter matematika: buang delimiter, simpan isinya
+  s = s.replace(/\$\$([\s\S]*?)\$\$/g, '$1');
+  s = s.replace(/\$([^$\n]+?)\$/g, '$1');
+  s = s.replace(/\\\(([\s\S]*?)\\\)/g, '$1');
+  s = s.replace(/\\\[([\s\S]*?)\\\]/g, '$1');
+
+  // Pecahan & akar (satu level kurung kurawal, cukup untuk soal sekolah)
+  s = s.replace(/\\d?frac\{([^{}]*)\}\{([^{}]*)\}/g, '$1/$2');
+  s = s.replace(/\\sqrt\{([^{}]*)\}/g, '√$1');
+  s = s.replace(/\\sqrt([A-Za-z0-9])/g, '√$1');
+
+  // Huruf Yunani
+  s = s.replace(/\\(alpha|beta|gamma|Delta|delta|varepsilon|epsilon|zeta|eta|Theta|theta|iota|kappa|Lambda|lambda|mu|nu|Xi|xi|Pi|pi|rho|Sigma|sigma|tau|Phi|phi|chi|Psi|psi|Omega|omega)\b/g,
+    (m, p1) => GREEK_LATEX_MAP[p1] || m);
+
+  // Operator & simbol umum
+  s = s.replace(/\\times/g, '×').replace(/\\cdot/g, '·').replace(/\\div/g, '÷')
+       .replace(/\\pm/g, '±').replace(/\\mp/g, '∓').replace(/\\leq/g, '≤')
+       .replace(/\\geq/g, '≥').replace(/\\neq/g, '≠').replace(/\\infty/g, '∞')
+       .replace(/\\approx/g, '≈').replace(/\\rightarrow|\\to/g, '→')
+       .replace(/\\left|\\right/g, '');
+
+  // Pangkat & subskrip angka tunggal/berkurung -> karakter Unicode
+  s = s.replace(/\^\{([0-9+\-]+)\}/g, (m, g) => g.split('').map(c => SUP_DIGIT_MAP[c] || c).join(''));
+  s = s.replace(/\^([0-9])/g, (m, g) => SUP_DIGIT_MAP[g] || ('^' + g));
+  s = s.replace(/_\{([0-9]+)\}/g, (m, g) => g.split('').map(c => SUB_DIGIT_MAP[c] || c).join(''));
+  s = s.replace(/_([0-9])/g, (m, g) => SUB_DIGIT_MAP[g] || ('_' + g));
+
+  // \text{...} / \mathrm{...} -> isinya saja
+  s = s.replace(/\\(?:text|mathrm|mathbf|mathit)\{([^{}]*)\}/g, '$1');
+
+  // Sisa perintah backslash yang tidak dikenali -> dibuang (bukan diloloskan mentah)
+  s = s.replace(/\\[a-zA-Z]+/g, '');
+
+  // Sisa kurung kurawal murni notasi (bukan bagian kalimat) -> dibuang
+  s = s.replace(/[{}]/g, '');
+
+  // Rapikan spasi ganda akibat penghapusan token
+  s = s.replace(/[ \t]{2,}/g, ' ').trim();
+
+  return s;
+}
+
 
 function sanitizeQuestions(
   raw,
@@ -509,7 +575,7 @@ function sanitizeQuestions(
       continue;
     }
 
-    const question = item.question.trim();
+    const question = convertLatexToPlainText(item.question.trim());
 
     if (!question || question.length > 2000) {
       rejected.push({
@@ -560,7 +626,7 @@ function sanitizeQuestions(
       }
 
       const options =
-        item.options.map(o => String(o == null ? '' : o).trim());
+        item.options.map(o => convertLatexToPlainText(String(o == null ? '' : o).trim()));
 
       if (options.some(o => !o)) {
         rejected.push({
@@ -603,7 +669,7 @@ function sanitizeQuestions(
       }
 
       const answerKey =
-        typeof item.answerKey === 'string' ? item.answerKey.trim().slice(0, 1000) : '';
+        typeof item.answerKey === 'string' ? convertLatexToPlainText(item.answerKey.trim().slice(0, 1000)) : '';
 
       seen.add(sig);
 

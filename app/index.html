@@ -1311,6 +1311,7 @@ function refreshDynamicTexts(){
     document.getElementById('pageDesc').textContent = t(key + 'Desc');
     if (mt) mt.textContent = t(key + 'Title');
   } else if (currentNav === 'bank'){ if (mt) mt.textContent = t('nav.bank'); renderBankPage();
+  } else if (currentNav === 'downloads'){ if (mt) mt.textContent = t('nav.downloads'); renderDownloadsPage();
   } else if (currentNav === 'settings'){ if (mt) mt.textContent = t('settings.title'); renderIdentityFieldsUI();
   } else if (currentNav === 'privacy'){ if (mt) mt.textContent = t('privacy.title');
   } else if (currentNav === 'theme'){
@@ -1879,7 +1880,7 @@ function renderDownloadsPage(){
     const mc = qs.filter(q => q.type === 'multiple-choice').length;
     const es = qs.filter(q => q.type === 'essay').length;
     const jenis = (mc && es) ? (currentLang === 'en' ? 'Mixed' : 'Campuran') : (mc ? t('nav.mcTitle') : (es ? t('nav.essayTitle') : '—'));
-    return `<div class="bank-card" data-fid="${f.id}"><div class="bank-card-top"><div class="bank-card-icon"><i class="fa-regular fa-file-lines"></i></div></div><h3 class="bank-card-name">${escapeHtml(f.name)}</h3><div class="bank-card-stats"><span><i class="fa-solid fa-list-ol"></i>${mc} ${t('nav.mcTitle')}</span><span><i class="fa-regular fa-file-lines"></i>${es} ${t('nav.essayTitle')}</span><span><i class="fa-solid fa-tags"></i>${jenis}</span></div><div class="bank-card-date"><i class="fa-regular fa-clock"></i>${t('downloads.createdAt')} ${formatRelativeTime(f.createdAt)}</div><div class="bank-card-date"><i class="fa-regular fa-clock"></i>${t('bank.lastModified')} ${formatRelativeTime(f.updatedAt)}</div><div class="bank-card-date" style="opacity:.7;"><i class="fa-solid fa-key"></i>${t('downloads.answerKeySoon')}</div><div class="bank-card-actions"><button class="btn btn-primary btn-sm" data-action="openEdit"><i class="fa-solid fa-pen-to-square"></i>${t('downloads.openEdit')}</button><button class="btn btn-ghost btn-sm" data-action="pdf"><i class="fa-solid fa-file-pdf"></i>${t('downloads.pdf')}</button><button class="btn btn-ghost btn-sm" data-action="delete" style="color:var(--danger);"><i class="fa-solid fa-trash"></i>${t('common.delete')}</button></div></div>`;
+    return `<div class="bank-card" data-fid="${f.id}"><div class="bank-card-top"><div class="bank-card-icon"><i class="fa-regular fa-file-lines"></i></div></div><h3 class="bank-card-name">${escapeHtml(f.name)}</h3><div class="bank-card-stats"><span><i class="fa-solid fa-list-ol"></i>${mc} ${t('nav.mcTitle')}</span><span><i class="fa-regular fa-file-lines"></i>${es} ${t('nav.essayTitle')}</span><span><i class="fa-solid fa-tags"></i>${jenis}</span></div><div class="bank-card-date"><i class="fa-regular fa-clock"></i>${t('downloads.createdAt')} ${formatRelativeTime(f.createdAt)}</div><div class="bank-card-date"><i class="fa-regular fa-clock"></i>${t('bank.lastModified')} ${formatRelativeTime(f.updatedAt)}</div><div class="bank-card-date" style="opacity:.7;"><i class="fa-solid fa-key"></i>${t('downloads.answerKeySoon')}</div><div class="bank-card-actions"><button class="btn btn-primary btn-sm" data-action="openEdit"><i class="fa-solid fa-pen-to-square"></i>${t('downloads.openEdit')}</button><button class="btn btn-ghost btn-sm" data-action="pdf"><i class="fa-solid fa-file-pdf"></i>${t('downloads.pdf')}</button></div></div>`;
   }).join('');
 }
 
@@ -1890,7 +1891,6 @@ function bindDownloadsEvents(){
     const id = card.dataset.fid; const action = btn.dataset.action;
     const f = filesStore.find(x => x.id === id); if (!f) return;
     if (action === 'openEdit'){ openSoalFile(id); return; }
-    if (action === 'delete'){ requestDeleteSoalFile(id); if (currentNav === 'downloads') setTimeout(renderDownloadsPage, 0); return; }
     if (action === 'pdf'){
       setActiveFile(id); renderAll();
       openPdfNameModal();
