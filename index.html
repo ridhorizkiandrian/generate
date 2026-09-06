@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Generate Soal Ujian Gratis dengan AI | Buat Soal Ujian Online</title>
+  <meta name="description" content="Buat soal ujian pilihan ganda dan essay dengan mudah — tulis manual atau generate otomatis pakai AI. 100% gratis, tanpa akun, tanpa berlangganan.">
+  <meta name="keywords" content="generate soal ujian, generator soal, pembuat soal AI, soal pilihan ganda, soal essay, bank soal guru">
+  <meta name="author" content="Generate Soal Ujian">
+  <link rel="canonical" href="https://generatesoalujian.xyz/">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#2f4bdb">
+  <link rel="icon" href="app/images/side.png" type="image/png">
+  <link rel="apple-touch-icon" href="app/images/side.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Generate Soal Ujian Gratis dengan AI">
+  <meta property="og:description" content="Buat soal pilihan ganda & essay dengan AI atau manual. Gratis, modern, tanpa akun.">
+  <meta property="og:url" content="https://generatesoalujian.xyz/">
+  <meta property="og:image" content="app/images/side.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root{
+      --primary:#2f4bdb;
+      --primary-dark:#1d35bf;
+      --primary-soft:#eef1ff;
+      --accent:#16b378;
+      --accent-soft:#e4f8ee;
+      --ink:#141833;
+      --ink-soft:#5b6280;
+      --ink-faint:#8991ac;
+      --bg:#ffffff;
+      --bg-soft:#f6f8fd;
+      --border:#e7eaf6;
+      --radius:16px;
+      --radius-lg:28px;
+      --shadow-sm:0 8px 24px -18px rgba(20,24,51,.22);
+      --shadow:0 22px 55px -28px rgba(20,24,51,.32);
+      --shadow-lg:0 35px 80px -35px rgba(20,24,51,.45);
+      --container:1160px;
+      --btn-height:48px;
+      --btn-radius:14px;
+      --transition: 220ms cubic-bezier(.2,.8,.2,1);
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    html{scroll-behavior:smooth; -webkit-text-size-adjust:100%;}
+    body{
+      font-family:'Inter',system-ui,sans-serif;
+      color:var(--ink);
+      background:var(--bg);
+      line-height:1.6;
+      -webkit-font-smoothing:antialiased;
+      overflow-x:hidden;
+    }
+    img{max-width:100%;display:block;}
+    a{color:inherit;text-decoration:none;}
+    h1,h2,h3,.brand-name{font-family:'Plus Jakarta Sans',sans-serif;line-height:1.2;color:var(--ink);}
+    .wrap{max-width:var(--container);margin:0 auto;padding:0 28px;}
+    @media (max-width:640px){.wrap{padding:0 18px;}}
+
+    /* focus visible */
+    :focus-visible{outline:3px solid var(--primary);outline-offset:3px;border-radius:6px;}
+
+    /* buttons */
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      height:var(--btn-height);padding:0 24px;border-radius:var(--btn-radius);
+      font-weight:600;font-size:15px;line-height:1;border:1px solid transparent;
+      cursor:pointer;transition:transform var(--transition), box-shadow var(--transition), background var(--transition), border-color var(--transition);
+      white-space:nowrap;
+    }
+    .btn:active{transform:scale(.97);}
+    .btn-primary{background:var(--primary);color:#fff;box-shadow:0 12px 26px -12px rgba(47,75,219,.55);}
+    .btn-primary:hover{background:var(--primary-dark);transform:translateY(-2px);box-shadow:0 16px 28px -12px rgba(47,75,219,.7);}
+    .btn-ghost{background:transparent;color:var(--ink);border-color:var(--border);box-shadow:var(--shadow-sm);}
+    .btn-ghost:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-soft);transform:translateY(-2px);}
+    .btn-lg{height:52px;padding:0 30px;font-size:16px;}
+
+    /* skip link */
+    .skip-link{position:absolute;left:-999px;top:0;background:var(--primary);color:#fff;padding:10px 18px;border-radius:0 0 12px 0;z-index:200;}
+    .skip-link:focus{left:0;}
+
+    /* ===== NAVBAR ===== */
+    .navbar{
+      position:sticky;top:16px;z-index:120;margin:16px auto 0;
+      max-width:calc(var(--container) + 40px);
+      border-radius:999px;
+      background:rgba(255,255,255,.72);
+      backdrop-filter:blur(22px);
+      -webkit-backdrop-filter:blur(22px);
+      border:1px solid rgba(255,255,255,.6);
+      box-shadow:0 16px 40px -20px rgba(20,24,51,.25);
+      transition:background var(--transition), box-shadow var(--transition);
+    }
+    .navbar .wrap{display:flex;align-items:center;justify-content:space-between;height:72px;}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none;}
+    .brand-mark{
+      width:42px;height:42px;border-radius:12px;background:var(--primary-soft);
+      display:flex;align-items:center;justify-content:center;overflow:hidden;
+      flex-shrink:0;border:1px solid rgba(47,75,219,.15);
+    }
+    .brand-mark img{width:100%;height:100%;object-fit:contain;border-radius:10px;}
+    .brand-name{font-weight:700;font-size:17px;letter-spacing:-.02em;color:var(--ink);}
+    .nav-links{display:flex;align-items:center;gap:8px;list-style:none;margin:0;padding:4px;background:rgba(239,241,255,.35);border-radius:999px;}
+    .nav-links a{
+      padding:9px 16px;border-radius:999px;font-weight:500;font-size:14px;color:var(--ink-soft);
+      transition:all var(--transition);position:relative;
+    }
+    .nav-links a:hover{color:var(--primary);background:rgba(255,255,255,.65);}
+    .nav-links a.active{background:var(--primary-soft);color:var(--primary-dark);font-weight:600;}
+    .nav-cta{display:flex;align-items:center;gap:8px;}
+    .nav-cta .btn{height:44px;padding:0 18px;border-radius:12px;font-size:14px;}
+    .hamburger{display:none;background:none;border:none;color:var(--ink);font-size:22px;}
+
+    /* mobile bottom nav */
+    .bottom-nav{
+      display:none;
+      position:fixed;bottom:calc(14px + env(safe-area-inset-bottom));left:16px;right:16px;z-index:150;
+      background:rgba(255,255,255,.78);
+      backdrop-filter:blur(22px);
+      -webkit-backdrop-filter:blur(22px);
+      border:1px solid rgba(255,255,255,.7);
+      border-radius:999px;
+      box-shadow:0 18px 35px -15px rgba(20,24,51,.35);
+      justify-content:space-around;
+      padding:8px 10px;
+      gap:6px;
+    }
+    .bottom-nav a{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+      padding:8px 14px;border-radius:30px;font-size:11px;font-weight:600;color:var(--ink-soft);
+      transition:all var(--transition);min-width:58px;
+    }
+    .bottom-nav a i{font-size:18px;color:var(--ink-faint);transition:color var(--transition);}
+    .bottom-nav a.active{background:var(--primary-soft);color:var(--primary-dark);}
+    .bottom-nav a.active i{color:var(--primary);}
+
+    @media (max-width:900px){
+      .nav-links,.nav-cta .btn{display:none;}
+      .hamburger{display:none;} /* hide hamburger since bottom nav used */
+      .navbar{top:10px;margin:10px auto 0;max-width:calc(100% - 28px);}
+      .navbar .wrap{height:64px;}
+      .bottom-nav{display:flex;}
+      body{padding-bottom:80px !important;}
+    }
+
+    /* ===== HERO ===== */
+    .hero{position:relative;padding:80px 0 60px;overflow:hidden;}
+    .hero::before{
+      content:"";position:absolute;right:-150px;top:-100px;width:520px;height:520px;
+      background:radial-gradient(circle, rgba(47,75,219,.08), transparent 70%);
+      border-radius:50%;pointer-events:none;
+    }
+    .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr .95fr;gap:60px;align-items:center;}
+    .hero-badge{
+      display:inline-flex;align-items:center;gap:8px;background:var(--primary-soft);color:var(--primary-dark);
+      font-size:13px;font-weight:600;padding:7px 16px;border-radius:999px;margin-bottom:24px;
+      box-shadow:var(--shadow-sm);
+    }
+    .hero h1{font-size:clamp(40px,5.5vw,62px);font-weight:800;letter-spacing:-.045em;line-height:1.08;max-width:12ch;}
+    .hero p.sub{margin-top:20px;font-size:18px;color:var(--ink-soft);max-width:52ch;line-height:1.75;}
+    .hero-actions{display:flex;gap:14px;margin-top:32px;flex-wrap:wrap;}
+    .hero-note{margin-top:20px;font-size:13px;color:var(--ink-faint);display:flex;align-items:center;gap:8px;}
+    .hero-note i{color:var(--accent);}
+
+    /* mockup */
+    .mock{position:relative;}
+    .mock-blob{position:absolute;inset:-20px -20px auto auto;width:240px;height:240px;background:radial-gradient(circle,var(--primary-soft),transparent 70%);z-index:-1;}
+    .mock-card{
+      background:rgba(255,255,255,.9);backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,.8);border-radius:24px;
+      box-shadow:var(--shadow-lg);padding:22px;transform:rotate(.5deg);
+      transition:transform .4s ease, box-shadow .4s ease;
+    }
+    .mock-card:hover{transform:rotate(0) translateY(-6px);box-shadow:0 40px 90px -35px rgba(20,24,51,.5);}
+    .mock-topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;}
+    .mock-title{font-size:13px;font-weight:700;color:var(--ink);}
+    .mock-pill{font-size:11px;font-weight:600;background:var(--accent-soft);color:var(--accent);padding:4px 12px;border-radius:999px;}
+    .mock-q{border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:12px;font-size:13px;background:#fff;}
+    .mock-q .qnum{color:var(--primary);font-weight:700;margin-right:6px;}
+    .mock-opt{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--ink-soft);margin-top:8px;}
+    .mock-opt span.dot{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;}
+    .mock-opt.correct span.dot{background:var(--accent);border-color:var(--accent);}
+    .mock-foot{display:flex;gap:10px;margin-top:18px;}
+    .mock-chip{flex:1;text-align:center;font-size:11px;font-weight:600;color:var(--ink-soft);border:1px solid var(--border);border-radius:10px;padding:10px 4px;background:#fff;}
+    .mock-chip i{display:block;margin-bottom:4px;color:var(--primary);font-size:14px;}
+
+    @media (max-width:900px){
+      .hero .wrap{grid-template-columns:1fr;gap:40px;}
+      .hero{padding:50px 0 40px;}
+      .hero h1{font-size:38px;}
+      .mock-card{transform:none;}
+    }
+
+    /* ===== TRUST STRIP ===== */
+    .trust{border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:linear-gradient(180deg,var(--bg-soft),#fff);padding:28px 0;}
+    .trust .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;}
+    .trust-item{display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px;color:var(--ink);}
+    .trust-item i{color:var(--primary);font-size:18px;}
+    @media (max-width:800px){.trust .wrap{grid-template-columns:1fr 1fr;}}
+    @media (max-width:480px){.trust .wrap{grid-template-columns:1fr;}}
+
+    /* ===== SECTION GENERAL ===== */
+    section{padding:80px 0;scroll-margin-top:100px;}
+    .section-head{max-width:680px;margin:0 auto 48px;text-align:center;}
+    .section-head h2{font-size:32px;font-weight:800;letter-spacing:-.03em;}
+    .section-head p{margin-top:14px;color:var(--ink-soft);font-size:16px;}
+    @media (max-width:640px){section{padding:56px 0;}.section-head h2{font-size:26px;}}
+
+    /* ===== FEATURES ===== */
+    .feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+    .feat-card{
+      background:#fff;border:1px solid var(--border);border-radius:20px;padding:28px;
+      transition:transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+    }
+    .feat-card:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:#dce1f5;}
+    .feat-card .icon{width:44px;height:44px;border-radius:12px;background:var(--primary-soft);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:18px;}
+    .feat-card h3{font-size:17px;font-weight:700;margin-bottom:8px;}
+    .feat-card p{font-size:14px;color:var(--ink-soft);line-height:1.6;}
+    @media (max-width:900px){.feat-grid{grid-template-columns:1fr 1fr;}}
+    @media (max-width:560px){.feat-grid{grid-template-columns:1fr;}}
+
+    /* ===== COMPARE ===== */
+    .compare{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+    .compare-card{border-radius:24px;padding:32px;border:1px solid var(--border);}
+    .compare-card.manual{background:#fff;}
+    .compare-card.ai{background:var(--primary);color:#fff;border-color:var(--primary);}
+    .compare-card h3{font-size:20px;font-weight:700;margin-bottom:8px;}
+    .compare-card.ai h3{color:#fff;}
+    .compare-card .lead{font-size:14px;margin-bottom:20px;}
+    .compare-card.manual .lead{color:var(--ink-soft);}
+    .compare-card.ai .lead{color:rgba(255,255,255,.85);}
+    .compare-card ul{list-style:none;display:flex;flex-direction:column;gap:12px;}
+    .compare-card li{display:flex;align-items:flex-start;gap:10px;font-size:14px;}
+    .compare-card.manual li i{color:var(--primary);}
+    .compare-card.ai li i{color:#fff;}
+    .compare-note{grid-column:1/-1;text-align:center;font-size:13px;color:var(--ink-faint);margin-top:8px;}
+    @media (max-width:800px){.compare{grid-template-columns:1fr;}}
+
+    /* ===== STEPS ===== */
+    .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
+    .step .num{font-size:36px;font-weight:800;color:var(--primary-soft);-webkit-text-stroke:1.5px var(--primary);display:block;margin-bottom:14px;}
+    .step h3{font-size:16px;font-weight:700;margin-bottom:8px;}
+    .step p{font-size:13.5px;color:var(--ink-soft);}
+    @media (max-width:900px){.steps{grid-template-columns:1fr 1fr;}}
+    @media (max-width:560px){.steps{grid-template-columns:1fr;}}
+
+    /* ===== SHOWCASE (images) ===== */
+    .showcase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+    .showcase-card{border-radius:20px;overflow:hidden;background:var(--bg-soft);border:1px solid var(--border);transition:transform var(--transition), box-shadow var(--transition);}
+    .showcase-card:hover{transform:translateY(-6px);box-shadow:var(--shadow);}
+    .showcase-preview{height:0;padding-bottom:56.25%; /* 16:9 */ position:relative;overflow:hidden;background:#eef1ff;}
+    .showcase-preview img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s ease;}
+    .showcase-card:hover .showcase-preview img{transform:scale(1.04);}
+    .showcase-label{padding:16px 18px;font-weight:600;font-size:14px;background:#fff;}
+    @media (max-width:900px){.showcase-grid{grid-template-columns:1fr 1fr;}}
+    @media (max-width:560px){.showcase-grid{grid-template-columns:1fr;}}
+
+    /* ===== FOR TEACHERS ===== */
+    .for-teachers{background:var(--bg-soft);border-radius:32px;padding:60px 32px;text-align:center;max-width:850px;margin:0 auto;border:1px solid var(--border);}
+    .for-teachers h2{font-size:28px;font-weight:800;margin-bottom:16px;}
+    .for-teachers p{font-size:16px;color:var(--ink-soft);max-width:60ch;margin:0 auto;}
+    @media (max-width:640px){.for-teachers{padding:40px 22px;}}
+
+    /* ===== FAQ ===== */
+    .faq-list{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:12px;}
+    .faq-item{border:1px solid var(--border);border-radius:16px;background:#fff;transition:box-shadow var(--transition), border-color var(--transition);}
+    .faq-item:hover{border-color:#dce1f5;}
+    .faq-item.open{box-shadow:var(--shadow);}
+    .faq-q{width:100%;text-align:left;background:none;border:none;padding:18px 22px;font-size:15px;font-weight:600;color:var(--ink);display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;}
+    .faq-q i{color:var(--ink-faint);transition:transform .3s ease, color .3s ease;}
+    .faq-item.open .faq-q i{transform:rotate(45deg);color:var(--primary);}
+    .faq-a{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+    .faq-a p{padding:0 22px 20px;font-size:14px;color:var(--ink-soft);}
+    .faq-item.open .faq-a{max-height:240px;}
+
+    /* ===== FINAL CTA ===== */
+    .final-cta{background:var(--primary);border-radius:32px;padding:60px 32px;text-align:center;color:#fff;box-shadow:var(--shadow-lg);}
+    .final-cta h2{color:#fff;font-size:30px;font-weight:800;}
+    .final-cta p{color:rgba(255,255,255,.85);margin-top:12px;font-size:16px;}
+    .final-cta .btn-primary{background:#fff;color:var(--primary-dark);box-shadow:0 12px 28px -12px rgba(0,0,0,.25);}
+    .final-cta .btn-primary:hover{background:#eef1ff;}
+
+    /* ===== FOOTER ===== */
+    footer.site-footer{border-top:1px solid var(--border);padding:40px 0 28px;background:var(--bg-soft);}
+    .footer-top{display:flex;justify-content:space-between;gap:32px;flex-wrap:wrap;}
+    .footer-brand p.desc{margin-top:12px;font-size:13.5px;color:var(--ink-soft);max-width:36ch;}
+    .footer-links{display:flex;flex-direction:column;gap:10px;}
+    .footer-links a{font-size:14px;color:var(--ink-soft);transition:color var(--transition);}
+    .footer-links a:hover{color:var(--primary);}
+    .footer-bottom{margin-top:32px;padding-top:20px;border-top:1px solid var(--border);font-size:12.5px;color:var(--ink-faint);}
+
+    .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+
+    /* reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *{animation-duration:.01ms !important;transition-duration:.01ms !important;scroll-behavior:auto !important;}
+    }
+  </style>
+</head>
+<body>
+  <a href="#main" class="skip-link">Langsung ke konten</a>
+
+  <!-- floating navbar -->
+  <header class="navbar" id="navbar">
+    <div class="wrap">
+      <a href="#top" class="brand" aria-label="Generate Soal Ujian - Beranda">
+        <span class="brand-mark"><img src="app/images/side.png" alt="Logo Generate Soal Ujian"></span>
+        <span class="brand-name">Generate Soal Ujian</span>
+      </a>
+      <nav aria-label="Navigasi utama desktop">
+        <ul class="nav-links" id="desktopNavLinks">
+          <li><a href="#top" class="active">Beranda</a></li>
+          <li><a href="#fitur">Fitur</a></li>
+          <li><a href="#cara-kerja">Cara Kerja</a></li>
+          <li><a href="#tentang">Tentang</a></li>
+        </ul>
+      </nav>
+      <div class="nav-cta">
+        <a href="/app/" class="btn btn-primary" style="height:44px;">Coba Sekarang</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- mobile bottom nav -->
+  <nav class="bottom-nav" id="bottomNav" aria-label="Navigasi mobile">
+    <a href="#top" class="active"><i class="fa-solid fa-house"></i>Beranda</a>
+    <a href="#fitur"><i class="fa-solid fa-star"></i>Fitur</a>
+    <a href="#cara-kerja"><i class="fa-solid fa-route"></i>Cara</a>
+    <a href="#tentang"><i class="fa-solid fa-circle-info"></i>Tentang</a>
+  </nav>
+
+  <main id="main">
+    <!-- HERO -->
+    <section class="hero" id="top" data-nav="top">
+      <div class="wrap">
+        <div>
+          <span class="hero-badge"><i class="fa-solid fa-graduation-cap"></i> Untuk guru di seluruh Indonesia</span>
+          <h1>Buat Soal Ujian Lebih Mudah, Cepat, dan Gratis</h1>
+          <p class="sub">Generate Soal Ujian membantu guru membuat soal pilihan ganda dan essay dengan mudah. Tulis manual atau gunakan AI untuk menyusun soal dalam hitungan detik.</p>
+          <div class="hero-actions">
+            <a href="/app/" class="btn btn-primary btn-lg">Coba Sekarang — Gratis</a>
+            <a href="#fitur" class="btn btn-ghost btn-lg">Lihat Fitur</a>
+          </div>
+          <p class="hero-note"><i class="fa-solid fa-circle-check"></i> Tanpa akun &nbsp;·&nbsp; Tanpa biaya &nbsp;·&nbsp; Data tersimpan di perangkat Anda</p>
+        </div>
+        <div class="mock" aria-hidden="true">
+          <div class="mock-blob"></div>
+          <div class="mock-card">
+            <div class="mock-topbar">
+              <span class="mock-title">Soal IPA — Kelas 5</span>
+              <span class="mock-pill">Dibuat dengan AI</span>
+            </div>
+            <div class="mock-q">
+              <p><span class="qnum">1.</span>Proses tumbuhan mengolah makanan menggunakan cahaya matahari disebut...</p>
+              <div class="mock-opt correct"><span class="dot"></span> Fotosintesis</div>
+              <div class="mock-opt"><span class="dot"></span> Respirasi</div>
+              <div class="mock-opt"><span class="dot"></span> Fermentasi</div>
+            </div>
+            <div class="mock-foot">
+              <div class="mock-chip"><i class="fa-solid fa-eye"></i>Preview</div>
+              <div class="mock-chip"><i class="fa-solid fa-key"></i>Kunci</div>
+              <div class="mock-chip"><i class="fa-solid fa-download"></i>Download</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRUST STRIP -->
+    <section class="trust" aria-label="Keunggulan utama">
+      <div class="wrap">
+        <div class="trust-item"><i class="fa-solid fa-hand-holding-heart"></i>100% Gratis</div>
+        <div class="trust-item"><i class="fa-solid fa-ban"></i>Tanpa Berlangganan</div>
+        <div class="trust-item"><i class="fa-solid fa-school"></i>Untuk Guru Indonesia</div>
+        <div class="trust-item"><i class="fa-solid fa-wand-magic-sparkles"></i>Manual & AI</div>
+      </div>
+    </section>
+
+    <!-- FITUR -->
+    <section id="fitur" data-nav="fitur">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Semua yang Dibutuhkan untuk Membuat Soal</h2>
+          <p>Dari membuat soal sampai mengelolanya, semuanya ada di satu tempat.</p>
+        </div>
+        <div class="feat-grid">
+          <div class="feat-card"><div class="icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div><h3>Generate Soal dengan AI</h3><p>Buat soal otomatis berdasarkan materi, mata pelajaran, topik, dan pengaturan yang Anda tentukan.</p></div>
+          <div class="feat-card"><div class="icon"><i class="fa-solid fa-pen-to-square"></i></div><h3>Buat Soal Manual</h3><p>Tulis dan edit soal sendiri sepenuhnya sesuai keinginan Anda.</p></div>
+          <div class="feat-card"><div class="icon"><i class="fa-solid fa-list-ol"></i></div><h3>Pilihan Ganda</h3><p>Buat soal pilihan ganda dengan jumlah opsi jawaban yang fleksibel.</p></div>
+          <div class="feat-card"><div class="icon"><i class="fa-solid fa-file-lines"></i></div><h3>Essay</h3><p>Susun soal essay dan pertanyaan uraian dengan mudah.</p></div>
+          <div class="feat-card"><div class="icon"><i class="fa-solid fa-image"></i></div><h3>Tambahkan Gambar</h3><p>Sisipkan gambar ke dalam soal kapan pun diperlukan.</p></div>
+          <div class="feat-card"><div class="icon"><i class="fa-solid fa-folder-open"></i></div><h3>Bank Soal</h3><p>Simpan soal yang sudah dibuat dan gunakan lagi kapan saja.</p></div>
+          <div class="feat-card"><div class="icon"><i class="fa-solid fa-eye"></i></div><h3>Preview</h3><p>Periksa tampilan soal dengan rapi sebelum digunakan atau diekspor.</p></div>
+          <div class="feat-card"><div class="icon"><i class="fa-solid fa-file-pdf"></i></div><h3>Export PDF</h3><p>Ekspor soal menjadi PDF yang siap digunakan dan dibagikan.</p></div>
+          <div class="feat-card"><div class="icon"><i class="fa-solid fa-key"></i></div><h3>Kunci Jawaban</h3><p>Kunci jawaban dibuat otomatis, baik untuk soal manual maupun AI.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MANUAL VS AI -->
+    <section style="background:var(--bg-soft);" data-nav="fitur">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Pilih Cara yang Sesuai untuk Anda</h2>
+          <p>AI adalah alat bantu — hasilnya tetap bisa Anda edit sebelum digunakan.</p>
+        </div>
+        <div class="compare">
+          <div class="compare-card manual">
+            <h3>Buat Secara Manual</h3>
+            <p class="lead">Cocok untuk guru yang ingin kontrol penuh terhadap soal.</p>
+            <ul>
+              <li><i class="fa-solid fa-check"></i>Tulis pertanyaan sendiri</li>
+              <li><i class="fa-solid fa-check"></i>Tentukan jawaban</li>
+              <li><i class="fa-solid fa-check"></i>Tambahkan gambar</li>
+              <li><i class="fa-solid fa-check"></i>Edit soal & atur layout</li>
+              <li><i class="fa-solid fa-check"></i>Simpan ke bank soal</li>
+            </ul>
+          </div>
+          <div class="compare-card ai">
+            <h3>Generate dengan AI</h3>
+            <p class="lead">Cocok untuk guru yang ingin menghemat waktu.</p>
+            <ul>
+              <li><i class="fa-solid fa-check"></i>Masukkan mata pelajaran & topik</li>
+              <li><i class="fa-solid fa-check"></i>Tentukan jumlah & tipe soal</li>
+              <li><i class="fa-solid fa-check"></i>Generate dalam hitungan detik</li>
+              <li><i class="fa-solid fa-check"></i>Edit hasilnya bila perlu</li>
+              <li><i class="fa-solid fa-check"></i>Simpan & export PDF</li>
+            </ul>
+          </div>
+          <p class="compare-note">Kedua cara sama-sama mendukung kunci jawaban, gambar, dan export PDF.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CARA KERJA -->
+    <section id="cara-kerja" data-nav="cara-kerja">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Cara Membuat Soal</h2>
+          <p>Empat langkah sederhana dari ide sampai soal siap digunakan.</p>
+        </div>
+        <div class="steps">
+          <div class="step"><span class="num">01</span><h3>Pilih cara membuat soal</h3><p>Manual atau menggunakan AI, sesuai kebutuhan Anda.</p></div>
+          <div class="step"><span class="num">02</span><h3>Buat dan atur soal</h3><p>Tulis sendiri atau generate dengan AI, lalu sesuaikan.</p></div>
+          <div class="step"><span class="num">03</span><h3>Periksa preview</h3><p>Pastikan soal, pilihan jawaban, gambar, dan layout sudah sesuai.</p></div>
+          <div class="step"><span class="num">04</span><h3>Download hasil</h3><p>Unduh hasil soal sebagai PDF untuk digunakan atau dibagikan.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SHOWCASE DOKUMEN (gambar landscape) -->
+    <section style="background:var(--bg-soft);" data-nav="fitur">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Bukan Hanya Generator — Dokumen Siap Pakai</h2>
+          <p>Dari membuat soal sampai dokumen ujian yang siap digunakan.</p>
+        </div>
+        <div class="showcase-grid">
+          <div class="showcase-card">
+            <div class="showcase-preview"><img src="app/images/soal.png" alt="Preview halaman soal pilihan ganda"></div>
+            <div class="showcase-label">Preview soal pilihan ganda</div>
+          </div>
+          <div class="showcase-card">
+            <div class="showcase-preview"><img src="app/images/essay.png" alt="Preview halaman soal essay"></div>
+            <div class="showcase-label">Dokumen soal essay</div>
+          </div>
+          <div class="showcase-card">
+            <div class="showcase-preview"><img src="app/images/bank.png" alt="Tampilan bank soal"></div>
+            <div class="showcase-label">Bank soal tersimpan</div>
+          </div>
+          <div class="showcase-card">
+            <div class="showcase-preview"><img src="app/images/download.png" alt="Download center dokumen"></div>
+            <div class="showcase-label">Download center</div>
+          </div>
+          
+          <div class="showcase-card">
+            <div class="showcase-preview"><img src="app/images/beranda.png" alt="Interface generator soal"></div>
+            <div class="showcase-label">Interface generator soal</div>
+          </div>
+          <div class="showcase-card">
+            <div class="showcase-preview"><img src="app/images/tema.png" alt="Interface generator soal"></div>
+            <div class="showcase-label">Pilih Tema Sesuka Kalian</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- UNTUK GURU INDONESIA -->
+    <section id="tentang" data-nav="tentang">
+      <div class="wrap">
+        <div class="for-teachers">
+          <h2>Dibuat untuk Membantu Guru Indonesia</h2>
+          <p>Generate Soal Ujian dibuat sebagai alat bantu sederhana untuk membantu guru menghemat waktu. Tidak ada biaya berlangganan, gunakan secara gratis untuk membantu pekerjaan Anda.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section style="background:var(--bg-soft);" data-nav="tentang">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Pertanyaan yang Sering Diajukan</h2>
+        </div>
+        <div class="faq-list" id="faqList">
+          <div class="faq-item"><button class="faq-q">Apa itu Generate Soal Ujian? <i class="fa-solid fa-plus"></i></button><div class="faq-a"><p>Generate Soal Ujian adalah platform gratis untuk membantu guru di Indonesia membuat soal ujian, baik secara manual maupun otomatis menggunakan AI.</p></div></div>
+          <div class="faq-item"><button class="faq-q">Apakah Generate Soal Ujian gratis? <i class="fa-solid fa-plus"></i></button><div class="faq-a"><p>Ya, sepenuhnya gratis. Tidak ada biaya berlangganan, paket premium, atau pembayaran dalam bentuk apa pun.</p></div></div>
+          <div class="faq-item"><button class="faq-q">Apakah bisa membuat soal secara manual? <i class="fa-solid fa-plus"></i></button><div class="faq-a"><p>Bisa. Anda dapat menulis pertanyaan, menentukan jawaban, menambahkan gambar, dan mengatur layout soal sendiri.</p></div></div>
+          <div class="faq-item"><button class="faq-q">Apakah bisa membuat soal menggunakan AI? <i class="fa-solid fa-plus"></i></button><div class="faq-a"><p>Bisa. Masukkan mata pelajaran, topik, dan jumlah soal, lalu AI akan membantu menyusun soal yang tetap dapat Anda edit.</p></div></div>
+          <div class="faq-item"><button class="faq-q">Apakah bisa membuat soal pilihan ganda? <i class="fa-solid fa-plus"></i></button><div class="faq-a"><p>Bisa, dengan jumlah opsi jawaban yang fleksibel.</p></div></div>
+          <div class="faq-item"><button class="faq-q">Apakah bisa membuat soal essay? <i class="fa-solid fa-plus"></i></button><div class="faq-a"><p>Bisa, termasuk pertanyaan uraian dan essay panjang.</p></div></div>
+          <div class="faq-item"><button class="faq-q">Apakah bisa menambahkan gambar? <i class="fa-solid fa-plus"></i></button><div class="faq-a"><p>Bisa. Gambar dapat disisipkan ke dalam soal jika diperlukan.</p></div></div>
+          <div class="faq-item"><button class="faq-q">Apakah soal bisa di-download PDF? <i class="fa-solid fa-plus"></i></button><div class="faq-a"><p>Bisa. Soal dapat diekspor menjadi file PDF untuk dibagikan.</p></div></div>
+          <div class="faq-item"><button class="faq-q">Apakah tersedia kunci jawaban? <i class="fa-solid fa-plus"></i></button><div class="faq-a"><p>Tersedia, baik untuk soal manual maupun AI.</p></div></div>
+          <div class="faq-item"><button class="faq-q">Apakah perlu membuat akun? <i class="fa-solid fa-plus"></i></button><div class="faq-a"><p>Tidak perlu. Anda bisa langsung menggunakannya.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section>
+      <div class="wrap">
+        <div class="final-cta">
+          <h2>Siap Membuat Soal dengan Lebih Mudah?</h2>
+          <p>Mulai membuat soal ujian Anda sekarang. Gratis, tanpa berlangganan.</p>
+          <div style="margin-top:28px;">
+            <a href="/app/" class="btn btn-primary btn-lg">Coba Sekarang — Gratis</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="brand" style="display:flex;align-items:center;gap:10px;">
+            <span class="brand-mark"><img src="app/images/side.png" alt="Generate Soal Ujian"></span>
+            <span class="brand-name">Generate Soal Ujian</span>
+          </span>
+          <p class="desc">Platform gratis untuk membantu guru Indonesia membuat soal ujian secara manual maupun dengan bantuan AI.</p>
+        </div>
+        <nav class="footer-links" aria-label="Tautan footer">
+          <a href="#top">Beranda</a>
+          <a href="#fitur">Fitur</a>
+          <a href="#cara-kerja">Cara Kerja</a>
+          <a href="#tentang">Tentang</a>
+          <a href="/app/">Coba Sekarang</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        &copy; 2026 Generate Soal Ujian. Dibuat untuk membantu guru Indonesia.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      // Get all nav links (desktop & mobile)
+      const desktopLinks = document.querySelectorAll('#desktopNavLinks a');
+      const bottomLinks = document.querySelectorAll('#bottomNav a');
+      const allSections = document.querySelectorAll('section[data-nav]');
+
+      // Set active link based on section id
+      function setActiveLink(activeId) {
+        // Update desktop nav
+        desktopLinks.forEach(link => {
+          if (link.getAttribute('href') === '#' + activeId) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+
+        // Update bottom nav
+        bottomLinks.forEach(link => {
+          if (link.getAttribute('href') === '#' + activeId) {
+            link.classList.add('active');
+          } else {
+            link.classList.remove('active');
+          }
+        });
+      }
+
+      // Scroll spy with Intersection Observer
+      const observerOptions = {
+        root: null,
+        rootMargin: '-40% 0px -55% 0px', // Trigger when section is in the middle of viewport
+        threshold: 0
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const sectionId = entry.target.getAttribute('data-nav');
+            if (sectionId) {
+              setActiveLink(sectionId);
+            }
+          }
+        });
+      }, observerOptions);
+
+      // Observe all sections that have data-nav attribute
+      allSections.forEach(section => {
+        observer.observe(section);
+      });
+
+      // Click handler for smooth scroll & immediate active state
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          const href = this.getAttribute('href');
+          if (href === '#') return;
+          const target = document.querySelector(href);
+          if (target) {
+            e.preventDefault();
+            const sectionId = href.substring(1);
+            
+            // Set active immediately on click
+            setActiveLink(sectionId);
+            
+            // Smooth scroll
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+
+      // FAQ accordion
+      document.querySelectorAll('.faq-q').forEach(q => {
+        q.addEventListener('click', function() {
+          const item = q.closest('.faq-item');
+          const isOpen = item.classList.contains('open');
+          document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+          if (!isOpen) item.classList.add('open');
+        });
+      });
+
+      // Set initial active state on page load
+      if (allSections.length > 0) {
+        setActiveLink('top');
+      }
+    })();
+  </script>
+</body>
+</html>

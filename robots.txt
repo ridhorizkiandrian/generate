@@ -1,0 +1,6 @@
+# Izinkan semua crawler mengakses seluruh situs
+User-agent: *
+Allow: /
+
+# Lokasi sitemap
+Sitemap: https://generatesoalujian.xyz/sitemap.xml

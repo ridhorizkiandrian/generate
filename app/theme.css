@@ -1,0 +1,1654 @@
+/* ============================================================
+   THEME SYSTEM — Generate Soal Ujian (v4 — rapi & konsisten)
+   File: theme.css
+   ------------------------------------------------------------
+   Struktur:
+     1. Design tokens :root (default) – TIDAK diubah dari aslinya.
+        Tema lain HANYA menimpa nilai variabel & memberi tweak
+        komponen bila perlu, sehingga tidak saling bertabrakan.
+     2. Transisi fade halus & AMAN saat ganti tema (lihat catatan
+        di section 1 — TIDAK memakai View Transitions API dan
+        TIDAK meng-animasikan backdrop-filter, karena keduanya
+        terbukti menyebabkan bug ghosting/duplikasi di WebView).
+     3. Tema alternatif: dark (BARU), sunset (BARU), neubrutalism,
+        paper, dan neumorphism.
+        (Glass & Liquid Glass SENGAJA DIHAPUS — backdrop-filter
+        blur di banyak elemen sekaligus terbukti berat & rawan
+        glitch di WebView mobile low-end.)
+     4. Custom Select dropdown (adaptif setiap tema).
+     5. Theme panel & preview kartu tema.
+   ============================================================ */
+
+
+/* ============================================================
+   1. TRANSITION saat tema berubah (crossfade halus & AMAN)
+   ------------------------------------------------------------
+   PENTING — pelajaran dari bug nyata di WebView Android:
+   - TIDAK memakai View Transitions API sama sekali (biarpun
+     didukung sebagian browser modern, WebView Android yang
+     dipakai app ini terbukti menghasilkan ghosting/duplikasi
+     konten saat memakainya).
+   - TIDAK meng-animasikan `backdrop-filter` atau `box-shadow`
+     secara massal ke SEMUA elemen (selector *). Meng-animasikan
+     blur di banyak elemen sekaligus sangat berat untuk GPU HP
+     dan terbukti menyebabkan compositor "tearing" — persis
+     gejala kartu tema yang tampak terbelah/duplikat dengan
+     badge "Aktif" melayang di posisi salah.
+   - Transisi dibatasi HANYA pada warna (background-color, color,
+     border-color) yang murah dan aman dianimasikan di banyak
+     elemen sekaligus. backdrop-filter & box-shadow berganti
+     instan (tidak masalah secara visual karena tersembunyi di
+     balik fade opacity body pada saat yang sama).
+   ============================================================ */
+body.theme-transitioning {
+  transition: opacity 0.16s ease;
+  opacity: 0.55;
+}
+body.theme-transitioning *,
+body.theme-transitioning *::before,
+body.theme-transitioning *::after {
+  transition:
+    background-color 0.25s ease,
+    color            0.25s ease,
+    border-color     0.25s ease;
+}
+
+/* Hormati preferensi pengguna yang sensitif terhadap animasi */
+@media (prefers-reduced-motion: reduce) {
+  body.theme-transitioning { opacity: 1; transition: none; }
+  body.theme-transitioning *,
+  body.theme-transitioning *::before,
+  body.theme-transitioning *::after { transition: none; }
+}
+
+
+/* ============================================================
+   2. DARK MODE THEME (BARU)
+   ------------------------------------------------------------
+   Latar gelap netral (bukan hitam pekat) dengan aksen biru
+   yang sama dengan tema default, supaya identitas brand tetap
+   konsisten. Kontras teks dijaga di atas rasio AA.
+   ============================================================ */
+html[data-theme="dark"] {
+  --bg:           #12151d;
+  --card:         #1a1e29;
+  --border:       #2a3040;
+  --border-strong:#3a4256;
+  --ink:          #eef1f8;
+  --ink-soft:     #a7b0c4;
+  --ink-faint:    #6d7690;
+  --primary:      #5b7dfa;
+  --primary-dark: #4666e6;
+  --primary-soft: rgba(91,125,250,.16);
+  --success:      #35c98d;
+  --success-soft: rgba(53,201,141,.14);
+  --danger:       #f16a70;
+  --danger-soft:  rgba(241,106,112,.14);
+  --warning:      #eab35a;
+  --warning-soft: rgba(234,179,90,.14);
+  --navy:         #0a0c12;
+  --navy-soft:    #161a24;
+  --shadow-sm:    0 1px 3px rgba(0,0,0,.35);
+  --shadow-md:    0 6px 20px rgba(0,0,0,.40);
+  --shadow-lg:    0 16px 44px rgba(0,0,0,.50);
+}
+
+html[data-theme="dark"] body { background: var(--bg); }
+html[data-theme="dark"] .sidebar {
+  background: var(--navy-soft);
+  border-right-color: var(--border);
+}
+html[data-theme="dark"] .sidebar-brand { border-bottom-color: var(--border); }
+html[data-theme="dark"] .sidebar-brand .brand-icon {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+html[data-theme="dark"] .panel,
+html[data-theme="dark"] .qa-card,
+html[data-theme="dark"] .q-card,
+html[data-theme="dark"] .bank-card,
+html[data-theme="dark"] .settings-row,
+html[data-theme="dark"] .active-file-bar {
+  background: var(--card);
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+html[data-theme="dark"] .panel-head {
+  border-bottom-color: var(--border);
+  background: var(--navy-soft);
+}
+html[data-theme="dark"] .qa-card:hover,
+html[data-theme="dark"] .bank-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+}
+html[data-theme="dark"] .bank-card.is-active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+html[data-theme="dark"] .bank-card-icon,
+html[data-theme="dark"] .bank-badge-active,
+html[data-theme="dark"] .privacy-sec-icon {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+html[data-theme="dark"] .modal-overlay {
+  background: rgba(4,6,12,.68);
+}
+html[data-theme="dark"] .modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+}
+html[data-theme="dark"] .modal-header,
+html[data-theme="dark"] .modal-footer {
+  background: var(--navy-soft);
+  border-color: var(--border);
+}
+html[data-theme="dark"] .mobile-header {
+  background: var(--navy-soft);
+  border-bottom-color: var(--border);
+}
+html[data-theme="dark"] .icon-btn {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--ink-soft);
+}
+html[data-theme="dark"] .icon-btn:hover {
+  background: var(--border);
+  color: var(--ink);
+}
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] input[type="text"],
+html[data-theme="dark"] input[type="number"],
+html[data-theme="dark"] select {
+  background: var(--navy-soft);
+  border-color: var(--border);
+  color: var(--ink);
+}
+html[data-theme="dark"] textarea::placeholder,
+html[data-theme="dark"] input::placeholder {
+  color: var(--ink-faint);
+}
+html[data-theme="dark"] textarea:focus,
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+html[data-theme="dark"] .nav-item { color: var(--ink-soft); }
+html[data-theme="dark"] .nav-item:hover {
+  background: var(--card);
+  color: var(--ink);
+}
+html[data-theme="dark"] .nav-item.active {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+html[data-theme="dark"] .nav-item .count {
+  background: var(--navy-soft);
+  color: var(--ink-soft);
+}
+html[data-theme="dark"] .sidebar-lang {
+  background: var(--navy-soft);
+  border-color: var(--border);
+}
+html[data-theme="dark"] .sidebar-lang-btn {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--ink-soft);
+}
+html[data-theme="dark"] .sidebar-lang-btn:hover,
+html[data-theme="dark"] .sidebar-lang-btn.active {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+html[data-theme="dark"] .preview-scroll { background: var(--navy); }
+html[data-theme="dark"] .segmented {
+  background: var(--navy-soft);
+  border-color: var(--border);
+}
+html[data-theme="dark"] .segmented button { color: var(--ink-soft); }
+html[data-theme="dark"] .segmented button.active {
+  background: var(--card);
+  color: var(--primary);
+}
+html[data-theme="dark"] .zoom-toolbar {
+  background: var(--card);
+  border-color: var(--border);
+}
+html[data-theme="dark"] .upload-area,
+html[data-theme="dark"] .logo-upload,
+html[data-theme="dark"] .image-preview-box,
+html[data-theme="dark"] .logo-upload-preview {
+  background: var(--navy-soft);
+  border-color: var(--border);
+  color: var(--ink-soft);
+}
+html[data-theme="dark"] .upload-area:hover,
+html[data-theme="dark"] .upload-area.dragover,
+html[data-theme="dark"] .logo-upload:hover,
+html[data-theme="dark"] .logo-upload.dragover {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+html[data-theme="dark"] .toast {
+  background: #f5f7fb;
+  color: #12151d;
+}
+html[data-theme="dark"] .btn-primary {
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(91,125,250,.32);
+}
+html[data-theme="dark"] .btn-outline {
+  border-color: var(--border-strong);
+  color: var(--ink);
+}
+html[data-theme="dark"] .btn-ghost:hover { background: var(--card); }
+html[data-theme="dark"] .q-type-badge.mc,
+html[data-theme="dark"] .q-card-options span,
+html[data-theme="dark"] .option-row .opt-badge {
+  background: var(--navy-soft);
+  border-color: var(--border);
+  color: var(--ink-soft);
+}
+html[data-theme="dark"] .q-type-badge.essay {
+  background: var(--success-soft);
+  color: var(--success);
+}
+html[data-theme="dark"] .q-index { background: var(--navy-soft); }
+html[data-theme="dark"] .settings-note {
+  background: var(--navy-soft);
+  border-color: var(--border);
+  color: var(--ink-soft);
+}
+
+
+/* ============================================================
+   3. NEUBRUTALISM THEME
+   ============================================================ */
+html[data-theme="neubrutalism"] {
+  --bg:           #f2f0eb;
+  --card:         #ffffff;
+  --border:       #1a1a1a;
+  --border-strong:#1a1a1a;
+  --ink:          #1a1a1a;
+  --ink-soft:     #3d3d3d;
+  --ink-faint:    #666666;
+  --primary:      #2f4bdb;
+  --primary-dark: #1d35bf;
+  --primary-soft: #dce3ff;
+  --success:      #1a8a57;
+  --success-soft: #c8f0dc;
+  --danger:       #d12f2f;
+  --danger-soft:  #ffdddd;
+  --warning:      #b57014;
+  --warning-soft: #ffecc2;
+  --navy:         #1a1a1a;
+  --navy-soft:    #2d2d2d;
+  --radius-sm:    4px;
+  --radius:       4px;
+  --radius-lg:    6px;
+  --shadow-sm:    3px 3px 0 #1a1a1a;
+  --shadow-md:    4px 4px 0 #1a1a1a;
+  --shadow-lg:    6px 6px 0 #1a1a1a;
+}
+
+html[data-theme="neubrutalism"] .btn {
+  border-width: 2px;
+  border-style: solid;
+  border-color: #1a1a1a;
+  border-radius: 4px;
+  box-shadow: 3px 3px 0 #1a1a1a;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+html[data-theme="neubrutalism"] .btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0 #1a1a1a;
+}
+html[data-theme="neubrutalism"] .btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0 #1a1a1a;
+}
+html[data-theme="neubrutalism"] .btn-primary { color: #fff; }
+html[data-theme="neubrutalism"] .btn-ghost {
+  border-color: transparent;
+  box-shadow: none;
+}
+html[data-theme="neubrutalism"] .btn-ghost:hover {
+  border-color: #1a1a1a;
+  box-shadow: 2px 2px 0 #1a1a1a;
+}
+html[data-theme="neubrutalism"] .panel,
+html[data-theme="neubrutalism"] .qa-card,
+html[data-theme="neubrutalism"] .bank-card,
+html[data-theme="neubrutalism"] .settings-row,
+html[data-theme="neubrutalism"] .q-card,
+html[data-theme="neubrutalism"] .active-file-bar {
+  border-width: 2px;
+  border-color: #1a1a1a;
+  border-radius: 6px;
+  box-shadow: 3px 3px 0 #1a1a1a;
+}
+html[data-theme="neubrutalism"] .qa-card:hover,
+html[data-theme="neubrutalism"] .bank-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 #1a1a1a;
+}
+html[data-theme="neubrutalism"] .bank-card.is-active {
+  border-color: var(--primary);
+  box-shadow: 4px 4px 0 var(--primary);
+}
+html[data-theme="neubrutalism"] .sidebar {
+  border-right-width: 2px;
+  border-color: #1a1a1a;
+}
+html[data-theme="neubrutalism"] .sidebar-brand .brand-icon {
+  background: #fff;
+  color: var(--primary);
+  border: 2px solid #1a1a1a;
+  border-radius: 4px;
+  box-shadow: 2px 2px 0 #1a1a1a;
+}
+html[data-theme="neubrutalism"] .sidebar-lang {
+  border-width: 2px;
+  border-color: #1a1a1a;
+  border-radius: 4px;
+  background: var(--bg);
+}
+html[data-theme="neubrutalism"] .sidebar-lang-btn {
+  border-width: 2px;
+  border-color: #1a1a1a;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 2px 2px 0 #1a1a1a;
+}
+html[data-theme="neubrutalism"] .sidebar-lang-btn:hover,
+html[data-theme="neubrutalism"] .sidebar-lang-btn.active {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  box-shadow: 3px 3px 0 var(--primary);
+}
+html[data-theme="neubrutalism"] .modal {
+  border: 2px solid #1a1a1a;
+  border-radius: 6px;
+  box-shadow: 8px 8px 0 #1a1a1a;
+}
+html[data-theme="neubrutalism"] .nav-item {
+  border-radius: 4px;
+  border: 2px solid transparent;
+}
+html[data-theme="neubrutalism"] .nav-item:hover {
+  border-color: #1a1a1a;
+  background: #fff;
+  box-shadow: 2px 2px 0 #1a1a1a;
+}
+html[data-theme="neubrutalism"] .nav-item.active {
+  border-color: #1a1a1a;
+  background: var(--primary-soft);
+  color: var(--primary);
+  box-shadow: 2px 2px 0 #1a1a1a;
+}
+html[data-theme="neubrutalism"] .icon-btn {
+  border-width: 2px;
+  border-color: #1a1a1a;
+  border-radius: 4px;
+  box-shadow: 2px 2px 0 #1a1a1a;
+  background: #fff;
+}
+html[data-theme="neubrutalism"] textarea,
+html[data-theme="neubrutalism"] input[type="text"],
+html[data-theme="neubrutalism"] input[type="number"],
+html[data-theme="neubrutalism"] select {
+  border-width: 2px;
+  border-color: #1a1a1a;
+  border-radius: 4px;
+  background: #fff;
+  color: #1a1a1a;
+}
+html[data-theme="neubrutalism"] textarea:focus,
+html[data-theme="neubrutalism"] input:focus,
+html[data-theme="neubrutalism"] select:focus {
+  box-shadow: 3px 3px 0 var(--primary);
+}
+html[data-theme="neubrutalism"] .upload-area,
+html[data-theme="neubrutalism"] .logo-upload {
+  border: 2px dashed #1a1a1a;
+  border-radius: 4px;
+  background: #fff;
+}
+html[data-theme="neubrutalism"] .toast {
+  border: 2px solid #fff;
+  border-radius: 4px;
+  box-shadow: 4px 4px 0 rgba(0,0,0,.5);
+}
+html[data-theme="neubrutalism"] .preview-scroll {
+  background: #e5e3dc;
+}
+html[data-theme="neubrutalism"] .segmented {
+  border-width: 2px;
+  border-color: #1a1a1a;
+  border-radius: 4px;
+  padding: 3px;
+  background: #fff;
+}
+html[data-theme="neubrutalism"] .segmented button.active {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: 1px solid #1a1a1a;
+  border-radius: 2px;
+  box-shadow: 1px 1px 0 #1a1a1a;
+}
+html[data-theme="neubrutalism"] .zoom-toolbar {
+  border-width: 2px;
+  border-color: #1a1a1a;
+  border-radius: 4px;
+  box-shadow: 2px 2px 0 #1a1a1a;
+}
+html[data-theme="neubrutalism"] .image-preview-box,
+html[data-theme="neubrutalism"] .logo-upload-preview {
+  border: 2px solid #1a1a1a;
+  border-radius: 4px;
+  background: #fff;
+}
+html[data-theme="neubrutalism"] .settings-note,
+html[data-theme="neubrutalism"] .q-card-options span,
+html[data-theme="neubrutalism"] .option-row .opt-badge {
+  border: 2px solid #1a1a1a;
+  border-radius: 4px;
+  background: #fff;
+}
+
+
+/* ============================================================
+   4. SUNSET GLOW THEME (BARU)
+   ------------------------------------------------------------
+   Gradasi hangat jingga → pink → ungu, kartu putih lembut
+   dengan sentuhan glow oranye. Ceria & energik, cocok untuk
+   pengguna yang ingin tampilan lebih ekspresif dari default.
+   ============================================================ */
+html[data-theme="sunset"] {
+  --bg:           #fdf1ea;
+  --card:         #fffaf6;
+  --border:       #f6ddc9;
+  --border-strong:#efc7a4;
+  --ink:          #3a2418;
+  --ink-soft:     #8a6a54;
+  --ink-faint:    #b89a84;
+  --primary:      #f0653f;
+  --primary-dark: #d9502c;
+  --primary-soft: #ffe4d6;
+  --success:      #2ba36a;
+  --success-soft: #e1f5ea;
+  --danger:       #e0424f;
+  --danger-soft:  #fce2e4;
+  --warning:      #d9932b;
+  --warning-soft: #fbeed4;
+  --navy:         #3a2418;
+  --navy-soft:    #4d3222;
+  --radius-sm:    10px;
+  --radius:       14px;
+  --radius-lg:    18px;
+  --shadow-sm:    0 2px 8px rgba(217,90,45,.10);
+  --shadow-md:    0 6px 22px rgba(217,90,45,.16);
+  --shadow-lg:    0 16px 44px rgba(200,70,40,.22);
+}
+
+html[data-theme="sunset"] body {
+  background: linear-gradient(150deg,
+    #ffe8d6 0%,
+    #ffd9c4 22%,
+    #ffc9c9 48%,
+    #f3c6e6 72%,
+    #e6cdf7 100%);
+}
+html[data-theme="sunset"] .sidebar {
+  background: rgba(255,250,246,0.88);
+  border-right: 1px solid var(--border);
+  box-shadow: 2px 0 14px rgba(217,90,45,.08);
+}
+html[data-theme="sunset"] .sidebar-brand { border-bottom-color: var(--border); }
+html[data-theme="sunset"] .sidebar-brand .brand-icon {
+  background: linear-gradient(135deg, #ff9a5a, #f0653f);
+  color: #fff;
+}
+html[data-theme="sunset"] .panel,
+html[data-theme="sunset"] .qa-card,
+html[data-theme="sunset"] .q-card,
+html[data-theme="sunset"] .bank-card,
+html[data-theme="sunset"] .settings-row,
+html[data-theme="sunset"] .active-file-bar {
+  background: var(--card);
+  border-color: var(--border);
+  box-shadow: var(--shadow-sm);
+}
+html[data-theme="sunset"] .panel-head {
+  border-bottom-color: var(--border);
+  background: #fff6ef;
+}
+html[data-theme="sunset"] .qa-card:hover,
+html[data-theme="sunset"] .bank-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+}
+html[data-theme="sunset"] .bank-card.is-active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+html[data-theme="sunset"] .bank-card-icon,
+html[data-theme="sunset"] .bank-badge-active,
+html[data-theme="sunset"] .privacy-sec-icon {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+html[data-theme="sunset"] .modal-overlay {
+  background: radial-gradient(120% 120% at 50% 0%, rgba(120,60,40,.30) 0%, rgba(70,30,40,.45) 100%);
+}
+html[data-theme="sunset"] .modal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+}
+html[data-theme="sunset"] .modal-header,
+html[data-theme="sunset"] .modal-footer {
+  background: #fff6ef;
+  border-color: var(--border);
+}
+html[data-theme="sunset"] .mobile-header {
+  background: rgba(255,250,246,0.92);
+  border-bottom-color: var(--border);
+}
+html[data-theme="sunset"] .icon-btn {
+  background: var(--card);
+  border-color: var(--border);
+  color: var(--ink-soft);
+}
+html[data-theme="sunset"] .icon-btn:hover {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+html[data-theme="sunset"] textarea,
+html[data-theme="sunset"] input[type="text"],
+html[data-theme="sunset"] input[type="number"],
+html[data-theme="sunset"] select {
+  background: #fff;
+  border-color: var(--border-strong);
+  color: var(--ink);
+}
+html[data-theme="sunset"] textarea:focus,
+html[data-theme="sunset"] input:focus,
+html[data-theme="sunset"] select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+html[data-theme="sunset"] .nav-item { color: var(--ink-soft); }
+html[data-theme="sunset"] .nav-item:hover { background: #fff3ea; }
+html[data-theme="sunset"] .nav-item.active {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+html[data-theme="sunset"] .nav-item .count {
+  background: #fff3ea;
+  color: var(--ink-soft);
+}
+html[data-theme="sunset"] .sidebar-lang {
+  background: #fff3ea;
+  border-color: var(--border);
+}
+html[data-theme="sunset"] .sidebar-lang-btn {
+  background: #fff;
+  border-color: var(--border);
+  color: var(--ink-soft);
+}
+html[data-theme="sunset"] .sidebar-lang-btn:hover,
+html[data-theme="sunset"] .sidebar-lang-btn.active {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary-dark);
+}
+html[data-theme="sunset"] .preview-scroll { background: #f6e2d2; }
+html[data-theme="sunset"] .segmented {
+  background: #fff3ea;
+  border-color: var(--border);
+}
+html[data-theme="sunset"] .segmented button.active {
+  background: #fff;
+  color: var(--primary-dark);
+}
+html[data-theme="sunset"] .zoom-toolbar {
+  background: var(--card);
+  border-color: var(--border);
+}
+html[data-theme="sunset"] .upload-area,
+html[data-theme="sunset"] .logo-upload,
+html[data-theme="sunset"] .image-preview-box,
+html[data-theme="sunset"] .logo-upload-preview {
+  background: #fff6ef;
+  border-color: var(--border-strong);
+  color: var(--ink-soft);
+}
+html[data-theme="sunset"] .upload-area:hover,
+html[data-theme="sunset"] .upload-area.dragover,
+html[data-theme="sunset"] .logo-upload:hover,
+html[data-theme="sunset"] .logo-upload.dragover {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary-dark);
+}
+html[data-theme="sunset"] .toast {
+  background: #3a2418;
+  color: #fff6ef;
+}
+html[data-theme="sunset"] .btn-primary {
+  background: linear-gradient(135deg, #ff9a5a, #f0653f);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(240,101,63,.35);
+}
+html[data-theme="sunset"] .btn-primary:hover {
+  background: linear-gradient(135deg, #ff8a42, #e2532a);
+}
+html[data-theme="sunset"] .q-type-badge.mc,
+html[data-theme="sunset"] .q-card-options span,
+html[data-theme="sunset"] .option-row .opt-badge {
+  background: #fff3ea;
+  border-color: var(--border);
+  color: var(--ink-soft);
+}
+html[data-theme="sunset"] .q-type-badge.essay {
+  background: var(--success-soft);
+  color: var(--success);
+}
+html[data-theme="sunset"] .q-index { background: #fff3ea; }
+html[data-theme="sunset"] .settings-note {
+  background: #fff3ea;
+  border-color: var(--border);
+  color: var(--ink-soft);
+}
+
+
+/* ============================================================
+   5. PAPER THEME
+   ============================================================ */
+html[data-theme="paper"] {
+  --bg:           #f0ece4;
+  --card:         #faf8f4;
+  --border:       #ddd6c8;
+  --border-strong:#ccc4b4;
+  --ink:          #2c2418;
+  --ink-soft:     #6a5e4e;
+  --ink-faint:    #a0947e;
+  --primary:      #4a6fa5;
+  --primary-dark: #3a5a8a;
+  --primary-soft: #e8eef6;
+  --success:      #4a7c59;
+  --success-soft: #e6f0e8;
+  --danger:       #a84040;
+  --danger-soft:  #f5e8e8;
+  --warning:      #8a6a22;
+  --warning-soft: #f5f0e0;
+  --navy:         #2c2418;
+  --navy-soft:    #3e3428;
+  --radius-sm:    6px;
+  --radius:       8px;
+  --radius-lg:    10px;
+  --shadow-sm:    0 1px 3px rgba(80,60,30,.08), 0 0 0 1px rgba(80,60,30,.04);
+  --shadow-md:    0 3px 10px rgba(80,60,30,.10), 0 0 0 1px rgba(80,60,30,.04);
+  --shadow-lg:    0 8px 24px rgba(80,60,30,.14), 0 0 0 1px rgba(80,60,30,.05);
+}
+
+html[data-theme="paper"] body {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 27px,
+      rgba(160,130,80,.06) 27px,
+      rgba(160,130,80,.06) 28px
+    ),
+    linear-gradient(135deg, #f0ece4 0%, #ece8de 100%);
+}
+html[data-theme="paper"] .sidebar {
+  background: #f5f2ea;
+  border-right: 1px solid #ddd6c8;
+  box-shadow: 2px 0 8px rgba(80,60,30,.06);
+}
+html[data-theme="paper"] .sidebar-brand { border-bottom-color: #ddd6c8; }
+html[data-theme="paper"] .sidebar-brand .brand-icon {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+html[data-theme="paper"] .sidebar-lang {
+  background: #ede9df;
+  border-color: #ddd6c8;
+}
+html[data-theme="paper"] .sidebar-lang-btn {
+  background: #f5f2ea;
+  border-color: #ddd6c8;
+  color: var(--ink);
+}
+html[data-theme="paper"] .sidebar-lang-btn:hover,
+html[data-theme="paper"] .sidebar-lang-btn.active {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+html[data-theme="paper"] .panel,
+html[data-theme="paper"] .qa-card,
+html[data-theme="paper"] .bank-card,
+html[data-theme="paper"] .q-card,
+html[data-theme="paper"] .settings-row,
+html[data-theme="paper"] .active-file-bar {
+  background: #faf8f4;
+  border-color: #ddd6c8;
+  box-shadow: 0 2px 8px rgba(80,60,30,.06), 0 0 0 1px rgba(80,60,30,.03);
+}
+html[data-theme="paper"] .panel-head {
+  border-bottom-color: #ddd6c8;
+  background: #f5f1eb;
+}
+html[data-theme="paper"] .bank-card.is-active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+html[data-theme="paper"] .bank-card-icon,
+html[data-theme="paper"] .bank-badge-active,
+html[data-theme="paper"] .privacy-sec-icon {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+html[data-theme="paper"] .modal {
+  background: #faf8f4;
+  border: 1px solid #ddd6c8;
+  box-shadow: 0 12px 40px rgba(80,60,30,.18);
+}
+html[data-theme="paper"] .modal-header,
+html[data-theme="paper"] .modal-footer {
+  background: #f5f1eb;
+  border-color: #ddd6c8;
+}
+html[data-theme="paper"] .mobile-header {
+  background: #f5f2ea;
+  border-bottom-color: #ddd6c8;
+}
+html[data-theme="paper"] .nav-item {
+  color: var(--ink);
+}
+html[data-theme="paper"] .nav-item:hover {
+  background: #ede9df;
+}
+html[data-theme="paper"] .nav-item.active {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+html[data-theme="paper"] .q-index {
+  background: #ede9df;
+}
+html[data-theme="paper"] textarea,
+html[data-theme="paper"] input[type="text"],
+html[data-theme="paper"] input[type="number"],
+html[data-theme="paper"] select {
+  background: #fff;
+  border-color: #ccc4b4;
+  color: var(--ink);
+}
+html[data-theme="paper"] textarea:focus,
+html[data-theme="paper"] input:focus,
+html[data-theme="paper"] select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(74,111,165,.15);
+}
+html[data-theme="paper"] .upload-area,
+html[data-theme="paper"] .logo-upload,
+html[data-theme="paper"] .image-preview-box,
+html[data-theme="paper"] .logo-upload-preview {
+  background: #ede9df;
+  border-color: #ccc4b4;
+  color: var(--ink);
+}
+html[data-theme="paper"] .upload-area:hover,
+html[data-theme="paper"] .upload-area.dragover,
+html[data-theme="paper"] .logo-upload:hover,
+html[data-theme="paper"] .logo-upload.dragover {
+  background: var(--primary-soft);
+  border-color: var(--primary);
+}
+html[data-theme="paper"] .preview-scroll {
+  background: #ddd8cc;
+}
+html[data-theme="paper"] .segmented {
+  background: #ede9df;
+  border-color: #ddd6c8;
+}
+html[data-theme="paper"] .segmented button.active {
+  background: #faf8f4;
+  color: var(--primary);
+}
+html[data-theme="paper"] .zoom-toolbar {
+  background: #faf8f4;
+  border-color: #ddd6c8;
+}
+html[data-theme="paper"] .icon-btn {
+  background: #faf8f4;
+  border-color: #ddd6c8;
+  color: var(--ink);
+}
+html[data-theme="paper"] .icon-btn:hover {
+  background: #ede9df;
+}
+html[data-theme="paper"] .toast {
+  background: #2c2418;
+  color: #fff;
+}
+html[data-theme="paper"] .btn-primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(74,111,165,.28);
+}
+html[data-theme="paper"] .btn-primary:hover {
+  background: var(--primary-dark);
+}
+html[data-theme="paper"] .q-type-badge.mc,
+html[data-theme="paper"] .q-card-options span,
+html[data-theme="paper"] .option-row .opt-badge {
+  background: #ede9df;
+  border-color: #ddd6c8;
+  color: var(--ink-soft);
+}
+html[data-theme="paper"] .q-type-badge.essay {
+  background: var(--success-soft);
+  color: var(--success);
+}
+html[data-theme="paper"] .settings-note {
+  background: #ede9df;
+  border-color: #ddd6c8;
+  color: var(--ink-soft);
+}
+
+
+/* ============================================================
+   6. NEUMORPHISM THEME
+   ------------------------------------------------------------
+   Karakteristik utama:
+     - Soft shadow (dua sisi: gelap di kanan-bawah, terang di
+       kiri-atas) untuk kesan "extruded" dari background.
+     - Inset shadow untuk elemen yang "tenggelam" (input, active).
+     - Radius bulat (10–16px) yang konsisten.
+     - Background & card SAMA WARNANYA — shadow yang membedakan.
+     - Kontras teks tetap kuat sehingga tidak sulit dibaca.
+   ============================================================ */
+html[data-theme="neumorphism"] {
+  --bg:           #e6ebf2;
+  --card:         #e6ebf2;
+  --border:       #d1d8e2;
+  --border-strong:#b9c2d0;
+  --ink:          #1e2a3b;
+  --ink-soft:     #4a5670;
+  --ink-faint:    #7a869e;
+  --primary:      #4c6ef5;
+  --primary-dark: #3b5bd9;
+  --primary-soft: #dde4fd;
+  --success:      #2ba36a;
+  --success-soft: #d5f0e2;
+  --danger:       #e5484d;
+  --danger-soft:  #fbdcdd;
+  --warning:      #c9852b;
+  --warning-soft: #fbe9cc;
+  --navy:         #1e2a3b;
+  --navy-soft:    #2a374d;
+  --radius-sm:    10px;
+  --radius:       14px;
+  --radius-lg:    18px;
+
+  /* Dua-arah soft shadow (kiri-atas terang, kanan-bawah gelap) */
+  --shadow-sm:
+    4px 4px 10px rgba(163,177,198,0.45),
+    -4px -4px 10px rgba(255,255,255,0.85);
+  --shadow-md:
+    6px 6px 14px rgba(163,177,198,0.50),
+    -6px -6px 14px rgba(255,255,255,0.90);
+  --shadow-lg:
+    10px 10px 26px rgba(163,177,198,0.55),
+    -10px -10px 26px rgba(255,255,255,0.95);
+
+  /* Inset ("tenggelam"), dipakai untuk input & active state */
+  --neu-inset:
+    inset 3px 3px 6px rgba(163,177,198,0.45),
+    inset -3px -3px 6px rgba(255,255,255,0.85);
+  --neu-inset-lg:
+    inset 4px 4px 10px rgba(163,177,198,0.50),
+    inset -4px -4px 10px rgba(255,255,255,0.90);
+}
+
+html[data-theme="neumorphism"] body {
+  background: #e6ebf2;
+}
+
+/* Sidebar — merata dengan background */
+html[data-theme="neumorphism"] .sidebar {
+  background: #e6ebf2;
+  border-right: 1px solid transparent;
+  box-shadow: 6px 0 16px rgba(163,177,198,0.28);
+}
+html[data-theme="neumorphism"] .sidebar-brand {
+  border-bottom-color: rgba(163,177,198,0.30);
+}
+html[data-theme="neumorphism"] .sidebar-brand .brand-icon {
+  background: #e6ebf2;
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+  border: none;
+}
+
+/* Card & panel — timbul */
+html[data-theme="neumorphism"] .panel,
+html[data-theme="neumorphism"] .qa-card,
+html[data-theme="neumorphism"] .bank-card,
+html[data-theme="neumorphism"] .q-card,
+html[data-theme="neumorphism"] .settings-row,
+html[data-theme="neumorphism"] .active-file-bar {
+  background: #e6ebf2;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+html[data-theme="neumorphism"] .panel-head {
+  border-bottom-color: rgba(163,177,198,0.30);
+  background: transparent;
+}
+html[data-theme="neumorphism"] .qa-card:hover,
+html[data-theme="neumorphism"] .bank-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+html[data-theme="neumorphism"] .bank-card.is-active {
+  background: #e6ebf2;
+  box-shadow: var(--neu-inset);
+  border-color: transparent;
+}
+html[data-theme="neumorphism"] .bank-card-icon,
+html[data-theme="neumorphism"] .bank-badge-active,
+html[data-theme="neumorphism"] .privacy-sec-icon {
+  background: var(--primary-soft);
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Modal — timbul dari overlay */
+html[data-theme="neumorphism"] .modal-overlay {
+  background: radial-gradient(120% 120% at 50% 0%, rgba(60,80,120,.28) 0%, rgba(40,55,90,.42) 100%);
+}
+html[data-theme="neumorphism"] .modal {
+  background: #e6ebf2;
+  border: none;
+  border-radius: var(--radius-lg);
+  box-shadow:
+    18px 18px 40px rgba(120,140,175,0.45),
+    -14px -14px 30px rgba(255,255,255,0.75);
+}
+html[data-theme="neumorphism"] .modal-header,
+html[data-theme="neumorphism"] .modal-footer {
+  background: transparent;
+  border-color: rgba(163,177,198,0.28);
+}
+
+/* Buttons — timbul, aktif → inset */
+html[data-theme="neumorphism"] .btn {
+  background: #e6ebf2;
+  color: var(--ink);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow .18s ease, transform .12s ease, background .18s ease, color .18s ease;
+}
+html[data-theme="neumorphism"] .btn:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+html[data-theme="neumorphism"] .btn:active {
+  box-shadow: var(--neu-inset);
+  transform: translateY(0);
+}
+html[data-theme="neumorphism"] .btn-primary {
+  background: linear-gradient(145deg, #5678f8, #3f5ee0);
+  color: #fff;
+  box-shadow:
+    5px 5px 12px rgba(120,140,175,0.45),
+    -5px -5px 12px rgba(255,255,255,0.85);
+}
+html[data-theme="neumorphism"] .btn-primary:hover {
+  background: linear-gradient(145deg, #4c6ef5, #3550cc);
+  box-shadow:
+    7px 7px 16px rgba(120,140,175,0.55),
+    -7px -7px 16px rgba(255,255,255,0.90);
+}
+html[data-theme="neumorphism"] .btn-primary:active {
+  box-shadow: inset 3px 3px 6px rgba(30,45,90,0.35), inset -3px -3px 6px rgba(255,255,255,0.18);
+}
+html[data-theme="neumorphism"] .btn-danger {
+  background: linear-gradient(145deg, #ee5a5f, #cf3d42);
+  color: #fff;
+}
+html[data-theme="neumorphism"] .btn-outline {
+  background: #e6ebf2;
+  color: var(--ink);
+}
+html[data-theme="neumorphism"] .btn-ghost {
+  background: transparent;
+  box-shadow: none;
+  color: var(--ink-soft);
+}
+html[data-theme="neumorphism"] .btn-ghost:hover {
+  background: #e6ebf2;
+  box-shadow: var(--shadow-sm);
+  color: var(--ink);
+}
+
+/* Icon buttons */
+html[data-theme="neumorphism"] .icon-btn {
+  background: #e6ebf2;
+  color: var(--ink-soft);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  box-shadow: var(--shadow-sm);
+}
+html[data-theme="neumorphism"] .icon-btn:hover {
+  color: var(--ink);
+  box-shadow: var(--shadow-md);
+}
+html[data-theme="neumorphism"] .icon-btn:active {
+  box-shadow: var(--neu-inset);
+}
+
+/* Inputs — inset (tenggelam) */
+html[data-theme="neumorphism"] textarea,
+html[data-theme="neumorphism"] input[type="text"],
+html[data-theme="neumorphism"] input[type="number"],
+html[data-theme="neumorphism"] select {
+  background: #e6ebf2;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  box-shadow: var(--neu-inset);
+}
+html[data-theme="neumorphism"] textarea:focus,
+html[data-theme="neumorphism"] input:focus,
+html[data-theme="neumorphism"] select:focus {
+  border-color: transparent;
+  box-shadow:
+    inset 3px 3px 6px rgba(163,177,198,0.50),
+    inset -3px -3px 6px rgba(255,255,255,0.90),
+    0 0 0 3px rgba(76,110,245,.18);
+}
+
+/* Nav items */
+html[data-theme="neumorphism"] .nav-item {
+  background: transparent;
+  color: var(--ink-soft);
+  border-radius: 10px;
+  border: 1px solid transparent;
+  transition: background .18s ease, box-shadow .18s ease, color .18s ease;
+}
+html[data-theme="neumorphism"] .nav-item:hover {
+  background: #e6ebf2;
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+html[data-theme="neumorphism"] .nav-item.active {
+  background: #e6ebf2;
+  color: var(--primary);
+  box-shadow: var(--neu-inset);
+  font-weight: 700;
+}
+html[data-theme="neumorphism"] .nav-item .count {
+  background: #e6ebf2;
+  color: var(--ink-soft);
+  box-shadow: var(--neu-inset);
+}
+html[data-theme="neumorphism"] .nav-item.active .count {
+  color: var(--primary);
+}
+
+/* Sidebar language switch */
+html[data-theme="neumorphism"] .sidebar-lang {
+  background: #e6ebf2;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  box-shadow: var(--neu-inset);
+}
+html[data-theme="neumorphism"] .sidebar-lang-btn {
+  background: #e6ebf2;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+html[data-theme="neumorphism"] .sidebar-lang-btn:hover {
+  color: var(--primary);
+  box-shadow: var(--shadow-md);
+}
+html[data-theme="neumorphism"] .sidebar-lang-btn.active {
+  background: #e6ebf2;
+  color: var(--primary);
+  border: 1px solid transparent;
+  box-shadow: var(--neu-inset);
+}
+
+/* Segmented toggle */
+html[data-theme="neumorphism"] .segmented {
+  background: #e6ebf2;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 4px;
+  box-shadow: var(--neu-inset);
+}
+html[data-theme="neumorphism"] .segmented button {
+  border-radius: 8px;
+  color: var(--ink-soft);
+  background: transparent;
+}
+html[data-theme="neumorphism"] .segmented button.active {
+  background: #e6ebf2;
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Upload area */
+html[data-theme="neumorphism"] .upload-area,
+html[data-theme="neumorphism"] .logo-upload,
+html[data-theme="neumorphism"] .image-preview-box,
+html[data-theme="neumorphism"] .logo-upload-preview {
+  background: #e6ebf2;
+  border: 1px dashed rgba(120,140,175,0.45);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--neu-inset);
+  color: var(--ink);
+}
+html[data-theme="neumorphism"] .upload-area:hover,
+html[data-theme="neumorphism"] .upload-area.dragover,
+html[data-theme="neumorphism"] .logo-upload:hover,
+html[data-theme="neumorphism"] .logo-upload.dragover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Toolbar & mobile header */
+html[data-theme="neumorphism"] .zoom-toolbar {
+  background: #e6ebf2;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  box-shadow: var(--shadow-sm);
+}
+html[data-theme="neumorphism"] .mobile-header {
+  background: #e6ebf2;
+  border-bottom-color: transparent;
+  box-shadow: 0 4px 12px rgba(163,177,198,0.28);
+}
+html[data-theme="neumorphism"] .preview-scroll {
+  background: #d9e0eb;
+  box-shadow: var(--neu-inset-lg);
+  border-radius: var(--radius);
+}
+
+/* Toast — timbul dari layar */
+html[data-theme="neumorphism"] .toast {
+  background: #1e2a3b;
+  color: #fff;
+  box-shadow:
+    10px 10px 24px rgba(30,45,60,0.30),
+    -8px -8px 20px rgba(255,255,255,0.12);
+}
+
+/* Badge & tags */
+html[data-theme="neumorphism"] .q-type-badge.mc {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+html[data-theme="neumorphism"] .q-type-badge.essay {
+  background: var(--success-soft);
+  color: var(--success);
+}
+html[data-theme="neumorphism"] .settings-note {
+  background: #e6ebf2;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--neu-inset);
+  color: var(--ink-soft);
+}
+html[data-theme="neumorphism"] .q-card-options span,
+html[data-theme="neumorphism"] .option-row .opt-badge {
+  background: #e6ebf2;
+  border: 1px solid transparent;
+  color: var(--ink-soft);
+  box-shadow: var(--shadow-sm);
+}
+html[data-theme="neumorphism"] .save-dot {
+  box-shadow: var(--shadow-sm);
+}
+
+
+/* ============================================================
+   7. CUSTOM SELECT DROPDOWN
+   ------------------------------------------------------------
+   Menggantikan tampilan <select> native. Menggunakan CSS
+   variables agar otomatis mengikuti tema yang aktif.
+   Struktur DOM (dibuat oleh custom-select.js):
+     .cs-select
+       .cs-selected  → tombol yang terlihat
+         .cs-selected-label
+         .cs-selected-caret (i)
+       .cs-menu      → daftar dropdown
+         .cs-option (multiple)
+   ============================================================ */
+.cs-select {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  width: 100%;
+  font-family: inherit;
+  color: var(--ink);
+}
+.cs-select.cs-block { display: flex; }
+
+.cs-selected {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 40px 10px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--ink);
+  font-size: 14px;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color .15s var(--ease, ease),
+    box-shadow   .15s var(--ease, ease),
+    background   .15s var(--ease, ease);
+  position: relative;
+  user-select: none;
+}
+.cs-selected:hover { border-color: var(--ink-faint); }
+.cs-select.is-open .cs-selected,
+.cs-selected:focus-visible {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+  outline: none;
+}
+.cs-select.is-disabled .cs-selected {
+  opacity: .55;
+  pointer-events: none;
+}
+.cs-selected-label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cs-selected-label.is-placeholder { color: var(--ink-faint); }
+.cs-selected-caret {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 11px;
+  color: var(--ink-soft);
+  transition: transform .18s ease;
+  pointer-events: none;
+}
+.cs-select.is-open .cs-selected-caret {
+  transform: translateY(-50%) rotate(180deg);
+  color: var(--primary);
+}
+
+.cs-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  min-width: 100%;
+  max-height: 260px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 6px;
+  background: var(--card);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg, 0 12px 32px rgba(20,24,40,.14));
+  z-index: 500;
+  opacity: 0;
+  transform: translateY(-6px) scale(.98);
+  pointer-events: none;
+  transition:
+    opacity .18s ease,
+    transform .18s ease;
+}
+.cs-select.is-open .cs-menu {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+.cs-menu.cs-menu-up {
+  top: auto;
+  bottom: calc(100% + 6px);
+  transform-origin: bottom;
+  transform: translateY(6px) scale(.98);
+}
+.cs-select.is-open .cs-menu.cs-menu-up {
+  transform: translateY(0) scale(1);
+}
+.cs-menu::-webkit-scrollbar { width: 8px; }
+.cs-menu::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 8px;
+}
+.cs-menu::-webkit-scrollbar-track { background: transparent; }
+
+.cs-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.35;
+  cursor: pointer;
+  transition: background .12s ease, color .12s ease;
+  user-select: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cs-option:hover,
+.cs-option.is-hover {
+  background: var(--bg);
+  color: var(--ink);
+}
+.cs-option.is-selected {
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-weight: 600;
+}
+.cs-option.is-disabled {
+  opacity: .5;
+  pointer-events: none;
+}
+
+/* ── Adaptasi Custom Select ke setiap tema ── */
+
+/* Dark */
+html[data-theme="dark"] .cs-selected {
+  background: var(--navy-soft);
+  border-color: var(--border);
+  color: var(--ink);
+}
+html[data-theme="dark"] .cs-select.is-open .cs-selected {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+html[data-theme="dark"] .cs-menu {
+  background: var(--card);
+  border-color: var(--border);
+  box-shadow: var(--shadow-lg);
+}
+html[data-theme="dark"] .cs-option:hover,
+html[data-theme="dark"] .cs-option.is-hover {
+  background: var(--navy-soft);
+}
+html[data-theme="dark"] .cs-option.is-selected {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+/* Sunset */
+html[data-theme="sunset"] .cs-selected {
+  background: #fff;
+  border-color: var(--border-strong);
+  color: var(--ink);
+}
+html[data-theme="sunset"] .cs-select.is-open .cs-selected {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
+}
+html[data-theme="sunset"] .cs-menu {
+  background: #fffaf6;
+  border-color: var(--border);
+  box-shadow: var(--shadow-lg);
+}
+html[data-theme="sunset"] .cs-option:hover,
+html[data-theme="sunset"] .cs-option.is-hover {
+  background: #fff3ea;
+}
+html[data-theme="sunset"] .cs-option.is-selected {
+  background: var(--primary-soft);
+  color: var(--primary-dark);
+}
+
+/* Neubrutalism */
+html[data-theme="neubrutalism"] .cs-selected {
+  border-width: 2px;
+  border-color: #1a1a1a;
+  border-radius: 4px;
+  background: #fff;
+  color: #1a1a1a;
+  box-shadow: 3px 3px 0 #1a1a1a;
+}
+html[data-theme="neubrutalism"] .cs-select.is-open .cs-selected {
+  box-shadow: 3px 3px 0 var(--primary);
+}
+html[data-theme="neubrutalism"] .cs-menu {
+  border-width: 2px;
+  border-color: #1a1a1a;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 4px 4px 0 #1a1a1a;
+}
+html[data-theme="neubrutalism"] .cs-option { border-radius: 2px; }
+html[data-theme="neubrutalism"] .cs-option.is-selected {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+/* Paper */
+html[data-theme="paper"] .cs-selected {
+  background: #fff;
+  border-color: #ccc4b4;
+}
+html[data-theme="paper"] .cs-menu {
+  background: #faf8f4;
+  border-color: #ddd6c8;
+  box-shadow: 0 8px 24px rgba(80,60,30,.16);
+}
+html[data-theme="paper"] .cs-option:hover,
+html[data-theme="paper"] .cs-option.is-hover {
+  background: #ede9df;
+}
+
+/* Neumorphism */
+html[data-theme="neumorphism"] .cs-selected {
+  background: #e6ebf2;
+  border-color: transparent;
+  border-radius: 10px;
+  color: var(--ink);
+  box-shadow: var(--neu-inset);
+}
+html[data-theme="neumorphism"] .cs-select.is-open .cs-selected {
+  box-shadow:
+    inset 3px 3px 6px rgba(163,177,198,0.50),
+    inset -3px -3px 6px rgba(255,255,255,0.90),
+    0 0 0 3px rgba(76,110,245,.18);
+}
+html[data-theme="neumorphism"] .cs-menu {
+  background: #e6ebf2;
+  border-color: transparent;
+  border-radius: 12px;
+  box-shadow:
+    10px 10px 26px rgba(163,177,198,0.55),
+    -10px -10px 26px rgba(255,255,255,0.95);
+}
+html[data-theme="neumorphism"] .cs-option:hover,
+html[data-theme="neumorphism"] .cs-option.is-hover {
+  background: #dde3ec;
+}
+html[data-theme="neumorphism"] .cs-option.is-selected {
+  background: var(--primary-soft);
+  color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Ukuran select kecil (misal identity-field-col) */
+.identity-field-row .cs-select { width: 110px; min-width: 110px; flex: 0 0 auto; }
+.count-control .cs-select { max-width: 110px; }
+
+
+/* ============================================================
+   8. THEME PANEL — halaman pemilihan tema
+   ============================================================ */
+#pageTheme { padding: 0; }
+#pageTheme .theme-page-inner { padding: 28px 32px 60px; }
+@media (max-width: 767px) {
+  #pageTheme .theme-page-inner { padding: 18px 14px 50px; }
+}
+.theme-header { margin-bottom: 28px; }
+.theme-header h1 {
+  font-size: 24px;
+  font-weight: 800;
+  margin: 0 0 4px;
+  letter-spacing: -.2px;
+  color: var(--ink);
+}
+.theme-header p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 14px;
+}
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+}
+.theme-card {
+  position: relative;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+  user-select: none;
+  color: var(--ink);
+}
+.theme-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.theme-card.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft), var(--shadow-md);
+}
+.theme-card-preview {
+  width: 100%;
+  height: 80px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  overflow: hidden;
+  position: relative;
+  border: 1px solid var(--border);
+}
+.theme-active-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 20px;
+  letter-spacing: .03em;
+  display: none;
+}
+.theme-card.active .theme-active-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.theme-card-name {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 4px;
+}
+.theme-card-desc {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Theme mini-previews */
+.tp-default  { background: linear-gradient(135deg,#f5f6f8 0%,#e3e6ec 100%); }
+.tp-neubru   { background: linear-gradient(135deg,#f2f0eb 0%,#fff 100%); border: 2px solid #1a1a1a; }
+.tp-paper    { background: linear-gradient(135deg,#f0ece4 0%,#faf8f4 100%); }
+.tp-neu      {
+  background: #e6ebf2;
+  box-shadow:
+    inset 4px 4px 10px rgba(163,177,198,0.45),
+    inset -4px -4px 10px rgba(255,255,255,0.85);
+}
+.tp-dark     { background: linear-gradient(135deg,#1a1e29 0%,#12151d 100%); }
+.tp-sunset   { background: linear-gradient(135deg,#ffdcb8 0%,#ffc9c9 45%,#e6cdf7 100%); }
+
+/* Dot decorations inside preview */
+.tp-dot { position:absolute; border-radius:4px; }
+.tp-default .tp-dot { background:#2f4bdb; }
+.tp-neubru  .tp-dot { background:#2f4bdb; box-shadow:2px 2px 0 #1a1a1a; border-radius:2px; }
+.tp-paper   .tp-dot { background:#4a6fa5; }
+.tp-neu     .tp-dot {
+  background:#4c6ef5;
+  box-shadow:
+    2px 2px 5px rgba(120,140,175,0.55),
+    -2px -2px 5px rgba(255,255,255,0.90);
+}
+.tp-dark    .tp-dot { background:#5b7dfa; }
+.tp-sunset  .tp-dot { background:#f0653f; }
+
+
+/* ============================================================
+   9. RESPONSIVE — panel tema
+   ============================================================ */
+@media (max-width: 600px) {
+  .theme-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .theme-card { padding: 14px; }
+  .theme-card-preview {
+    height: 56px;
+    margin-bottom: 10px;
+  }
+}
+@media (max-width: 380px) {
+  .theme-grid { grid-template-columns: 1fr; }
+}
+
+/* Custom select — pastikan tidak keluar container di mobile */
+@media (max-width: 767px) {
+  .cs-menu { max-height: 220px; }
+  .settings-row .cs-select { width: 100%; }
+  .settings-row .cs-select .cs-selected { min-width: 140px; }
+}

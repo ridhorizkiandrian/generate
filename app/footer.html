@@ -1,0 +1,173 @@
+<style>
+.app-footer{
+  position:relative;
+  margin-top:auto;
+  border-top:1px solid var(--border);
+  background:var(--surface, transparent);
+  padding:28px 32px 22px;
+  overflow:hidden;
+}
+
+.app-footer-inner{
+  max-width:1100px;
+  margin:0 auto;
+}
+
+/* Top section */
+.app-footer-main{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+}
+
+/* Brand */
+.app-footer-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.app-footer-logo{
+  width:38px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid var(--border);
+  background:var(--primary);
+  color:#fff;
+  border-radius:10px;
+  font-size:16px;
+  flex-shrink:0;
+}
+
+.app-footer-title{
+  font-size:13.5px;
+  font-weight:700;
+  color:var(--ink);
+  margin:0 0 2px;
+}
+
+.app-footer-description{
+  margin:0;
+  font-size:11.5px;
+  color:var(--ink-faint);
+  line-height:1.5;
+}
+
+/* Privacy badge */
+.app-footer-privacy{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:9px 13px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  color:var(--ink-faint);
+  font-size:11.5px;
+  white-space:nowrap;
+}
+
+.app-footer-privacy i{
+  color:var(--primary);
+  font-size:12px;
+}
+
+/* Bottom section */
+.app-footer-bottom{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-top:22px;
+  padding-top:16px;
+  border-top:1px solid var(--border);
+}
+
+.app-footer-copyright{
+  margin:0;
+  font-size:11.5px;
+  color:var(--ink-faint);
+}
+
+.app-footer-links{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.app-footer-links a{
+  color:var(--ink-faint);
+  text-decoration:none;
+  font-size:11.5px;
+  transition:color .2s ease;
+}
+
+.app-footer-links a:hover{
+  color:var(--primary);
+}
+
+/* Mobile */
+@media (max-width:767px){
+
+  .app-footer{
+    padding:22px 16px 18px;
+  }
+
+  .app-footer-main{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:16px;
+  }
+
+  .app-footer-privacy{
+    width:100%;
+    box-sizing:border-box;
+    white-space:normal;
+  }
+
+  .app-footer-bottom{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+    margin-top:18px;
+  }
+
+  .app-footer-links{
+    gap:16px;
+  }
+}
+</style><footer class="app-footer">  <div class="app-footer-inner"><!-- Main Footer -->
+<div class="app-footer-main">
+
+  <div class="app-footer-brand">
+
+    <div>
+      <p class="app-footer-title">Generate Soal Ujian</p>
+      <p class="app-footer-description" data-i18n="footer.desc">
+        Pembuat lembar soal otomatis untuk membantu guru menyusun ujian dengan cepat, rapi, dan efisien.
+      </p>
+    </div>
+
+  </div>
+
+
+  <div class="app-footer-privacy">
+    <i class="fa-solid fa-shield-halved"></i>
+    <span data-i18n="footer.privacy">Data soal tersimpan secara lokal di perangkat Anda</span>
+  </div>
+
+</div>
+
+
+<!-- Bottom Footer -->
+<div class="app-footer-bottom">
+
+  <p class="app-footer-copyright">
+    &copy; 2026 Generate Soal Ujian. All rights reserved. <br> By RidhoRizkiAndrian
+  </p>
+
+</div>
+
+  </div></footer>

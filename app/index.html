@@ -1,0 +1,2764 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+<!-- ============================================================
+     SEO — GANTI "https://domainanda.com/" di bawah dengan domain
+     asli website ini sebelum publish (dipakai di canonical & OG).
+     ============================================================ -->
+
+<!-- Title & description: dibedakan dari landing page (root) supaya tidak duplicate title/description -->
+<title>Aplikasi Generate Soal Ujian — Buat, Preview & Export PDF</title>
+<meta name="description" content="Aplikasi pembuat soal ujian pilihan ganda dan essay. Buat manual atau dengan AI, atur kop surat, unggah gambar, simpan ke bank soal, lalu preview dan export ke PDF.">
+<meta name="keywords" content="generate soal ujian, buat soal online, soal pilihan ganda, soal essay, export soal pdf, aplikasi buat soal, kop surat ujian, bank soal guru">
+<meta name="author" content="Generate Soal Ujian">
+<link rel="canonical" href="https://generatesoalujian.xyz/app/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#2f4bdb">
+
+<!-- Open Graph (tampilan saat link dibagikan di WhatsApp/Facebook/dll) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Generate Soal Ujian">
+<meta property="og:title" content="Aplikasi Generate Soal Ujian — Buat, Preview & Export PDF">
+<meta property="og:description" content="Buat dan atur lembar soal ujian pilihan ganda & essay dengan cepat. Gratis, langsung ekspor ke PDF.">
+<meta property="og:url" content="https://generatesoalujian.xyz/app/">
+<meta property="og:image" content="https://generatesoalujian.xyz/images/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="id_ID">
+
+<!-- Twitter / X Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Aplikasi Generate Soal Ujian — Buat, Preview & Export PDF">
+<meta name="twitter:description" content="Buat dan atur lembar soal ujian pilihan ganda & essay dengan cepat. Gratis, langsung ekspor ke PDF.">
+<meta name="twitter:image" content="https://generatesoalujian.xyz/images/og-cover.png">
+
+<!-- Data terstruktur (Schema.org) supaya Google lebih paham konteks halaman -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Generate Soal Ujian",
+  "url": "https://generatesoalujian.xyz/app/",
+  "description": "Aplikasi web untuk membuat dan mengatur lembar soal ujian pilihan ganda dan essay, lengkap dengan kop surat, ekspor PDF dan fitur AI gratis.",
+  "applicationCategory": "EducationApplication",
+  "operatingSystem": "Any (Web Browser)",
+  "inLanguage": "id",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "Generate Soal Ujian",
+    "url": "https://generatesoalujian.xyz/"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "IDR"
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
+<link rel="stylesheet" href="theme.css">
+<style>
+:root{
+  --bg:#f5f6f8;
+  --card:#ffffff;
+  --border:#e3e6ec;
+  --border-strong:#d3d7e0;
+  --ink:#1a2233;
+  --ink-soft:#5b6472;
+  --ink-faint:#909aab;
+  --primary:#2f4bdb;
+  --primary-dark:#233bbd;
+  --primary-soft:#eaedfd;
+  --success:#1c9c6b;
+  --success-soft:#e6f7f0;
+  --danger:#e5484d;
+  --danger-soft:#fdecec;
+  --warning:#c9852b;
+  --warning-soft:#fdf1e2;
+  --navy:#151b2c;
+  --navy-soft:#222a40;
+  --radius-sm:8px;
+  --radius:12px;
+  --radius-lg:16px;
+  --shadow-sm:0 1px 2px rgba(20,24,40,.05);
+  --shadow-md:0 4px 16px rgba(20,24,40,.08);
+  --shadow-lg:0 12px 32px rgba(20,24,40,.14);
+  --ease:cubic-bezier(.4,0,.2,1);
+  --sidebar-w:248px;
+  --sidebar-w-c:78px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:'Inter',system-ui,-apple-system,Segoe UI,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+button{font-family:inherit;cursor:pointer;color:inherit;}
+input,textarea,select{font-family:inherit;}
+.hidden{display:none !important;}
+::selection{background:var(--primary-soft);}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;}
+#introScreen{
+  position:fixed;inset:0;background:#ffffff;z-index:999;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;
+  transition:opacity .5s var(--ease), filter .5s var(--ease);
+}
+#introScreen.fade-out{opacity:0;filter:blur(6px);pointer-events:none;}
+.intro-visual{
+  position:relative;
+  width:min(55vw, 220px);height:min(55vw, 220px);
+  display:flex;align-items:center;justify-content:center;
+}
+.intro-visual video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:contain;
+  transition:opacity .6s var(--ease);
+}
+.intro-visual video.video-hide{opacity:0;}
+.intro-logo-img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:contain;
+  display:flex;align-items:center;justify-content:center;font-size:56px;color:#2f4bdb;
+  opacity:0;transform:scale(.92);
+  transition:opacity .6s var(--ease), transform .6s var(--ease);
+}
+.intro-logo-img.show{opacity:1;transform:scale(1);}
+.intro-title{
+  color:#1a2233;font-size:22px;font-weight:700;letter-spacing:.2px;margin-top:18px;
+  opacity:0;transition:opacity .5s var(--ease);
+}
+.intro-title.show{opacity:1;}
+.intro-ring{
+  margin-top:22px;width:150px;height:3px;border-radius:3px;
+  background:#e3e6ec;overflow:hidden;position:relative;
+  opacity:0;transition:opacity .5s var(--ease);
+}
+.intro-ring.show{opacity:1;}
+.intro-ring::after{
+  content:'';position:absolute;left:-40%;top:0;bottom:0;width:40%;
+  background:linear-gradient(90deg,transparent,#2f4bdb,transparent);
+  animation:ringSlide 1.1s ease-in-out infinite;
+}
+@keyframes ringSlide{0%{left:-40%;}100%{left:100%;}}
+@keyframes fadeIn{to{opacity:1;}}
+
+#skeletonScreen{
+  position:fixed;inset:0;background:var(--bg);z-index:998;
+  display:flex;
+}
+.skel-sidebar{width:var(--sidebar-w);background:var(--card);border-right:1px solid var(--border);padding:20px;}
+.skel-main{flex:1;padding:28px;}
+.skel-block{background:linear-gradient(90deg,#eceef2 25%,#f6f7f9 37%,#eceef2 63%);
+  background-size:400% 100%;animation:shimmer 1.3s ease-in-out infinite;border-radius:8px;}
+@keyframes shimmer{0%{background-position:100% 0;}100%{background-position:0 0;}}
+.skel-sidebar .skel-block{height:14px;margin-bottom:18px;width:70%;}
+.skel-main .skel-title{height:24px;width:220px;margin-bottom:10px;}
+.skel-main .skel-sub{height:14px;width:340px;margin-bottom:28px;}
+.skel-cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;}
+.skel-cards .skel-block{height:110px;}
+.skel-main .skel-panel{height:400px;}
+
+#app{display:flex;min-height:100vh;opacity:0;}
+#app.app-in{animation:appIn .5s var(--ease) forwards;}
+@keyframes appIn{to{opacity:1;}}
+
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;background:var(--card);
+  color:var(--ink-soft);display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;z-index:60;border-right:1px solid var(--border);
+  overflow:hidden;transition:width .25s var(--ease);
+}
+.sidebar-brand{
+  display:flex;align-items:center;gap:20px;padding:22px 20px;border-bottom:1px solid var(--border);
+}
+.sidebar-brand .brand-icon{
+  width:34px;height:34px;border-radius:9px;background:#ffffff;
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;
+}
+.sidebar-brand .brand-icon img{width:250%;height:250%;object-fit:contain;padding:4px;}
+.sidebar-brand .brand-name{color:var(--ink);font-weight:700;font-size:15.5px;letter-spacing:.1px;}
+.sidebar-nav{flex:1;padding:16px 12px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;}
+.nav-label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-faint);padding:10px 12px 6px;}
+.nav-item{
+  display:flex;align-items:center;gap:11px;padding:10px 12px;
+  color:var(--ink-soft);font-size:14px;font-weight:500;text-decoration:none;border:none;background:none;
+  width:100%;text-align:left;transition:background .16s var(--ease),color .16s var(--ease);
+}
+.nav-item i{width:17px;text-align:center;font-size:14px;}
+.nav-item:hover{background:var(--bg);color:var(--ink);}
+.nav-item.active{background:var(--primary-soft);color:var(--primary);font-weight:700;}
+.nav-item .count{margin-left:auto;font-size:11px;background:var(--bg);color:var(--ink-soft);padding:1px 7px;border-radius:20px;}
+.nav-item.active .count{background:rgba(47,75,219,.15);color:var(--primary);}
+.sidebar-footer{padding:12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:2px;}
+.sidebar-lang{margin-bottom:10px;padding:10px;border:1px solid var(--border);border-radius:12px;background:linear-gradient(180deg,#fff 0%,#f8faff 100%);}
+.sidebar-lang-title{font-size:12px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+.sidebar-lang-sub{font-size:11px;line-height:1.45;color:var(--ink-faint);margin-bottom:8px;}
+.sidebar-lang-options{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.sidebar-lang-btn{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border:1px solid var(--border);background:#fff;border-radius:10px;color:var(--ink);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s var(--ease);}
+.sidebar-lang-btn:hover{border-color:var(--primary);background:var(--primary-soft);color:var(--primary);}
+.sidebar-lang-btn.active{border-color:var(--primary);background:var(--primary-soft);color:var(--primary);box-shadow:0 0 0 1px rgba(47,75,219,.08) inset;}
+.sidebar-lang-flag{font-size:17px;line-height:1;flex-shrink:0;}
+.sidebar-lang-text{min-width:0;white-space:nowrap;}
+
+.sidebar-collapse-btn{margin-top:6px;color:var(--ink-faint);}
+.sidebar-collapse-btn:hover{color:var(--primary);}
+@media (min-width:768px){
+  body.sidebar-collapsed .sidebar{width:var(--sidebar-w-c);}
+  body.sidebar-collapsed .main{margin-left:var(--sidebar-w-c);}
+  body.sidebar-collapsed .sidebar-brand{padding:22px 0;justify-content:center;gap:0;}
+  body.sidebar-collapsed .brand-name,
+  body.sidebar-collapsed .nav-label,
+  body.sidebar-collapsed .nav-text,
+  body.sidebar-collapsed .nav-item .count,
+  body.sidebar-collapsed .sidebar-lang-title,
+  body.sidebar-collapsed .sidebar-lang-sub,
+  body.sidebar-collapsed .sidebar-lang-text{display:none;}
+  body.sidebar-collapsed .sidebar-nav{padding:16px 10px;}
+  body.sidebar-collapsed .sidebar-footer{padding:12px 10px;}
+  body.sidebar-collapsed .nav-item{justify-content:center;padding:11px 0;gap:0;}
+  body.sidebar-collapsed .nav-item i{width:auto;font-size:16px;}
+  body.sidebar-collapsed .sidebar-lang{padding:8px 6px;}
+  body.sidebar-collapsed .sidebar-lang-options{grid-template-columns:1fr;gap:6px;}
+  body.sidebar-collapsed .sidebar-lang-btn{justify-content:center;padding:8px 0;}
+}
+@media (max-width:767px){
+  .sidebar-collapse-btn{display:none;}
+}
+.main{flex:1;margin-left:var(--sidebar-w);min-width:0;display:flex;flex-direction:column;transition:margin-left .25s var(--ease);}
+.mobile-header{
+  display:none;align-items:center;gap:12px;padding:14px 16px;
+  background:var(--card);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:40;
+}
+.icon-btn{
+  width:38px;height:38px;border-radius:9px;border:1px solid var(--border);background:var(--card);
+  display:flex;align-items:center;justify-content:center;color:var(--ink-soft);font-size:15px;
+  transition:background .15s var(--ease),border-color .15s var(--ease),transform .15s var(--ease);
+}
+.icon-btn:hover{background:var(--bg);border-color:var(--border-strong);}
+.icon-btn:active{transform:scale(.94);}
+/* Tombol tutup di dalam modal dibuat lebih halus */
+.modal-header .icon-btn{
+  width:36px;height:36px;flex-shrink:0;
+  border-color:transparent;background:transparent;color:var(--ink-faint);
+}
+.modal-header .icon-btn:hover{background:var(--bg);color:var(--ink);border-color:transparent;}
+.mobile-header .mh-title{font-weight:700;font-size:15px;flex:1;}
+.mobile-header .mh-pdf{
+  background:var(--primary);color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:13px;font-weight:600;
+  display:flex;align-items:center;gap:6px;
+}
+.sidebar-overlay{
+  position:fixed;inset:0;background:rgba(15,18,30,.45);z-index:55;
+  opacity:0;pointer-events:none;transition:opacity .25s var(--ease);
+}
+.sidebar-overlay.show{opacity:1;pointer-events:auto;}
+.content{padding:28px 32px 60px;width:100%;box-sizing:border-box;}
+.page-header{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:24px;
+}
+.page-header h1{font-size:24px;font-weight:800;margin:0 0 4px;letter-spacing:-.2px;}
+.page-header p{margin:0;color:var(--ink-soft);font-size:14px;}
+.header-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;border-radius:10px;font-size:13.5px;font-weight:600;
+  padding:10px 18px;border:1px solid transparent;transition:all .16s var(--ease);white-space:nowrap;
+}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(47,75,219,.28);}
+.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px);box-shadow:0 6px 16px rgba(47,75,219,.32);}
+.btn-outline{background:var(--card);border-color:var(--border-strong);color:var(--ink);}
+.btn-outline:hover{background:var(--bg);}
+.btn-ghost{background:transparent;border-color:transparent;color:var(--ink-soft);}
+.btn-ghost:hover{background:var(--bg);color:var(--ink);}
+.btn-danger{background:var(--danger);color:#fff;}
+.btn-danger:hover{background:#cf3d42;}
+.btn-sm{padding:7px 11px;font-size:12.5px;border-radius:7px;}
+.btn:disabled{opacity:.5;pointer-events:none;}
+
+.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px;}
+.qa-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:22px;display:flex;align-items:center;gap:16px;text-align:left;
+  box-shadow:var(--shadow-sm);transition:box-shadow .18s var(--ease),border-color .18s var(--ease),transform .18s var(--ease);
+}
+.qa-card:hover{box-shadow:var(--shadow-md);border-color:var(--border-strong);transform:translateY(-1px);}
+.qa-card:active{transform:translateY(0) scale(.99);}
+.qa-icon{
+  width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;
+}
+.qa-card.mc .qa-icon{background:var(--primary-soft);color:var(--primary);}
+.qa-card.essay .qa-icon{background:var(--success-soft);color:var(--success);}
+.qa-card h3{margin:0 0 3px;font-size:15.5px;font-weight:700;color:var(--ink);}
+.qa-card p{margin:0;font-size:13px;color:var(--ink-soft);}
+
+.editor-preview-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start;}
+.panel{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-sm);overflow:hidden;
+}
+.panel-head{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:16px 18px;border-bottom:1px solid var(--border);
+}
+.panel-head h2{font-size:14.5px;font-weight:700;margin:0;}
+.panel-head .meta{font-size:12px;color:var(--ink-faint);}
+.panel-body{padding:16px 18px;max-height:760px;overflow-y:auto;}
+
+.q-card{
+  border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;
+  background:var(--card);animation:cardIn .25s var(--ease) both;position:relative;
+}
+@keyframes cardIn{from{opacity:0;}to{opacity:1;}}
+.q-card:last-child{margin-bottom:0;}
+.q-card-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.q-index{
+  width:26px;height:26px;border-radius:7px;background:var(--bg);color:var(--ink-soft);
+  display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;
+}
+.q-type-badge{
+  font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;
+  padding:3px 8px;border-radius:20px;
+}
+.q-type-badge.mc{background:var(--primary-soft);color:var(--primary);}
+.q-type-badge.essay{background:var(--success-soft);color:var(--success);}
+.q-key-badge{
+  font-size:10.5px;font-weight:700;letter-spacing:.02em;
+  padding:3px 8px;border-radius:20px;background:var(--warning-soft,#fff4de);color:var(--warning,#b9770e);
+  display:inline-flex;align-items:center;gap:4px;
+}
+.q-card-options span.q-opt-correct{color:var(--success);font-weight:700;}
+.q-card-text{font-size:13.5px;color:var(--ink);line-height:1.5;margin:0 0 8px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.q-card-thumb{width:100%;max-width:160px;border-radius:8px;border:1px solid var(--border);display:block;margin-bottom:8px;}
+.q-card-options{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.q-card-options span{font-size:11.5px;background:var(--bg);border:1px solid var(--border);padding:3px 8px;border-radius:6px;color:var(--ink-soft);}
+.q-card-actions{display:flex;align-items:center;gap:6px;}
+.q-card-actions .spacer{flex:1;}
+
+.empty-state{display:flex;flex-direction:column;align-items:center;text-align:center;padding:52px 20px;color:var(--ink-soft);}
+.empty-state i{font-size:38px;color:var(--border-strong);margin-bottom:14px;}
+.empty-state h3{margin:0 0 6px;font-size:15px;color:var(--ink);}
+.empty-state p{margin:0 0 18px;font-size:13px;max-width:280px;}
+.empty-state .empty-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+
+.preview-toolbar{display:flex;align-items:center;gap:10px;}
+.segmented{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:3px;}
+.segmented button{
+  border:none;background:transparent;padding:6px 12px;border-radius:7px;font-size:12.5px;font-weight:600;
+  color:var(--ink-soft);transition:all .15s var(--ease);
+}
+.segmented button.active{background:var(--card);color:var(--primary);box-shadow:var(--shadow-sm);}
+.preview-scroll{background:#e9ebf0;padding:26px;overflow:auto;max-height:760px;}
+.preview-scroll.mobile-mode{padding:16px;}
+.zoom-toolbar{display:flex;align-items:center;gap:2px;background:var(--card);border:1px solid var(--border);
+  border-radius:9px;padding:3px;box-shadow:var(--shadow-sm);}
+.zoom-toolbar button{
+  width:28px;height:28px;border:none;background:transparent;border-radius:6px;color:var(--ink-soft);
+  display:flex;align-items:center;justify-content:center;font-size:12px;transition:background .15s var(--ease);
+}
+.zoom-toolbar button:hover{background:var(--bg);color:var(--ink);}
+.zoom-toolbar .zoom-value{font-size:12px;font-weight:600;color:var(--ink);min-width:42px;text-align:center;}
+#previewViewport{width:100%;display:block;text-align:left;margin:0;padding:0;}
+#previewPages{transform-origin:top left;flex-shrink:0;width:210mm;margin:0;display:block;}
+.preview-pagination{
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  padding:12px 16px;border-top:1px solid var(--border);background:var(--card);
+}
+.preview-pagination span{font-size:12.5px;font-weight:600;color:var(--ink-soft);min-width:110px;text-align:center;}
+
+.a4-page{
+  width:210mm;min-height:297mm;background:#fff;margin:0 auto 24px;
+  box-shadow:0 4px 22px rgba(20,24,40,.16);position:relative;flex-shrink:0;
+}
+.a4-page:last-child{margin-bottom:0;}
+.a4-content{
+  padding:20mm;
+  font-family:'Times New Roman',Times,serif;font-size:12pt;line-height:1.2;color:#000;
+}
+.doc-header{margin-bottom:14pt;}
+.doc-letterhead{display:flex;align-items:center;gap:10pt;}
+.doc-letterhead-logo{flex:0 0 24mm;display:flex;align-items:center;justify-content:center;min-height:22mm;}
+.doc-letterhead-logo img{max-width:24mm;max-height:24mm;object-fit:contain;}
+.doc-letterhead-text{flex:1 1 auto;text-align:center;}
+.lh-agency{font-family:'Times New Roman',Times,serif;font-weight:700;font-size:12pt;text-transform:uppercase;letter-spacing:.2px;line-height:1.25;}
+.lh-school{font-family:'Times New Roman',Times,serif;font-weight:700;font-size:16pt;text-transform:uppercase;line-height:1.25;margin-top:1pt;}
+.lh-address{font-family:'Times New Roman',Times,serif;font-size:11pt;line-height:1.25;margin-top:1pt;}
+.doc-header-rule-outer{margin:8pt 0 10pt;}
+.doc-header-rule-thick{border-top:2.2pt solid #000;margin-bottom:1.2pt;}
+.doc-header-rule-thin{border-top:1pt solid #000;}
+.doc-id-block{font-size:11.5pt;margin-top:4pt;}
+.doc-id-grid{display:grid;grid-template-columns:1fr 1fr;column-gap:24pt;}
+.doc-id-row{display:flex;align-items:baseline;gap:4pt;margin-bottom:5pt;}
+.doc-id-row .id-label{flex:0 0 auto;width:90pt;}
+.doc-id-row .id-colon{flex:0 0 auto;}
+.doc-id-row .id-fill{flex:1 1 auto;border-bottom:1px dotted #000;min-height:11pt;}
+.doc-instruction{font-family:'Times New Roman',Times,serif;font-style:italic;font-size:11.5pt;margin:0 0 12pt;line-height:1.25;}
+.doc-section-title{
+  font-family:'Times New Roman',Times,serif;font-size:14pt;font-weight:700;text-align:left;
+  margin:0 0 10pt;text-transform:uppercase;
+}
+
+.doc-question{
+  display:grid;grid-template-columns:0.7cm 1fr;column-gap:0.25cm;
+  margin-bottom:10pt;break-inside:avoid;page-break-inside:avoid;
+}
+
+/* ==========================================================================
+   LAYOUT SOAL 2 KOLOM — continuous flow (kiri → kanan → halaman baru)
+   - Grid 2 kolom di halaman A4 dibuat eksplisit (bukan CSS columns). Tiap kolom
+     adalah flex column yang menahan deret soal vertikal (top-to-bottom).
+   - Pengisian mengikuti tinggi konten NYATA (bukan pembagian n/2 statis):
+     kolom KIRI diisi dari atas sampai penuh, baru kolom KANAN pada halaman
+     yang sama, baru setelah itu halaman berikutnya (lihat flowTwoColumnQuestions
+     di JS). Satu soal BOLEH terpotong di batas kolom/halaman — teks
+     pertanyaan & pilihan jawaban mengalir seperti dokumen biasa, bukan blok
+     kaku yang harus selalu dipindah utuh (lihat splitQuestionIntoBudget).
+   ========================================================================== */
+.doc-question-grid{
+  display:grid;
+  grid-template-columns:repeat(2, minmax(0, 1fr));
+  align-items:start; /* kolom tidak di-stretch: tinggi kolom = tinggi kontennya, penting untuk pengukuran pengisian */
+  column-gap:0.8cm;
+  row-gap:0;
+  margin-bottom:10pt;
+  break-inside:auto;
+  page-break-inside:auto;
+}
+/* Grid dengan tinggi terkunci (dipakai saat grid tidak mulai dari atas
+   halaman): kolom dibatasi agar tidak mengalir melewati dasar halaman. */
+.doc-question-grid[style*="height"]{
+  overflow:hidden;
+  margin-bottom:0;
+}
+.doc-question-col{
+  display:flex;
+  flex-direction:column;
+  gap:10pt;
+  min-width:0;
+}
+.doc-question-col > .doc-question{
+  margin-bottom:0 !important;
+  break-inside:avoid;
+  page-break-inside:avoid;
+}
+
+.doc-pages-grid{
+  display:grid;grid-template-columns:repeat(2, 210mm);column-gap:0.8cm;
+}
+.doc-question .q-num{font-weight:400;}
+.doc-question .q-body{display:flex;flex-direction:column;gap:4pt;}
+.doc-question-text{margin:0;}
+.doc-image{margin:0;}
+.doc-image img{max-width:100%;display:block;object-fit:contain;}
+.doc-image.size-small img{max-height:32mm;}
+.doc-image.size-medium img{max-height:48mm;}
+.doc-image.size-large img{max-height:70mm;}
+.doc-options{display:grid;grid-template-columns:1fr;gap:2pt 14pt;margin:0;}
+.doc-options.cols-2{grid-template-columns:1fr 1fr;grid-auto-flow:row;}
+.doc-question-col .doc-image img{max-width:100%;}
+.doc-question-col .doc-image.size-small img{max-height:22mm;}
+.doc-question-col .doc-image.size-medium img{max-height:32mm;}
+.doc-question-col .doc-image.size-large img{max-height:44mm;}
+.doc-option{display:flex;gap:5pt;}
+.doc-option .opt-label{font-weight:400;}
+.doc-option.is-correct{font-weight:700;color:#166534;}
+.doc-option.is-correct .opt-label{font-weight:700;}
+.doc-answer-key{
+  margin-top:6pt;padding:5pt 8pt;background:#f0fdf4;border:0.75pt solid #86efac;border-radius:3pt;
+  font-size:9.5pt;color:#166534;line-height:1.4;
+}
+.doc-empty{padding:80px 20px;text-align:center;color:#b7bcc8;font-family:'Inter',sans-serif;}
+.doc-empty i{font-size:34px;margin-bottom:12px;}
+
+/* ==========================================================================
+   MODAL / POPUP — Desain modern, rapi, profesional (v2)
+   -------------------------------------------------------------------------
+   - Overlay: backdrop blur + gradient overlay agar konten belakang tetap
+     terasa "tenggelam" tanpa kehilangan konteks visual.
+   - Modal   : rounded lebih besar, shadow berlapis, header/footer sticky
+     dengan divider halus, animasi zoom+slide yang lembut.
+   - Field / tombol : spacing, tipografi, dan hierarki disempurnakan.
+   - Responsive: pada layar sempit modal menjadi bottom-sheet dengan
+     handle bar, sudut atas melengkung.
+   ========================================================================== */
+.modal-overlay{
+  position:fixed;inset:0;
+  background:radial-gradient(120% 120% at 50% 0%, rgba(20,28,54,.45) 0%, rgba(10,14,26,.62) 100%);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  z-index:200;
+  display:flex;align-items:center;justify-content:center;padding:24px;
+  opacity:0;pointer-events:none;transition:opacity .22s var(--ease),backdrop-filter .22s var(--ease);
+}
+.modal-overlay.show{opacity:1;pointer-events:auto;}
+.modal{
+  background:var(--card);
+  border-radius:20px;
+  width:100%;max-width:680px;
+  max-height:min(92vh, 900px);
+  display:flex;flex-direction:column;
+  box-shadow:
+    0 24px 60px -12px rgba(20,24,40,.28),
+    0 8px 24px -8px rgba(20,24,40,.16),
+    0 0 0 1px var(--border);
+  transform:translateY(12px) scale(.97);opacity:0;
+  transition:transform .28s var(--ease),opacity .22s var(--ease);
+  overflow:hidden;
+}
+.modal-overlay.show .modal{transform:translateY(0) scale(1);opacity:1;}
+.modal.modal-sm{max-width:440px;}
+.modal.modal-crop{max-width:780px;}
+.modal-header{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:14px;
+  padding:22px 26px 18px;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;background:var(--card);
+  border-radius:20px 20px 0 0;z-index:3;
+}
+.modal-header > div:first-child{min-width:0;flex:1;}
+.modal-header h2{
+  margin:0 0 4px;font-size:18px;font-weight:800;letter-spacing:-.2px;
+  color:var(--ink);line-height:1.3;
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+}
+.modal-header p{margin:0;font-size:13px;color:var(--ink-soft);line-height:1.5;}
+.modal-body{padding:22px 26px;overflow-y:auto;flex:1;}
+.modal-body::-webkit-scrollbar{width:8px;}
+.modal-body::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:8px;}
+.modal-body::-webkit-scrollbar-track{background:transparent;}
+.modal-footer{
+  display:flex;align-items:center;justify-content:flex-end;gap:10px;
+  padding:16px 26px;
+  border-top:1px solid var(--border);
+  position:sticky;bottom:0;background:var(--card);
+  border-radius:0 0 20px 20px;z-index:3;
+}
+.modal-footer .btn{min-height:40px;}
+.field{margin-bottom:20px;}
+.field:last-child{margin-bottom:0;}
+.field-label{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.05em;color:var(--ink-soft);margin-bottom:9px;}
+.field-label .req{color:var(--danger);margin-left:2px;}
+.field-label .counter{font-weight:500;text-transform:none;letter-spacing:0;color:var(--ink-faint);}
+textarea, input[type="text"], input[type="number"], select{
+  width:100%;border:1px solid var(--border-strong);border-radius:10px;padding:11px 14px;font-size:14px;
+  color:var(--ink);background:var(--card);
+  transition:border-color .15s var(--ease),box-shadow .15s var(--ease),background .15s var(--ease);
+}
+select{
+  appearance:none;-webkit-appearance:none;-moz-appearance:none;
+  padding-right:38px;cursor:pointer;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='none' stroke='%23606a7d' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' d='M1 1.5 6 6.5 11 1.5'/></svg>");
+  background-repeat:no-repeat;background-position:right 14px center;
+}
+textarea{resize:vertical;min-height:96px;line-height:1.55;}
+textarea:focus, input:focus, select:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft);outline:none;}
+textarea:hover:not(:focus), input:hover:not(:focus), select:hover:not(:focus){border-color:var(--ink-faint);}
+.field-error{display:none;color:var(--danger);font-size:12.5px;margin-top:6px;align-items:center;gap:5px;}
+.field.has-error textarea, .field.has-error input{border-color:var(--danger);box-shadow:0 0 0 3px var(--danger-soft);}
+.field.has-error .field-error{display:flex;}
+.upload-area{
+  border:1.5px dashed var(--border-strong);border-radius:var(--radius);padding:26px 16px;
+  text-align:center;background:var(--bg);transition:all .18s var(--ease);cursor:pointer;
+}
+.upload-area:hover{border-color:var(--primary);background:var(--primary-soft);}
+.upload-area.dragover{border-color:var(--primary);background:var(--primary-soft);transform:scale(1.01);}
+.upload-area i{font-size:26px;color:var(--ink-faint);margin-bottom:10px;}
+.upload-area.dragover i, .upload-area:hover i{color:var(--primary);}
+.upload-area .up-main{font-size:13.5px;font-weight:600;color:var(--ink);margin-bottom:2px;}
+.upload-area .up-sub{font-size:12px;color:var(--ink-faint);}
+.upload-area .up-link{color:var(--primary);text-decoration:underline;}
+.image-preview-box{
+  border:1px solid var(--border);border-radius:var(--radius);padding:12px;background:var(--bg);
+  display:flex;gap:12px;align-items:center;
+}
+.image-preview-box img{width:88px;height:88px;object-fit:cover;border-radius:8px;border:1px solid var(--border-strong);flex-shrink:0;background:#fff;}
+.image-preview-box .ip-actions{display:flex;gap:6px;flex-wrap:wrap;flex:1;}
+.logo-upload{
+  border:1.5px dashed var(--border-strong);border-radius:var(--radius);padding:14px;
+  text-align:center;background:var(--bg);transition:all .18s var(--ease);cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:6px;width:150px;
+}
+.logo-upload:hover{border-color:var(--primary);background:var(--primary-soft);}
+.logo-upload.dragover{border-color:var(--primary);background:var(--primary-soft);}
+.logo-upload i{font-size:18px;color:var(--ink-faint);}
+.logo-upload span{font-size:11.5px;color:var(--ink-soft);}
+.logo-upload-preview{
+  width:150px;border:1px solid var(--border);border-radius:var(--radius);padding:10px;background:var(--bg);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+.logo-upload-preview img{width:64px;height:64px;object-fit:contain;background:#fff;border:1px solid var(--border-strong);border-radius:8px;}
+.options-list{display:flex;flex-direction:column;gap:8px;}
+.option-row{display:flex;align-items:center;gap:8px;}
+.option-row .opt-correct-radio{display:flex;align-items:center;cursor:pointer;flex-shrink:0;}
+.option-row .opt-correct-radio input[type="radio"]{margin:0 6px 0 0;cursor:pointer;accent-color:var(--primary,#2f4bdb);width:15px;height:15px;}
+.option-row .opt-correct-radio:has(input:checked) .opt-badge{border-color:var(--primary,#2f4bdb);color:var(--primary,#2f4bdb);background:var(--primary-soft,#eef1ff);}
+.option-row .opt-badge{
+  width:34px;height:34px;flex-shrink:0;border-radius:8px;background:var(--bg);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--ink-soft);
+}
+.option-row input{flex:1;}
+.radio-option-group{display:flex;flex-direction:column;gap:8px;}
+.radio-option{
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);
+  border-radius:10px;cursor:pointer;font-size:13.5px;color:var(--ink);transition:border-color .15s ease,background .15s ease;
+}
+.radio-option:has(input:checked){border-color:var(--primary,#2f4bdb);background:var(--primary-soft,#eef1ff);color:var(--primary,#2f4bdb);font-weight:600;}
+.radio-option input[type="radio"]{margin:0;cursor:pointer;accent-color:var(--primary,#2f4bdb);width:16px;height:16px;flex-shrink:0;}
+.count-control{display:flex;align-items:center;gap:8px;}
+.count-control select{max-width:100px;}
+.crop-stage{background:#20242f;border-radius:var(--radius);overflow:hidden;height:400px;display:flex;align-items:center;justify-content:center;}
+.crop-stage img{display:block;max-width:100%;}
+.crop-toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px;}
+.confirm-icon{
+  width:52px;height:52px;border-radius:14px;background:var(--danger-soft);color:var(--danger);
+  display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:16px;
+}
+.toast-container{position:fixed;bottom:20px;right:20px;z-index:400;display:flex;flex-direction:column;gap:10px;align-items:flex-end;}
+.toast{
+  display:flex;align-items:center;gap:10px;background:var(--navy);color:#fff;padding:12px 16px;border-radius:10px;
+  font-size:13.5px;font-weight:500;box-shadow:var(--shadow-lg);min-width:240px;max-width:340px;
+  transform:translateY(16px);opacity:0;animation:toastIn .28s var(--ease) forwards;
+}
+.toast.leaving{animation:toastOut .22s var(--ease) forwards;}
+@keyframes toastIn{to{transform:translateY(0);opacity:1;}}
+@keyframes toastOut{to{transform:translateX(20px);opacity:0;}}
+.toast i{font-size:15px;flex-shrink:0;}
+.toast.success i{color:#5fe0ac;}
+.toast.warning i{color:#f5b25a;}
+.toast.error i{color:#ff8a8f;}
+.settings-grid{display:grid;grid-template-columns:1fr;gap:16px;width:100%;}
+.settings-row{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 18px;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);flex-wrap:wrap;
+}
+.settings-row .sr-label{font-size:13.5px;font-weight:600;}
+.settings-row .sr-sub{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+.settings-row select, .settings-row input{width:auto;min-width:140px;}
+.settings-note{font-size:12.5px;color:var(--ink-faint);background:var(--bg);border:1px solid var(--border);border-radius:9px;padding:12px 14px;}
+.identity-field-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px;border:1px solid var(--border);border-radius:var(--radius-sm,8px);background:var(--card);}
+.identity-field-row .identity-field-label{flex:1 1 auto;width:auto;}
+.identity-field-row .identity-field-col{flex:0 0 auto;width:110px;min-width:110px;}
+.identity-field-row .identity-field-remove{flex:0 0 auto;width:auto;min-width:0;padding:9px 11px;}
+.identity-field-row .identity-field-value{flex:1 1 100%;order:5;}
+@media (max-width:1023px){
+  .editor-preview-grid{grid-template-columns:1fr;}
+}
+@media (max-width:767px){
+  .sidebar{transform:translateX(-100%);transition:transform .28s var(--ease);box-shadow:0 0 40px rgba(0,0,0,.3);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .mobile-header{display:flex;}
+  .page-header{display:none;}
+  .content{padding:18px 14px 50px;}
+  .quick-actions{grid-template-columns:1fr;}
+  /* Modal menjadi bottom-sheet di mobile */
+  .modal-overlay{padding:0;align-items:flex-end;}
+  .modal{
+    max-height:94vh;width:100%;
+    border-radius:20px 20px 0 0;
+    animation:none;
+    transform:translateY(24px);
+  }
+  .modal-overlay.show .modal{transform:translateY(0);}
+  .modal::before{
+    content:"";display:block;width:44px;height:4px;border-radius:4px;
+    background:var(--border-strong);opacity:.7;
+    margin:8px auto 0;
+  }
+  .modal.modal-sm,.modal.modal-crop{max-width:100%;}
+  .modal-header{padding:14px 18px 14px;border-radius:0;}
+  .modal-header h2{font-size:16.5px;}
+  .modal-body{padding:18px;}
+  .modal-footer{padding:12px 18px calc(12px + env(safe-area-inset-bottom, 0px));border-radius:0;flex-wrap:wrap;}
+  .modal-footer .btn{flex:1 1 auto;justify-content:center;}
+  .toast-container{left:12px;right:12px;bottom:14px;align-items:center;}
+  .toast{width:100%;max-width:none;}
+  .preview-scroll{padding:14px;}
+  .q-card{overflow:hidden;}
+  .q-card-actions{flex-wrap:wrap;row-gap:6px;}
+  .q-card-actions .spacer{display:none;}
+  .q-card-actions .btn-ghost{padding:6px 9px;font-size:12px;}
+}
+.active-file-bar{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:10px 14px;margin-bottom:20px;box-shadow:var(--shadow-sm);
+}
+.active-file-bar .af-info{display:flex;align-items:center;gap:10px;min-width:0;}
+.active-file-bar .af-info > i{color:var(--primary);font-size:16px;flex-shrink:0;}
+.af-name{font-size:13.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:46vw;}
+.af-sub{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--ink-faint);}
+.save-dot{width:8px;height:8px;border-radius:50%;background:var(--success);flex-shrink:0;}
+.save-dot.saving{background:var(--warning);animation:savePulse .6s ease-in-out infinite;}
+@keyframes savePulse{50%{opacity:.35;}}
+.bank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+.bank-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:18px;box-shadow:var(--shadow-sm);display:flex;flex-direction:column;gap:10px;
+  transition:box-shadow .18s var(--ease),border-color .18s var(--ease),transform .18s var(--ease);
+}
+.bank-card:hover{box-shadow:var(--shadow-md);border-color:var(--border-strong);transform:translateY(-1px);}
+.bank-card.is-active{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-soft);}
+.bank-card-top{display:flex;align-items:center;justify-content:space-between;}
+.bank-card-icon{
+  width:40px;height:40px;border-radius:11px;background:var(--primary-soft);color:var(--primary);
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+}
+.bank-badge-active{
+  display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;
+  color:var(--primary);background:var(--primary-soft);padding:3px 9px;border-radius:20px;
+}
+.bank-card-name{margin:0;font-size:15.5px;font-weight:700;line-height:1.35;word-break:break-word;}
+.bank-card-stats{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-soft);}
+.bank-card-stats i{margin-right:5px;color:var(--ink-faint);}
+.bank-card-date{font-size:11.5px;color:var(--ink-faint);}
+.bank-card-date i{margin-right:5px;}
+.bank-card-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px;padding-top:12px;border-top:1px solid var(--border);}
+.bank-create-mobile{display:none;}
+.privacy-sec{display:flex;gap:14px;align-items:flex-start;}
+.privacy-sec-icon{
+  width:42px;height:42px;border-radius:12px;background:var(--primary-soft);color:var(--primary);
+  display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;
+}
+.privacy-sec h3{margin:0 0 4px;font-size:14.5px;font-weight:700;}
+.privacy-sec p{margin:0;font-size:13px;color:var(--ink-soft);line-height:1.65;}
+.privacy-sec ul{margin:8px 0 0;padding-left:18px;font-size:13px;color:var(--ink-soft);line-height:1.7;}
+@media (max-width:767px){
+  .af-name{max-width:52vw;}
+  .bank-grid{grid-template-columns:1fr;}
+  .bank-create-mobile{display:flex;width:100%;justify-content:center;margin-bottom:16px;}
+  .bank-card-actions .btn{flex:1;justify-content:center;}
+}
+
+  .sidebar-lang-flag {
+  width: 26px;
+  height: 26px;
+
+  object-fit: cover;
+
+  border-radius: 50%;
+
+  display: block;
+
+  flex-shrink: 0;
+}
+
+  .sidebar.collapsed .sidebar-lang-text {
+  display: none;
+}
+
+.sidebar.collapsed .sidebar-lang-btn {
+  justify-content: center;
+}
+</style>
+</head>
+<body>
+<div id="introScreen">
+  <div class="intro-visual">
+    <video id="introVideoEl" src="animated/intro.mp4" autoplay muted playsinline></video>
+    <img id="introLogoImg" class="intro-logo-img" src="images/logo.png" alt="Logo" onerror="if(window.handleLogoImgError)handleLogoImgError(this)">
+  </div>
+  <div class="intro-title" id="introTitle" data-i18n="app.loading">Harap Tunggu</div>
+  <div class="intro-ring" id="introRing"></div>
+</div>
+<div id="skeletonScreen" class="hidden">
+  <div class="skel-sidebar">
+    <div class="skel-block" style="height:34px;width:100%;margin-bottom:26px;"></div>
+    <div class="skel-block"></div><div class="skel-block"></div><div class="skel-block"></div>
+    <div class="skel-block"></div><div class="skel-block"></div>
+  </div>
+  <div class="skel-main">
+    <div class="skel-block skel-title"></div>
+    <div class="skel-block skel-sub"></div>
+    <div class="skel-cards"><div class="skel-block"></div><div class="skel-block"></div></div>
+    <div class="skel-block skel-panel"></div>
+  </div>
+</div>
+<div id="sidebarMount"></div>
+<script src="sidebar.js"></script>
+<script src="theme.js"></script>
+<script src="custom-select.js" defer></script>
+<div id="app" class="hidden">
+  <div class="main">
+    <header class="mobile-header">
+      <button class="icon-btn" id="btnHamburger" aria-label="Buka menu"><i class="fa-solid fa-bars"></i></button>
+      <div class="mh-title" id="mobileTitle">Generate Soal Ujian</div>
+      <button class="mh-pdf" id="btnExportPdfMobile"><i class="fa-solid fa-file-pdf"></i>PDF</button>
+    </header>
+    <div class="content" id="pageHome">
+      <div class="active-file-bar hidden" id="activeFileBar">
+        <div class="af-info">
+          <i class="fa-solid fa-file-lines"></i>
+          <div style="min-width:0;">
+            <div class="af-name" id="activeFileName">—</div>
+            <div class="af-sub"><span class="save-dot" id="saveDot"></span><span id="saveStatusText" data-i18n="save.allSaved">Semua perubahan tersimpan</span></div>
+          </div>
+        </div>
+        <button class="btn btn-outline btn-sm" id="btnBackToBank"><i class="fa-solid fa-folder-open"></i><span data-i18n="nav.bank">Bank Soal</span></button>
+      </div>
+      <div class="page-header">
+        <div>
+          <h1 id="pageTitle">Buat Lembar Soal</h1>
+          <p id="pageDesc">Susun soal pilihan ganda dan essay dengan mudah.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-primary" id="btnExportPdf"><i class="fa-solid fa-file-pdf"></i><span data-i18n="home.exportPdf">Ekspor PDF</span></button>
+        </div>
+      </div>
+      <div class="quick-actions" id="quickActions">
+        <button class="qa-card mc" id="btnAddMc">
+          <div class="qa-icon"><i class="fa-solid fa-list-ol"></i></div>
+          <div><h3 data-i18n="qa.mcTitle">Pilihan Ganda</h3><p data-i18n="qa.mcDesc">Tambahkan soal pilihan ganda</p></div>
+        </button>
+        <button class="qa-card essay" id="btnAddEssay">
+          <div class="qa-icon"><i class="fa-solid fa-file-lines"></i></div>
+          <div><h3 data-i18n="qa.essayTitle">Essay</h3><p data-i18n="qa.essayDesc">Tambahkan soal essay</p></div>
+        </button>
+      </div>
+      <div class="editor-preview-grid">
+        <section class="panel">
+          <div class="panel-head">
+            <h2 data-i18n="home.questionList">Daftar Soal</h2>
+            <span class="meta" id="listMeta">0 soal</span>
+          </div>
+          <div class="panel-body" id="questionListBody"></div>
+        </section>
+        <section class="panel">
+          <div class="panel-head">
+            <h2 data-i18n="home.previewTitle">Preview Lembar Soal</h2>
+            <div class="preview-toolbar">
+              <div class="zoom-toolbar">
+                <button id="zoomOut" title="Perkecil" aria-label="Perkecil" data-i18n-title="preview.zoomOut" data-i18n-aria="preview.zoomOut"><i class="fa-solid fa-minus"></i></button>
+                <span class="zoom-value" id="zoomPercent">100%</span>
+                <button id="zoomIn" title="Perbesar" aria-label="Perbesar" data-i18n-title="preview.zoomIn" data-i18n-aria="preview.zoomIn"><i class="fa-solid fa-plus"></i></button>
+                <button id="zoomFit" title="Sesuaikan lebar" aria-label="Sesuaikan lebar" data-i18n-title="preview.zoomFit" data-i18n-aria="preview.zoomFit"><i class="fa-solid fa-arrows-left-right-to-line"></i></button>
+              </div>
+              
+            </div>
+          </div>
+          <div class="preview-scroll" id="previewScroll">
+            <div id="previewViewport">
+              <div id="previewPages"></div>
+            </div>
+          </div>
+          <div class="preview-pagination">
+            <button class="btn btn-outline btn-sm" id="previewPrevBtn"><i class="fa-solid fa-chevron-left"></i></button>
+            <span id="previewPageIndicator">Halaman 0 / 0</span>
+            <button class="btn btn-outline btn-sm" id="previewNextBtn"><i class="fa-solid fa-chevron-right"></i></button>
+          </div>
+        </section>
+      </div>
+    </div>
+    <div class="content hidden" id="pageSettings">
+      <div class="page-header"><div><h1 data-i18n="settings.title">Pengaturan</h1><p data-i18n="settings.sub">Preferensi dokumen dan aplikasi.</p></div></div>
+      <div class="settings-grid">
+        
+        <div class="settings-row">
+          <div><div class="sr-label" data-i18n="settings.paperSize">Ukuran Kertas</div><div class="sr-sub" data-i18n="settings.paperSizeSub">Ukuran halaman dokumen soal</div></div>
+          <select disabled><option>A4 (21 × 29,7 cm)</option></select>
+        </div>
+        <div class="settings-row">
+          <div><div class="sr-label" data-i18n="settings.orientation">Orientasi</div><div class="sr-sub" data-i18n="settings.orientationSub">Arah tampilan halaman</div></div>
+          <select disabled><option>Portrait</option></select>
+        </div>
+        <div class="settings-row">
+          <div><div class="sr-label" data-i18n="settings.margins">Margin Halaman</div><div class="sr-sub" data-i18n="settings.marginsSub">Atas 2cm • Kanan 2cm • Bawah 2cm • Kiri 2,5cm</div></div>
+          <select disabled><option data-i18n="settings.standard">Standar</option></select>
+        </div>
+        <div class="settings-row">
+          <div><div class="sr-label" data-i18n="settings.font">Font Isi Soal</div><div class="sr-sub" data-i18n="settings.fontSub">Jenis huruf pertanyaan &amp; pilihan jawaban</div></div>
+          <select disabled><option>Times New Roman</option></select>
+        </div>
+        <div class="settings-row">
+          <div><div class="sr-label" data-i18n="settings.fontSize">Ukuran Font</div><div class="sr-sub" data-i18n="settings.fontSizeSub">Ukuran huruf isi dokumen</div></div>
+          <select disabled><option>12pt</option></select>
+        </div>
+        <div class="settings-note"><i class="fa-solid fa-circle-info"></i> <span data-i18n="settings.note">Pengaturan dokumen mengikuti format lembar soal ujian formal dan dikunci agar preview dan PDF selalu identik.</span></div>
+        <div class="settings-row" style="align-items:flex-start;">
+          <div><div class="sr-label" data-i18n="settings.letterhead">Kop Surat</div><div class="sr-sub" data-i18n="settings.letterheadSub">Tampilkan logo &amp; identitas sekolah di halaman pertama</div></div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);">
+            <input type="checkbox" id="headerEnabledToggle" style="width:auto;"><span data-i18n="settings.enable">Aktifkan</span>
+          </label>
+        </div>
+        <div id="headerFieldsBlock" class="hidden" style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;gap:14px;flex-wrap:wrap;">
+            <div>
+              <div class="sr-label" style="margin-bottom:8px;" data-i18n="settings.schoolLogo">Logo Sekolah</div>
+              <div id="schoolLogoUpload" class="logo-upload">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span data-i18n="settings.logoUpload" data-i18n-html>Drag &amp; drop atau <span class="up-link" style="color:var(--primary);text-decoration:underline;">pilih logo</span></span>
+              </div>
+              <div id="schoolLogoPreview" class="logo-upload-preview hidden">
+                <img id="schoolLogoImg" alt="Logo sekolah">
+                <button class="btn btn-ghost btn-sm" id="btnRemoveSchoolLogo" style="color:var(--danger);"><i class="fa-solid fa-trash"></i><span data-i18n="common.delete">Hapus</span></button>
+              </div>
+              <input type="file" id="schoolLogoInput" accept="image/png,image/jpeg" class="hidden">
+            </div>
+            <div>
+              <div class="sr-label" style="margin-bottom:8px;" data-i18n="settings.agencyLogo">Logo Dinas / Kabupaten</div>
+              <div id="agencyLogoUpload" class="logo-upload">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <span data-i18n="settings.logoUpload" data-i18n-html>Drag &amp; drop atau <span class="up-link" style="color:var(--primary);text-decoration:underline;">pilih logo</span></span>
+              </div>
+              <div id="agencyLogoPreview" class="logo-upload-preview hidden">
+                <img id="agencyLogoImg" alt="Logo dinas/kabupaten">
+                <button class="btn btn-ghost btn-sm" id="btnRemoveAgencyLogo" style="color:var(--danger);"><i class="fa-solid fa-trash"></i><span data-i18n="common.delete">Hapus</span></button>
+              </div>
+              <input type="file" id="agencyLogoInput" accept="image/png,image/jpeg" class="hidden">
+            </div>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label class="field-label"><span data-i18n="settings.agencyName">Nama Dinas / Kabupaten &amp; Kota</span> <span class="counter" data-i18n="settings.enterNewLine">(Enter untuk baris baru)</span></label>
+            <textarea id="hdrAgencyInput" rows="2" placeholder="Contoh : PEMERINTAH KABUPATEN BEKASI&#10;DINAS PENDIDIKAN" data-i18n-ph="settings.phAgency"></textarea>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label class="field-label"><span data-i18n="settings.schoolName">Nama Sekolah</span> <span class="counter" data-i18n="settings.enterNewLine">(Enter untuk baris baru)</span></label>
+            <textarea id="hdrSchoolInput" rows="1" placeholder="SMK/SMA" data-i18n-ph="settings.phSchool"></textarea>
+          </div>
+          <div class="field" style="margin-bottom:0;">
+            <label class="field-label"><span data-i18n="settings.schoolAddress">Alamat Sekolah</span> <span class="counter" data-i18n="settings.enterNewLine">(Enter untuk baris baru)</span></label>
+            <textarea id="hdrAddressInput" rows="2" placeholder="Contoh : Jl. Raya Serang – Cibarusah KM. 17, Cikarang Barat&#10;Telp. (62) 123456789" data-i18n-ph="settings.phAddress"></textarea>
+          </div>
+        </div>
+        <div class="settings-row" style="align-items:flex-start;">
+          <div><div class="sr-label" data-i18n="settings.identity">Kolom Identitas</div><div class="sr-sub" data-i18n="settings.identitySub">Buat kolom identitas sendiri (Nama, Kelas, dll) sesuai kebutuhan Anda</div></div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);">
+            <input type="checkbox" id="identityEnabledToggle" style="width:auto;"><span data-i18n="settings.enable">Aktifkan</span>
+          </label>
+        </div>
+        <div id="identityFieldsBlock" class="hidden" style="display:flex;flex-direction:column;gap:10px;">
+          <div id="identityFieldsList" style="display:flex;flex-direction:column;gap:8px;"></div>
+          <div id="identityFieldsEmpty" class="settings-note hidden" style="margin:0;"><i class="fa-solid fa-circle-info"></i> <span data-i18n="settings.identityFieldEmpty">Belum ada kolom identitas. Klik "Tambah Kolom" untuk membuat.</span></div>
+          <button class="btn btn-outline btn-sm" id="btnAddIdentityField" type="button" style="align-self:flex-start;">
+            <i class="fa-solid fa-plus"></i> <span data-i18n="settings.addIdentityField">Tambah Kolom</span>
+          </button>
+        </div>
+        <div class="settings-row" style="align-items:flex-start;">
+          <div><div class="sr-label" data-i18n="settings.examDate">Tanggal Ujian</div><div class="sr-sub" data-i18n="settings.examDateSub">Tampilkan tanggal mulai ujian di kop surat</div></div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);">
+            <input type="checkbox" id="examDateEnabledToggle" style="width:auto;"><span data-i18n="settings.enable">Aktifkan</span>
+          </label>
+        </div>
+        <div id="examDateFieldBlock" class="hidden settings-row">
+          <div class="sr-label" style="flex-shrink:0;" data-i18n="settings.dayDate">Hari / Tanggal</div>
+          <input type="text" id="examDateInput" placeholder="Senin, 8 Desember 2025" style="max-width:280px;" data-i18n-ph="settings.phExamDate">
+        </div>
+        <div class="settings-row" style="align-items:flex-start;">
+          <div><div class="sr-label" data-i18n="settings.instruction">Petunjuk Pengerjaan</div><div class="sr-sub" data-i18n="settings.instructionSub">Kalimat instruksi di atas soal pilihan ganda</div></div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);">
+            <input type="checkbox" id="instructionEnabledToggle" style="width:auto;"><span data-i18n="settings.enable">Aktifkan</span>
+          </label>
+        </div>
+        <div id="instructionFieldBlock" class="hidden field" style="margin-bottom:0;">
+          <textarea id="instructionInput" rows="2" placeholder="Pilihlah jawaban yang benar dengan menyilang (X) huruf A, B, C, D, atau E!" data-i18n-ph="settings.phInstruction"></textarea>
+        </div>
+        <div class="settings-row">
+          <div><div class="sr-label"><span data-i18n="settings.sectionLabels">Label "Pilihan Ganda" / "Essay"</span></div><div class="sr-sub" data-i18n="settings.sectionLabelsSub">Tampilkan judul kecil di atas tiap bagian soal</div></div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-soft);">
+            <input type="checkbox" id="sectionLabelsToggle" style="width:auto;"><span data-i18n="settings.enable">Aktifkan</span>
+          </label>
+        </div>
+        <div class="settings-row" style="margin-top:8px;">
+          <div><div class="sr-label" data-i18n="settings.resetAll">Reset Semua Soal</div><div class="sr-sub" data-i18n="settings.resetAllSub">Hapus seluruh data soal yang tersimpan</div></div>
+          <button class="btn btn-danger btn-sm" id="btnResetAll"><i class="fa-solid fa-trash"></i><span data-i18n="common.reset">Reset</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="content hidden" id="pageBank">
+      <div class="page-header">
+        <div><h1 data-i18n="nav.bank">Bank Soal</h1><p data-i18n="bank.sub">Simpan dan kelola semua file soal Anda di satu tempat.</p></div>
+        <div class="header-actions"><button class="btn btn-primary" id="btnCreateFile"><i class="fa-solid fa-plus"></i><span data-i18n="bank.create">Buat File Soal</span></button></div>
+      </div>
+      <button class="btn btn-primary bank-create-mobile" id="btnCreateFileMobile"><i class="fa-solid fa-plus"></i><span data-i18n="bank.create">Buat File Soal</span></button>
+      <div class="bank-grid" id="bankFileList"></div>
+    </div>
+    <div class="content hidden" id="pageDownloads">
+      <div class="page-header">
+        <div><h1 data-i18n="downloads.title">Download Center</h1><p data-i18n="downloads.sub">Semua soal yang sudah dibuat — preview atau unduh sebagai PDF.</p></div>
+      </div>
+      <div class="bank-grid" id="downloadsFileList"></div>
+    </div>
+    <div class="content hidden" id="pagePrivacy">
+      <div class="page-header"><div><h1 data-i18n="privacy.title">Privasi &amp; Keamanan Data</h1><p data-i18n="privacy.sub">Bagaimana Generate Soal Ujian menjaga data Anda.</p></div></div>
+      <div class="settings-grid" style="max-width:720px;">
+        <div class="panel" style="padding:18px 20px;">
+          <p style="margin:0;font-size:14px;line-height:1.65;color:var(--ink-soft);" data-i18n="privacy.intro" data-i18n-html><strong style="color:var(--ink);">Generate Soal Ujian menghargai privasi pengguna.</strong> Aplikasi ini dirancang agar seluruh data soal yang Anda buat tetap berada di bawah kendali Anda — tersimpan secara lokal di perangkat, tanpa dikirim ke server mana pun secara otomatis.</p>
+        </div>
+        <div class="panel" style="padding:20px 22px;">
+          <div class="privacy-sec">
+            <div class="privacy-sec-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div><h3 data-i18n="privacy.sec1t">Keamanan Data</h3><p data-i18n="privacy.sec1b" data-i18n-html>Aplikasi berjalan sepenuhnya di browser Anda. Isi soal, gambar, dan pengaturan dokumen <strong>tidak dikirim ke server secara otomatis</strong> — tidak ada akun, tidak ada pelacakan isi dokumen. Jangan menyimpan informasi pribadi atau data sensitif yang tidak diperlukan di dalam soal.</p></div>
+          </div>
+        </div>
+        <div class="panel" style="padding:20px 22px;">
+          <div class="privacy-sec">
+            <div class="privacy-sec-icon"><i class="fa-solid fa-hard-drive"></i></div>
+            <div><h3 data-i18n="privacy.sec2t">Penyimpanan Lokal</h3><p data-i18n="privacy.sec2b" data-i18n-html>Seluruh file soal disimpan menggunakan <strong>localStorage</strong> browser, sehingga data tetap tersedia ketika halaman direfresh atau browser ditutup lalu dibuka kembali. Perlu diperhatikan:</p>
+              <ul>
+                <li data-i18n="privacy.li1">Data terikat pada browser dan perangkat yang Anda gunakan saat ini.</li>
+                <li data-i18n="privacy.li2">Data tidak otomatis berpindah ke browser atau perangkat lain.</li>
+                <li data-i18n="privacy.li3">Menghapus data browser (cache / site data) dapat menghapus seluruh data yang tersimpan secara lokal.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="panel" style="padding:20px 22px;">
+          <div class="privacy-sec">
+            <div class="privacy-sec-icon"><i class="fa-solid fa-user-gear"></i></div>
+            <div><h3 data-i18n="privacy.sec3t">Kontrol Pengguna</h3><p data-i18n="privacy.sec3b">Anda adalah pemilik penuh atas data Anda. Anda dapat membuka, mengubah nama, menduplikat, dan menghapus file soal kapan saja melalui halaman Bank Soal. Untuk data yang penting, Anda bertanggung jawab melakukan backup — misalnya dengan mengekspor lembar soal ke PDF secara berkala.</p></div>
+          </div>
+        </div>
+        <div class="panel" style="padding:20px 22px;">
+          <div class="privacy-sec">
+            <div class="privacy-sec-icon"><i class="fa-solid fa-trash-can"></i></div>
+            <div><h3 data-i18n="privacy.sec4t">Penghapusan Data</h3><p data-i18n="privacy.sec4b">Menghapus file soal di Bank Soal akan menghapusnya secara permanen dari perangkat. Anda juga dapat menghapus seluruh data lokal aplikasi sekaligus melalui tombol di bawah ini. Data yang telah dihapus tidak dapat dikembalikan.</p></div>
+          </div>
+        </div>
+        <div class="panel" style="padding:20px 22px;border-color:var(--danger);">
+          <h3 style="margin:0 0 6px;font-size:14.5px;font-weight:700;color:var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i> <span data-i18n="privacy.dangerTitle">Zona Berbahaya</span></h3>
+          <p style="margin:0 0 14px;font-size:13px;color:var(--ink-soft);line-height:1.6;" data-i18n="privacy.dangerText">Menghapus semua data akan membersihkan seluruh file soal dan pengaturan yang tersimpan di perangkat ini.</p>
+          <button class="btn btn-danger" id="btnDeleteAllData"><i class="fa-solid fa-trash"></i><span data-i18n="privacy.dangerBtn">Hapus Semua Data Lokal</span></button>
+        </div>
+      </div>
+    </div>
+    <div class="content hidden" id="pageTheme"></div>
+    <div id="footerMount"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="mcModalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mcModalTitle">
+    <div class="modal-header"><div><h2 id="mcModalTitle">Tambah Pilihan Ganda</h2><p id="mcModalSub">Buat soal pilihan ganda baru.</p></div><button class="icon-btn" data-close="mcModalOverlay" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="field" id="mcQuestionField">
+        <label class="field-label"><span data-i18n="form.question">Pertanyaan</span><span class="req">*</span><span class="counter" id="mcQCounter">0 karakter</span></label>
+        <textarea id="mcQuestionInput" placeholder="Tulis pertanyaan di sini..." maxlength="1000" data-i18n-ph="form.questionPh"></textarea>
+        <div class="field-error"><i class="fa-solid fa-triangle-exclamation"></i><span data-i18n="form.questionRequired">Pertanyaan wajib diisi.</span></div>
+      </div>
+      <div class="field">
+        <label class="field-label" data-i18n="mc.image">Gambar Soal (opsional)</label>
+        <div id="mcUploadArea" class="upload-area">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <div class="up-main" data-i18n="mc.uploadMain" data-i18n-html>Drag &amp; drop gambar di sini atau <span class="up-link">pilih gambar</span></div>
+          <div class="up-sub" data-i18n="mc.uploadSub">PNG, JPG, JPEG • Maks. 5 MB</div>
+        </div>
+        <input type="file" id="mcFileInput" accept="image/png,image/jpeg" class="hidden">
+        <div id="mcImagePreviewBox" class="image-preview-box hidden">
+          <img id="mcImagePreviewImg" alt="Pratinjau gambar soal">
+          <div class="ip-actions">
+            <button class="btn btn-outline btn-sm" id="btnCropImage"><i class="fa-solid fa-crop"></i><span data-i18n="mc.crop">Crop Gambar</span></button>
+            <button class="btn btn-outline btn-sm" id="btnReplaceImage"><i class="fa-solid fa-rotate"></i><span data-i18n="mc.replace">Ubah Gambar</span></button>
+            <button class="btn btn-ghost btn-sm" id="btnRemoveImage"><i class="fa-solid fa-trash"></i><span data-i18n="common.delete">Hapus</span></button>
+          </div>
+        </div>
+        <div id="mcImageSizeField" class="field hidden" style="margin-top:12px;margin-bottom:0;">
+          <label class="field-label" data-i18n="mc.imageSize">Ukuran Gambar pada Lembar Soal</label>
+          <div class="segmented" id="mcImageSizeToggle" style="width:fit-content;">
+            <button data-size="small" data-i18n="mc.sizeSmall">Kecil</button>
+            <button class="active" data-size="medium" data-i18n="mc.sizeMedium">Sedang</button>
+            <button data-size="large" data-i18n="mc.sizeLarge">Besar</button>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label"><span data-i18n="mc.options">Pilihan Jawaban</span><span class="req">*</span></label>
+        <div class="count-control" style="margin-bottom:12px;">
+          <span style="font-size:13px;color:var(--ink-soft);" data-i18n="mc.optionCount">Jumlah pilihan</span>
+          <select id="mcOptionCount"></select>
+          <button class="btn btn-outline btn-sm" id="btnAddOption"><i class="fa-solid fa-plus"></i><span data-i18n="mc.addOption">Tambah Pilihan</span></button>
+        </div>
+        <div class="options-list" id="mcOptionsList"></div>
+        <div style="font-size:12px;color:var(--ink-faint);margin-top:6px;" data-i18n="mc.correctHint">Klik bulatan di samping huruf untuk menandai jawaban yang benar (opsional).</div>
+        <div class="field-error" id="mcOptionsError"><i class="fa-solid fa-triangle-exclamation"></i><span data-i18n="mc.optionsRequired">Semua pilihan harus diisi.</span></div>
+      </div>
+      <div class="field">
+        <label class="field-label" data-i18n="mc.answerLayout">Layout Jawaban</label>
+        <div class="segmented" id="mcLayoutToggle" style="width:fit-content;">
+          <button class="active" data-layout="1-column" data-i18n="common.col1">1 Kolom</button>
+          <button data-layout="2-column" data-i18n="common.col2">2 Kolom</button>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" data-i18n="mc.questionLayout">Layout Soal</label>
+        <div class="segmented" id="mcQuestionLayoutToggle" style="width:fit-content;">
+          <button class="active" data-qlayout="1-column" data-i18n="common.col1">1 Kolom</button>
+          <button data-qlayout="2-column" data-i18n="common.col2">2 Kolom</button>
+        </div>
+        <div style="font-size:12px;color:var(--ink-faint);margin-top:6px;" data-i18n="mc.questionLayoutHint">"2 Kolom" menyusun soal pilihan ganda berdampingan dua per baris pada lembar soal.</div>
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label class="field-label" data-i18n="form.placement">Penempatan Halaman</label>
+        <div class="segmented" id="mcPlacementToggle" style="width:fit-content;">
+          <button class="active" data-placement="current" data-i18n="form.placeCurrent">Halaman Ini</button>
+          <button data-placement="new" data-i18n="form.placeNew">Halaman Baru</button>
+        </div>
+        <div style="font-size:12px;color:var(--ink-faint);margin-top:6px;" data-i18n="form.placementHint">"Halaman Baru" akan memulai soal ini di lembar A4 berikutnya, meskipun halaman saat ini masih ada ruang kosong.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close="mcModalOverlay"><span data-i18n="common.cancel">Batal</span></button>
+      <button class="btn btn-primary" id="btnSaveMc"><i class="fa-solid fa-check"></i><span data-i18n="common.done">Selesai</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="essayModalOverlay">
+  <div class="modal modal-sm" role="dialog" aria-modal="true" aria-labelledby="essayModalTitle">
+    <div class="modal-header"><div><h2 id="essayModalTitle">Tambah Essay</h2><p id="essayModalSub">Buat soal essay baru.</p></div><button class="icon-btn" data-close="essayModalOverlay" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="field" id="essayQuestionField">
+        <label class="field-label"><span data-i18n="form.question">Pertanyaan</span><span class="req">*</span><span class="counter" id="essayQCounter">0 karakter</span></label>
+        <textarea id="essayQuestionInput" placeholder="Tulis pertanyaan essay di sini..." maxlength="1000" data-i18n-ph="form.essayPh"></textarea>
+        <div class="field-error"><i class="fa-solid fa-triangle-exclamation"></i><span data-i18n="form.questionRequired">Pertanyaan wajib diisi.</span></div>
+      </div>
+      <div class="field" id="essayAnswerKeyField">
+        <label class="field-label"><span data-i18n="form.essayAnswerKey">Kunci Jawaban / Pedoman Jawaban</span><span class="counter" id="essayAnswerKeyCounter">0 karakter</span></label>
+        <textarea id="essayAnswerKeyInput" placeholder="Opsional — tulis jawaban model atau pedoman penilaian..." maxlength="1000" data-i18n-ph="form.essayAnswerKeyPh"></textarea>
+        <div style="font-size:12px;color:var(--ink-faint);margin-top:6px;" data-i18n="form.essayAnswerKeyHint">Opsional. Kunci jawaban ini hanya muncul saat Anda mengekspor dengan opsi "Dengan Kunci Jawaban".</div>
+      </div>
+      <div class="field">
+        <label class="field-label" data-i18n="form.placement">Penempatan Halaman</label>
+        <div class="segmented" id="essayPlacementToggle" style="width:fit-content;">
+          <button class="active" data-placement="current" data-i18n="form.placeCurrent">Halaman Ini</button>
+          <button data-placement="new" data-i18n="form.placeNew">Halaman Baru</button>
+        </div>
+        <div style="font-size:12px;color:var(--ink-faint);margin-top:6px;" data-i18n="form.placementHint">"Halaman Baru" akan memulai soal ini di lembar A4 berikutnya, meskipun halaman saat ini masih ada ruang kosong.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close="essayModalOverlay"><span data-i18n="common.cancel">Batal</span></button>
+      <button class="btn btn-primary" id="btnSaveEssay"><i class="fa-solid fa-check"></i><span data-i18n="common.done">Selesai</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="cropModalOverlay">
+  <div class="modal modal-crop" role="dialog" aria-modal="true">
+    <div class="modal-header"><div><h2 data-i18n="crop.title">Crop Gambar</h2><p data-i18n="crop.sub">Sesuaikan area gambar yang akan digunakan.</p></div><button class="icon-btn" data-close="cropModalOverlay" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="crop-stage"><img id="cropImageEl" alt="Gambar untuk di-crop"></div>
+      <div class="crop-toolbar">
+        <button class="btn btn-outline btn-sm" id="cropRotateLeft"><i class="fa-solid fa-rotate-left"></i><span data-i18n="crop.rotL">Putar Kiri</span></button>
+        <button class="btn btn-outline btn-sm" id="cropRotateRight"><i class="fa-solid fa-rotate-right"></i><span data-i18n="crop.rotR">Putar Kanan</span></button>
+        <button class="btn btn-outline btn-sm" id="cropZoomIn"><i class="fa-solid fa-magnifying-glass-plus"></i><span data-i18n="crop.zoomIn">Perbesar</span></button>
+        <button class="btn btn-outline btn-sm" id="cropZoomOut"><i class="fa-solid fa-magnifying-glass-minus"></i><span data-i18n="crop.zoomOut">Perkecil</span></button>
+        <button class="btn btn-outline btn-sm" id="cropReset"><i class="fa-solid fa-arrows-rotate"></i><span data-i18n="crop.reset">Reset</span></button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close="cropModalOverlay"><span data-i18n="common.cancel">Batal</span></button>
+      <button class="btn btn-primary" id="btnUseCrop"><i class="fa-solid fa-check"></i><span data-i18n="crop.use">Gunakan Gambar</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="confirmModalOverlay">
+  <div class="modal modal-sm modal-confirm" role="dialog" aria-modal="true">
+    <div class="modal-body">
+      <div class="confirm-icon" id="confirmIcon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <h2 id="confirmTitle" style="margin:0 0 6px;font-size:16.5px;font-weight:800;letter-spacing:-.2px;">Hapus soal ini?</h2>
+      <p id="confirmDesc" style="margin:0;font-size:13.5px;color:var(--ink-soft);line-height:1.6;">Soal yang dihapus tidak dapat dikembalikan.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close="confirmModalOverlay"><span data-i18n="common.cancel">Batal</span></button>
+      <button class="btn btn-danger" id="btnConfirmAction"><i class="fa-solid fa-trash"></i>Hapus</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="pdfNameModalOverlay">
+  <div class="modal modal-sm" role="dialog" aria-modal="true">
+    <div class="modal-header"><div><h2 data-i18n="home.exportPdf">Ekspor PDF</h2><p data-i18n="pdf.sub">Masukkan nama file untuk lembar soal.</p></div><button class="icon-btn" data-close="pdfNameModalOverlay" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="field">
+        <label class="field-label" data-i18n="pdf.fileName">Nama File PDF</label>
+        <input type="text" id="pdfFileNameInput" value="lembar-soal">
+      </div>
+      <div class="field">
+        <label class="field-label" data-i18n="pdf.version">Pilih Versi</label>
+        <div class="radio-option-group" id="pdfVersionGroup">
+          <label class="radio-option">
+            <input type="radio" name="pdfVersion" value="without" checked>
+            <span data-i18n="pdf.withoutKey">Tanpa Kunci Jawaban</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="pdfVersion" value="with">
+            <span data-i18n="pdf.withKey">Dengan Kunci Jawaban</span>
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close="pdfNameModalOverlay"><span data-i18n="common.cancel">Batal</span></button>
+      <button class="btn btn-primary" id="btnConfirmExport"><i class="fa-solid fa-file-pdf"></i><span data-i18n="pdf.export">Ekspor</span></button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="fileModalOverlay">
+  <div class="modal modal-sm" role="dialog" aria-modal="true" aria-labelledby="fileModalTitle">
+    <div class="modal-header"><div><h2 id="fileModalTitle">Buat File Soal</h2><p id="fileModalSub">Buat file soal baru untuk menyimpan soal Anda.</p></div><button class="icon-btn" data-close="fileModalOverlay" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="field" id="fileNameField" style="margin-bottom:0;">
+        <label class="field-label"><span data-i18n="file.name">Nama File Soal</span><span class="req">*</span></label>
+        <input type="text" id="fileNameInput" placeholder="Contoh: UTS Matematika Kelas 10" maxlength="80" data-i18n-ph="file.namePh">
+        <div class="field-error"><i class="fa-solid fa-triangle-exclamation"></i><span data-i18n="file.nameRequired">Nama file wajib diisi.</span></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" data-close="fileModalOverlay"><span data-i18n="common.cancel">Batal</span></button>
+      <button class="btn btn-primary" id="btnSaveFile"><i class="fa-solid fa-plus"></i>Buat File</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="helpModalOverlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-header"><div><h2 data-i18n="help.title">Cara Menggunakan BuatSoal</h2><p data-i18n="help.sub">Alur singkat membuat lembar soal dari awal sampai siap diekspor.</p></div><button class="icon-btn" data-close="helpModalOverlay" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div style="display:flex;flex-direction:column;gap:20px;">
+        <div style="display:flex;gap:14px;"><div class="q-index" style="width:30px;height:30px;flex-shrink:0;">1</div><div><strong style="font-size:13.5px;" data-i18n="help.s1t">Tambah soal</strong><p style="margin:2px 0 0;font-size:13px;color:var(--ink-soft);" data-i18n="help.s1d">Di halaman Beranda, klik kartu "Pilihan Ganda" atau "Essay" untuk membuka form tambah soal.</p></div></div>
+        <div style="display:flex;gap:14px;"><div class="q-index" style="width:30px;height:30px;flex-shrink:0;">2</div><div><strong style="font-size:13.5px;" data-i18n="help.s2t">Isi detail soal</strong><p style="margin:2px 0 0;font-size:13px;color:var(--ink-soft);" data-i18n="help.s2d">Tulis pertanyaan. Untuk pilihan ganda, tambahkan gambar (opsional), atur jumlah pilihan A–Z, ukuran gambar, dan layout 1 atau 2 kolom. Klik "Selesai" untuk menyimpan.</p></div></div>
+        <div style="display:flex;gap:14px;"><div class="q-index" style="width:30px;height:30px;flex-shrink:0;">3</div><div><strong style="font-size:13.5px;" data-i18n="help.s3t">Kelola daftar soal</strong><p style="margin:2px 0 0;font-size:13px;color:var(--ink-soft);" data-i18n="help.s3d">Soal yang tersimpan muncul di panel "Daftar Soal". Gunakan tombol Edit, Duplikat, Hapus, atau panah ↑/↓ untuk mengatur urutan.</p></div></div>
+        <div style="display:flex;gap:14px;"><div class="q-index" style="width:30px;height:30px;flex-shrink:0;">4</div><div><strong style="font-size:13.5px;" data-i18n="help.s4t">Cek preview</strong><p style="margin:2px 0 0;font-size:13px;color:var(--ink-soft);" data-i18n="help.s4d">Panel "Preview Lembar Soal" menampilkan hasil akhir dalam format A4. Gunakan tombol zoom untuk memperbesar/memperkecil tampilan, dan toggle Desktop/Mobile untuk melihat mode tampilan.</p></div></div>
+        <div style="display:flex;gap:14px;"><div class="q-index" style="width:30px;height:30px;flex-shrink:0;">5</div><div><strong style="font-size:13.5px;" data-i18n="help.s5t">Ekspor PDF</strong><p style="margin:2px 0 0;font-size:13px;color:var(--ink-soft);" data-i18n="help.s5d">Jika sudah sesuai, klik "Ekspor PDF" untuk mengunduh file lembar soal Anda.</p></div></div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" data-close="helpModalOverlay"><span data-i18n="help.ok">Mengerti</span></button>
+    </div>
+  </div>
+</div>
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="i18n_fallback.js"></script>
+<script src="ai-generator.js" defer></script>
+<script>
+let questions = [];
+let editingId = null;
+let editingType = null;
+let deleteTargetId = null;
+let resetPending = false;
+let mcOptions = [];
+let mcCorrectIndex = null;
+let mcLayout = '1-column';
+let mcQuestionLayout = '1-column';
+let mcPlacement = 'current';
+let essayPlacement = 'current';
+let mcImageData = null;
+let mcImageSize = 'medium';
+let mcImageDims = null;
+let cropper = null;
+let cropSourceData = null;
+let currentPreviewMode = 'desktop';
+let previewZoom = null;
+let previewQuestionLayout = 'pagination';
+let currentPreviewPages = [];
+let previewPageIndex = 0;
+let currentNav = 'home';
+
+const PREFS_KEY = 'generateSoalPrefs';
+let formPrefs = { mcOptionCount:5, mcLayout:'1-column', mcQuestionLayout:'1-column', mcImageSize:'medium' };
+function loadFormPrefs(){ try{ const raw = localStorage.getItem(PREFS_KEY); if (raw) formPrefs = Object.assign({}, formPrefs, JSON.parse(raw)); }catch(e){} }
+function saveFormPrefs(){ try{ localStorage.setItem(PREFS_KEY, JSON.stringify(formPrefs)); }catch(e){} }
+
+const LANG_STORAGE_KEY = 'generateSoalLang';
+let currentLang = 'id';
+let i18nDicts = (typeof FALLBACK_LANGS !== 'undefined') ? FALLBACK_LANGS : { id:{}, en:{} };
+function t(key){ const dict = i18nDicts[currentLang] || {}; const base = i18nDicts.id || {}; const v = (dict[key] !== undefined) ? dict[key] : base[key]; return (v !== undefined) ? v : key; }
+function tf(key, vars){ let s = t(key); Object.keys(vars || {}).forEach(k => { s = s.split('{' + k + '}').join(vars[k]); }); return s; }
+function translateDom(root){
+  const scope = root || document;
+  scope.querySelectorAll('[data-i18n]').forEach(el => { const v = t(el.getAttribute('data-i18n')); if (el.hasAttribute('data-i18n-html')) el.innerHTML = v; else el.textContent = v; });
+  scope.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.getAttribute('data-i18n-ph')); });
+  scope.querySelectorAll('[data-i18n-aria]').forEach(el => { el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria'))); });
+  scope.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.getAttribute('data-i18n-title')); });
+}
+function syncSidebarLanguageButtons(){ document.querySelectorAll('.sidebar-lang-btn[data-lang]').forEach(btn => { btn.classList.toggle('active', btn.dataset.lang === currentLang); }); }
+function setLanguage(lang){
+  if (!i18nDicts[lang]) lang = 'id';
+  currentLang = lang;
+  try{ localStorage.setItem(LANG_STORAGE_KEY, lang); }catch(e){}
+  document.documentElement.lang = lang;
+  syncSidebarLanguageButtons();
+  translateDom();
+  refreshDynamicTexts();
+}
+function refreshDynamicTexts(){
+  const list = (currentNav === 'mc') ? questions.filter(q => q.type === 'multiple-choice') : (currentNav === 'essay') ? questions.filter(q => q.type === 'essay') : questions;
+  const lm = document.getElementById('listMeta'); if (lm) lm.textContent = tf('home.questionCount', { n: list.length });
+  const sst = document.getElementById('saveStatusText'); const dot = document.getElementById('saveDot');
+  if (sst && dot && !dot.classList.contains('saving')) sst.textContent = t('save.allSaved');
+  const mt = document.getElementById('mobileTitle');
+  if (['home','all','mc','essay'].indexOf(currentNav) !== -1){
+    const map = { home:'nav.home', all:'nav.all', mc:'nav.mc', essay:'nav.essay' };
+    const key = map[currentNav];
+    document.getElementById('pageTitle').textContent = t(key + 'Title');
+    document.getElementById('pageDesc').textContent = t(key + 'Desc');
+    if (mt) mt.textContent = t(key + 'Title');
+  } else if (currentNav === 'bank'){ if (mt) mt.textContent = t('nav.bank'); renderBankPage();
+  } else if (currentNav === 'settings'){ if (mt) mt.textContent = t('settings.title'); renderIdentityFieldsUI();
+  } else if (currentNav === 'privacy'){ if (mt) mt.textContent = t('privacy.title');
+  } else if (currentNav === 'theme'){
+    const themeLabel = currentLang === 'en' ? 'Theme' : 'Tema';
+    if (mt) mt.textContent = themeLabel;
+    if (window.ThemeSystem) window.ThemeSystem.renderThemePanel();
+  }
+  renderQuestionList(); updatePaginationUI();
+}
+function initLanguage(){
+  let lang = 'id';
+  try{ lang = localStorage.getItem(LANG_STORAGE_KEY) || 'id'; }catch(e){}
+  setLanguage(lang);
+  fetch('bahasa.json').then(r => { if (!r.ok) throw new Error('bahasa.json not found'); return r.json(); })
+    .then(data => { if (data && data.id && data.en){ i18nDicts = data; setLanguage(currentLang); }})
+    .catch(() => {});
+}
+
+const PAGE_W_MM = 210;
+const PAGE_H_MM = 297;
+const MARGIN_TOP_MM = 20;
+const MARGIN_RIGHT_MM = 20;
+const MARGIN_BOTTOM_MM = 20;
+const MARGIN_LEFT_MM = 20;
+const CONTENT_W_MM = PAGE_W_MM - MARGIN_LEFT_MM - MARGIN_RIGHT_MM;
+const CONTENT_H_MM = PAGE_H_MM - MARGIN_TOP_MM - MARGIN_BOTTOM_MM;
+const IMAGE_SIZE_MAX_MM = { small:32, medium:48, large:70 };
+const IMAGE_SIZE_MAX_MM_HALF = { small:22, medium:32, large:44 };
+const GRID_COL_W_MM = (CONTENT_W_MM - 8) / 2;
+
+const DEFAULT_DOC_SETTINGS = {
+  headerEnabled:false,
+  schoolLogo:null, schoolLogoW:null, schoolLogoH:null,
+  agencyLogo:null, agencyLogoW:null, agencyLogoH:null,
+  agencyName:'', schoolName:'', schoolAddress:'',
+  identityEnabled:false,
+  identityFields:[],
+  examDateEnabled:false, examDate:'',
+  instructionEnabled:false,
+  instructionText:'Pilihlah jawaban yang benar dengan menyilang (X) huruf A, B, C, D, atau E!',
+  sectionLabelsEnabled:true
+};
+let docSettings = JSON.parse(JSON.stringify(DEFAULT_DOC_SETTINGS));
+
+const FILES_KEY = 'generateSoalFiles';
+const ACTIVE_FILE_KEY = 'generateSoalActiveFile';
+const LEGACY_STORAGE_KEY = 'buatsoal_questions_v1';
+const LEGACY_SETTINGS_KEY = 'buatsoal_settings_v1';
+let filesStore = [];
+let activeFileId = null;
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadFileStore(); migrateLegacyData(); loadFormPrefs(); loadActiveFileIntoState();
+  bootSequence(); bindEvents(); bindBankEvents(); bindDownloadsEvents(); initLanguage();
+});
+
+function handleLogoImgError(imgEl){
+  const icon = document.createElement('i');
+  icon.className = (imgEl.className ? imgEl.className + ' ' : '') + 'fa-solid fa-file-pen';
+  if (imgEl.id) icon.id = imgEl.id;
+  imgEl.replaceWith(icon);
+}
+
+function bootSequence(){
+  const videoEl = document.getElementById('introVideoEl');
+  let advanced = false;
+  const morphToLogo = () => {
+    if (advanced) return; advanced = true;
+    if (videoEl){ videoEl.classList.add('video-hide'); videoEl.pause(); }
+    const logoImg = document.getElementById('introLogoImg'); if (logoImg) logoImg.classList.add('show');
+    setTimeout(() => {
+      const title = document.getElementById('introTitle'); const ring = document.getElementById('introRing');
+      if (title) title.classList.add('show'); if (ring) ring.classList.add('show');
+      runLoadingThenApp();
+    }, 350);
+  };
+  setTimeout(morphToLogo, 4200);
+  if (!videoEl){ morphToLogo(); return; }
+  videoEl.muted = true;
+  videoEl.addEventListener('ended', morphToLogo);
+  videoEl.addEventListener('error', morphToLogo);
+  videoEl.addEventListener('stalled', morphToLogo);
+  const playPromise = videoEl.play();
+  if (playPromise && typeof playPromise.catch === 'function'){ playPromise.catch(morphToLogo); }
+}
+
+function runLoadingThenApp(){
+  setTimeout(() => {
+    document.getElementById('introScreen').classList.add('fade-out');
+    setTimeout(() => {
+      document.getElementById('introScreen').classList.add('hidden');
+      document.getElementById('skeletonScreen').classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById('skeletonScreen').classList.add('hidden');
+        const app = document.getElementById('app');
+        app.classList.remove('hidden'); app.classList.add('app-in');
+        renderAll();
+        setNav(filesStore.length ? 'home' : 'bank');
+      }, 700);
+    }, 520);
+  }, 1300);
+}
+
+function defaultDocSettings(){ return JSON.parse(JSON.stringify(DEFAULT_DOC_SETTINGS)); }
+
+function loadFileStore(){
+  try{ const raw = localStorage.getItem(FILES_KEY); filesStore = raw ? JSON.parse(raw) : []; if (!Array.isArray(filesStore)) filesStore = []; }catch(e){ filesStore = []; }
+  activeFileId = localStorage.getItem(ACTIVE_FILE_KEY) || null;
+  if (activeFileId && !filesStore.some(f => f.id === activeFileId)) activeFileId = null;
+  if (!activeFileId && filesStore.length) activeFileId = filesStore[0].id;
+}
+
+function migrateLegacyData(){
+  if (filesStore.length) return;
+  let legacyQuestions = null;
+  try{ legacyQuestions = JSON.parse(localStorage.getItem(LEGACY_STORAGE_KEY) || 'null'); }catch(e){}
+  if (!legacyQuestions || !legacyQuestions.length) return;
+  let legacySettings = null;
+  try{ legacySettings = JSON.parse(localStorage.getItem(LEGACY_SETTINGS_KEY) || 'null'); }catch(e){}
+  const now = new Date().toISOString();
+  const f = { id:'file-' + uid(), name:'Lembar Soal Saya', createdAt:now, updatedAt:now, questions:legacyQuestions, settings:Object.assign(defaultDocSettings(), legacySettings || {}) };
+  filesStore.push(f); activeFileId = f.id;
+  persistFiles(); persistActiveFile();
+  localStorage.removeItem(LEGACY_STORAGE_KEY); localStorage.removeItem(LEGACY_SETTINGS_KEY);
+}
+
+function downscaleDataUrl(dataUrl, maxDim, quality){
+  return new Promise((resolve) => {
+    try{
+      const img = new Image();
+      img.onload = () => {
+        try{
+          const scale = Math.min(1, maxDim / Math.max(img.naturalWidth || 1, img.naturalHeight || 1));
+          const w = Math.max(1, Math.round((img.naturalWidth || 1) * scale));
+          const h = Math.max(1, Math.round((img.naturalHeight || 1) * scale));
+          const c = document.createElement('canvas'); c.width = w; c.height = h;
+          const ctx = c.getContext('2d'); ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h); ctx.drawImage(img, 0, 0, w, h);
+          const out = c.toDataURL('image/jpeg', quality);
+          resolve(out.length < dataUrl.length ? out : dataUrl);
+        }catch(e){ resolve(dataUrl); }
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    }catch(e){ resolve(dataUrl); }
+  });
+}
+
+async function compressStoreImagesToFit(){
+  const steps = [ [1400, 0.85], [1000, 0.8], [700, 0.72], [500, 0.65], [360, 0.6] ];
+  for (const [maxDim, q] of steps){
+    for (const f of filesStore){
+      if (f.settings){ for (const key of ['schoolLogo', 'agencyLogo']){ const v = f.settings[key]; if (v && typeof v === 'string' && v.startsWith('data:image')){ f.settings[key] = await downscaleDataUrl(v, 400, q); } } }
+      if (Array.isArray(f.questions)){
+        for (const qu of f.questions){
+          if (qu.image && typeof qu.image === 'string' && qu.image.startsWith('data:image')){
+            qu.image = await downscaleDataUrl(qu.image, maxDim, q);
+            if (qu.imgW && qu.imgH){ const s = Math.min(1, maxDim / Math.max(qu.imgW, qu.imgH)); qu.imgW = Math.max(1, Math.round(qu.imgW * s)); qu.imgH = Math.max(1, Math.round(qu.imgH * s)); }
+          }
+        }
+      }
+    }
+    try{ localStorage.setItem(FILES_KEY, JSON.stringify(filesStore)); return true; }catch(e){}
+  }
+  return false;
+}
+
+let _quotaWarned = false;
+function persistFiles(){
+  try{ localStorage.setItem(FILES_KEY, JSON.stringify(filesStore)); _quotaWarned = false; }
+  catch(e){
+    compressStoreImagesToFit().then(ok => { _quotaWarned = false; if (!ok && !_quotaWarned){ _quotaWarned = true; showToast(t('toast.saveFail'), 'error'); } });
+    if (!_quotaWarned){ _quotaWarned = true; showToast(t('toast.saveCompress'), 'warning'); }
+  }
+}
+function persistActiveFile(){ try{ localStorage.setItem(ACTIVE_FILE_KEY, activeFileId || ''); }catch(e){} }
+function getActiveFile(){ return filesStore.find(f => f.id === activeFileId) || null; }
+function setActiveFile(id){ activeFileId = id; persistActiveFile(); loadActiveFileIntoState(); }
+function loadActiveFileIntoState(){
+  const f = getActiveFile();
+  questions = f && Array.isArray(f.questions) ? f.questions : [];
+  docSettings = Object.assign(defaultDocSettings(), f && f.settings ? f.settings : {});
+  if (document.getElementById('headerEnabledToggle')) initHeaderSettingsUI();
+}
+function saveToStorage(){ const f = getActiveFile(); if (!f) return; f.questions = questions; f.updatedAt = new Date().toISOString(); persistFiles(); flashSaveIndicator(); }
+function saveSettings(){ const f = getActiveFile(); if (f){ f.settings = docSettings; f.updatedAt = new Date().toISOString(); persistFiles(); } flashSaveIndicator(); }
+let _saveSettingsTimer = null;
+function saveSettingsDebounced(){ clearTimeout(_saveSettingsTimer); _saveSettingsTimer = setTimeout(saveSettings, 400); flashSaveIndicator(); }
+let _saveIndicatorTimer = null;
+function flashSaveIndicator(){
+  const dot = document.getElementById('saveDot'); const txt = document.getElementById('saveStatusText'); if (!dot || !txt) return;
+  dot.classList.add('saving'); txt.textContent = t('save.saving'); clearTimeout(_saveIndicatorTimer);
+  _saveIndicatorTimer = setTimeout(() => { dot.classList.remove('saving'); txt.textContent = t('save.allSaved'); }, 500);
+}
+
+function uid(){ return Date.now() + '-' + Math.random().toString(36).slice(2,8); }
+function labelFor(i){ return String.fromCharCode(65 + i); }
+function escapeHtml(str){ const d = document.createElement('div'); d.textContent = str || ''; return d.innerHTML; }
+function mmToPx(mm){ const el = document.createElement('div'); el.style.height = mm + 'mm'; el.style.position = 'absolute'; el.style.visibility = 'hidden'; document.body.appendChild(el); const px = el.offsetHeight; document.body.removeChild(el); return px; }
+function computeImageBoxMm(naturalWpx, naturalHpx, maxHeightMm, maxWidthMm){
+  const pxToMm = 25.4 / 96;
+  let wmm = naturalWpx * pxToMm; let hmm = naturalHpx * pxToMm;
+  const scale = Math.min(1, maxWidthMm / wmm, maxHeightMm / hmm);
+  wmm *= scale; hmm *= scale;
+  return { wmm, hmm };
+}
+
+function showToast(message, type = 'success'){
+  const icons = { success:'fa-circle-check', warning:'fa-triangle-exclamation', error:'fa-circle-xmark' };
+  const el = document.createElement('div'); el.className = 'toast ' + type;
+  el.innerHTML = `<i class="fa-solid ${icons[type] || icons.success}"></i><span>${escapeHtml(message)}</span>`;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => { el.classList.add('leaving'); setTimeout(() => el.remove(), 240); }, 2800);
+}
+
+function bindEvents(){
+  document.querySelectorAll('.nav-item[data-nav]').forEach(btn => { btn.addEventListener('click', () => setNav(btn.dataset.nav)); });
+  document.getElementById('btnHamburger').addEventListener('click', openMobileSidebar);
+  const overlayEl = document.getElementById('sidebarOverlay'); if (overlayEl) overlayEl.addEventListener('click', closeMobileSidebar);
+  document.querySelectorAll('.sidebar-lang-btn[data-lang]').forEach(btn => { btn.addEventListener('click', () => setLanguage(btn.dataset.lang)); });
+
+  const collapseBtn = document.getElementById('btnCollapseSidebar');
+  function applySidebarCollapsed(collapsed){
+    document.body.classList.toggle('sidebar-collapsed', collapsed);
+    if (collapseBtn){
+      const icon = collapseBtn.querySelector('i'); const text = collapseBtn.querySelector('.nav-text');
+      if (icon) icon.className = 'fa-solid ' + (collapsed ? 'fa-angles-right' : 'fa-angles-left');
+      if (text) text.textContent = collapsed ? t('nav.expand') : t('nav.collapse');
+      collapseBtn.title = collapsed ? t('nav.expandTitle') : t('nav.collapseTitle');
+    }
+    // Force re-fit to panel width on sidebar change so editor+preview selalu 50/50
+    previewZoom = null;
+    if (!document.getElementById('app').classList.contains('hidden')){ setTimeout(() => applyPreviewZoom(), 280); }
+  }
+  if (collapseBtn){
+    collapseBtn.addEventListener('click', () => {
+      const collapsed = !document.body.classList.contains('sidebar-collapsed');
+      try{ localStorage.setItem('sidebarCollapsed', collapsed ? '1' : '0'); }catch(e){}
+      applySidebarCollapsed(collapsed);
+    });
+  }
+  try{ applySidebarCollapsed(localStorage.getItem('sidebarCollapsed') === '1'); }catch(e){}
+  const helpBtn = document.getElementById('btnHelp'); if (helpBtn) helpBtn.addEventListener('click', () => openModal(document.getElementById('helpModalOverlay')));
+
+  document.getElementById('btnAddMc').addEventListener('click', () => openMcModal());
+  document.getElementById('btnAddEssay').addEventListener('click', () => openEssayModal());
+  document.getElementById('btnExportPdf').addEventListener('click', () => openPdfNameModal());
+  document.getElementById('btnExportPdfMobile').addEventListener('click', () => openPdfNameModal());
+
+  document.getElementById('btnResetAll').addEventListener('click', () => {
+    resetPending = true;
+    openConfirmModal({ title: t('confirm.resetTitle'), desc: t('confirm.resetDesc'), actionLabel: t('confirm.resetAction') });
+  });
+
+  initHeaderSettingsUI();
+  document.getElementById('headerEnabledToggle').addEventListener('change', (e) => { docSettings.headerEnabled = e.target.checked; document.getElementById('headerFieldsBlock').classList.toggle('hidden', !docSettings.headerEnabled); saveSettings(); previewZoom = null; renderPreview(); });
+  const hdrTextFieldMap = { hdrAgencyInput:'agencyName', hdrSchoolInput:'schoolName', hdrAddressInput:'schoolAddress' };
+  Object.keys(hdrTextFieldMap).forEach(id => { document.getElementById(id).addEventListener('input', (e) => { docSettings[hdrTextFieldMap[id]] = e.target.value; saveSettingsDebounced(); renderPreview(); }); });
+  document.getElementById('identityEnabledToggle').addEventListener('change', (e) => { docSettings.identityEnabled = e.target.checked; document.getElementById('identityFieldsBlock').classList.toggle('hidden', !docSettings.identityEnabled); saveSettings(); previewZoom = null; renderPreview(); });
+  document.getElementById('btnAddIdentityField').addEventListener('click', () => {
+    if (!Array.isArray(docSettings.identityFields)) docSettings.identityFields = [];
+    docSettings.identityFields.push({ id: createIdentityFieldId(), label: '', value: '', column: 'left' });
+    renderIdentityFieldsUI();
+    saveSettings(); previewZoom = null; renderPreview();
+    const labels = document.querySelectorAll('#identityFieldsList .identity-field-label');
+    if (labels.length) labels[labels.length - 1].focus();
+  });
+  document.getElementById('examDateEnabledToggle').addEventListener('change', (e) => { docSettings.examDateEnabled = e.target.checked; document.getElementById('examDateFieldBlock').classList.toggle('hidden', !docSettings.examDateEnabled); saveSettings(); previewZoom = null; renderPreview(); });
+  document.getElementById('examDateInput').addEventListener('input', (e) => { docSettings.examDate = e.target.value; saveSettingsDebounced(); renderPreview(); });
+  document.getElementById('instructionEnabledToggle').addEventListener('change', (e) => { docSettings.instructionEnabled = e.target.checked; document.getElementById('instructionFieldBlock').classList.toggle('hidden', !docSettings.instructionEnabled); saveSettings(); previewZoom = null; renderPreview(); });
+  document.getElementById('instructionInput').addEventListener('input', (e) => { docSettings.instructionText = e.target.value; saveSettingsDebounced(); renderPreview(); });
+  document.getElementById('sectionLabelsToggle').addEventListener('change', (e) => { docSettings.sectionLabelsEnabled = e.target.checked; saveSettings(); renderPreview(); });
+
+  bindLogoUploader('schoolLogoUpload', 'schoolLogoInput', 'schoolLogoPreview', 'schoolLogoImg', 'btnRemoveSchoolLogo', 'schoolLogo');
+  bindLogoUploader('agencyLogoUpload', 'agencyLogoInput', 'agencyLogoPreview', 'agencyLogoImg', 'btnRemoveAgencyLogo', 'agencyLogo');
+
+  document.querySelectorAll('[data-close]').forEach(btn => { btn.addEventListener('click', () => closeModal(document.getElementById(btn.dataset.close))); });
+  document.querySelectorAll('.modal-overlay').forEach(ov => { ov.addEventListener('click', (e) => { if (e.target === ov) closeModal(ov); }); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape'){ document.querySelectorAll('.modal-overlay.show').forEach(ov => closeModal(ov)); } });
+
+  const mcQ = document.getElementById('mcQuestionInput');
+  mcQ.addEventListener('input', () => { document.getElementById('mcQCounter').textContent = mcQ.value.length + ' ' + t('form.chars'); clearFieldError('mcQuestionField'); });
+  document.getElementById('btnSaveMc').addEventListener('click', saveMcQuestion);
+  const essayQ = document.getElementById('essayQuestionInput');
+  essayQ.addEventListener('input', () => { document.getElementById('essayQCounter').textContent = essayQ.value.length + ' ' + t('form.chars'); clearFieldError('essayQuestionField'); });
+  const essayAK = document.getElementById('essayAnswerKeyInput');
+  essayAK.addEventListener('input', () => { document.getElementById('essayAnswerKeyCounter').textContent = essayAK.value.length + ' ' + t('form.chars'); });
+  document.getElementById('btnSaveEssay').addEventListener('click', saveEssayQuestion);
+
+  const uploadArea = document.getElementById('mcUploadArea');
+  const fileInput = document.getElementById('mcFileInput');
+  uploadArea.addEventListener('click', () => fileInput.click());
+  uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+  uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+  uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.classList.remove('dragover'); if (e.dataTransfer.files[0]) handleImageFile(e.dataTransfer.files[0]); });
+  fileInput.addEventListener('change', (e) => { if (e.target.files[0]) handleImageFile(e.target.files[0]); });
+  document.getElementById('btnReplaceImage').addEventListener('click', () => fileInput.click());
+  document.getElementById('btnRemoveImage').addEventListener('click', removeMcImage);
+  document.getElementById('btnCropImage').addEventListener('click', () => openCropModal(mcImageData));
+  document.getElementById('mcImageSizeToggle').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-size]'); if (!btn) return;
+    mcImageSize = btn.dataset.size;
+    document.querySelectorAll('#mcImageSizeToggle button').forEach(b => b.classList.toggle('active', b === btn));
+    formPrefs.mcImageSize = mcImageSize; saveFormPrefs();
+  });
+
+  const countSel = document.getElementById('mcOptionCount');
+  for (let i = 2; i <= 26; i++){ const opt = document.createElement('option'); opt.value = i; opt.textContent = i; countSel.appendChild(opt); }
+  countSel.addEventListener('change', () => setOptionCount(parseInt(countSel.value, 10)));
+  document.getElementById('btnAddOption').addEventListener('click', () => { if (mcOptions.length < 26) setOptionCount(mcOptions.length + 1); });
+
+  document.getElementById('mcLayoutToggle').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-layout]'); if (!btn) return;
+    mcLayout = btn.dataset.layout;
+    document.querySelectorAll('#mcLayoutToggle button').forEach(b => b.classList.toggle('active', b === btn));
+    formPrefs.mcLayout = mcLayout; saveFormPrefs();
+  });
+  document.getElementById('mcQuestionLayoutToggle').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-qlayout]'); if (!btn) return;
+    mcQuestionLayout = btn.dataset.qlayout;
+    document.querySelectorAll('#mcQuestionLayoutToggle button').forEach(b => b.classList.toggle('active', b === btn));
+    formPrefs.mcQuestionLayout = mcQuestionLayout; saveFormPrefs();
+  });
+  document.getElementById('mcPlacementToggle').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-placement]'); if (!btn) return;
+    mcPlacement = btn.dataset.placement;
+    document.querySelectorAll('#mcPlacementToggle button').forEach(b => b.classList.toggle('active', b === btn));
+  });
+  document.getElementById('essayPlacementToggle').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-placement]'); if (!btn) return;
+    essayPlacement = btn.dataset.placement;
+    document.querySelectorAll('#essayPlacementToggle button').forEach(b => b.classList.toggle('active', b === btn));
+  });
+
+  document.getElementById('cropRotateLeft').addEventListener('click', () => cropper && cropper.rotate(-90));
+  document.getElementById('cropRotateRight').addEventListener('click', () => cropper && cropper.rotate(90));
+  document.getElementById('cropZoomIn').addEventListener('click', () => cropper && cropper.zoom(0.1));
+  document.getElementById('cropZoomOut').addEventListener('click', () => cropper && cropper.zoom(-0.1));
+  document.getElementById('cropReset').addEventListener('click', () => cropper && cropper.reset());
+  document.getElementById('btnUseCrop').addEventListener('click', applyCrop);
+
+  const previewModeEl = document.getElementById('previewModeToggle');
+  if (previewModeEl) previewModeEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-mode]'); if (!btn) return;
+    currentPreviewMode = btn.dataset.mode;
+    document.querySelectorAll('#previewModeToggle button').forEach(b => b.classList.toggle('active', b === btn));
+    document.getElementById('previewScroll').classList.toggle('mobile-mode', currentPreviewMode === 'mobile');
+    previewZoom = null; renderPreview();
+  });
+  const previewQLayoutEl = document.getElementById('previewQLayoutToggle');
+  if (previewQLayoutEl) previewQLayoutEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-qlayout]'); if (!btn) return;
+    previewQuestionLayout = btn.dataset.qlayout;
+    document.querySelectorAll('#previewQLayoutToggle button').forEach(b => b.classList.toggle('active', b === btn));
+    previewZoom = null; previewPageIndex = 0; renderPreview();
+  });
+
+  document.getElementById('zoomIn').addEventListener('click', () => { previewZoom = Math.min(2, (previewZoom ?? applyPreviewZoom(true)) + 0.1); applyPreviewZoom(); });
+  document.getElementById('zoomOut').addEventListener('click', () => { previewZoom = Math.max(0.25, (previewZoom ?? applyPreviewZoom(true)) - 0.1); applyPreviewZoom(); });
+  document.getElementById('zoomFit').addEventListener('click', () => { previewZoom = null; applyPreviewZoom(); });
+  window.addEventListener('resize', () => { if (previewZoom === null) applyPreviewZoom(); });
+  document.getElementById('previewPrevBtn').addEventListener('click', () => showPreviewPage(previewPageIndex - 1));
+  document.getElementById('previewNextBtn').addEventListener('click', () => showPreviewPage(previewPageIndex + 1));
+
+  document.getElementById('btnConfirmAction').addEventListener('click', handleConfirmAction);
+  document.getElementById('btnConfirmExport').addEventListener('click', () => {
+    const name = document.getElementById('pdfFileNameInput').value.trim() || 'lembar-soal';
+    const withKey = document.querySelector('input[name="pdfVersion"]:checked').value === 'with';
+    closeModal(document.getElementById('pdfNameModalOverlay'));
+    exportPDF(name, withKey);
+  });
+
+  document.getElementById('questionListBody').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action]'); if (!btn) return;
+    const id = btn.dataset.id; const action = btn.dataset.action;
+    if (action === 'edit') editQuestion(id);
+    else if (action === 'duplicate') duplicateQuestion(id);
+    else if (action === 'delete') requestDeleteQuestion(id);
+    else if (action === 'up') moveQuestion(id, -1);
+    else if (action === 'down') moveQuestion(id, 1);
+  });
+}
+
+function createIdentityFieldId(){ return 'idf_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+// Render ulang daftar kolom identitas kustom di panel Pengaturan (input label +
+// pilihan kolom kiri/kanan + tombol hapus untuk tiap kolom identitas).
+function renderIdentityFieldsUI(){
+  const list = document.getElementById('identityFieldsList');
+  const emptyNote = document.getElementById('identityFieldsEmpty');
+  if (!list) return;
+  if (!Array.isArray(docSettings.identityFields)) docSettings.identityFields = [];
+  const fields = docSettings.identityFields;
+  list.innerHTML = '';
+  if (emptyNote) emptyNote.classList.toggle('hidden', fields.length > 0);
+  fields.forEach(field => {
+    const row = document.createElement('div');
+    row.className = 'identity-field-row';
+    row.dataset.id = field.id;
+    row.innerHTML = `
+      <input type="text" class="identity-field-label" maxlength="40" placeholder="${escapeHtml(t('settings.identityFieldLabelPh'))}" value="${escapeHtml(field.label || '')}">
+      <select class="identity-field-col">
+        <option value="left">${escapeHtml(t('settings.identityColumnLeft'))}</option>
+        <option value="right">${escapeHtml(t('settings.identityColumnRight'))}</option>
+      </select>
+      <button type="button" class="btn btn-ghost btn-sm identity-field-remove" title="${escapeHtml(t('settings.identityFieldRemove'))}" style="color:var(--danger);"><i class="fa-solid fa-trash"></i></button>
+      <input type="text" class="identity-field-value" maxlength="80" placeholder="${escapeHtml(t('settings.identityFieldValuePh'))}" value="${escapeHtml(field.value || '')}">
+    `;
+    row.querySelector('.identity-field-col').value = field.column === 'right' ? 'right' : 'left';
+    row.querySelector('.identity-field-label').addEventListener('input', (e) => {
+      field.label = e.target.value; saveSettingsDebounced(); renderPreview();
+    });
+    row.querySelector('.identity-field-value').addEventListener('input', (e) => {
+      field.value = e.target.value; saveSettingsDebounced(); renderPreview();
+    });
+    row.querySelector('.identity-field-col').addEventListener('change', (e) => {
+      field.column = e.target.value === 'right' ? 'right' : 'left'; saveSettings(); renderPreview();
+    });
+    row.querySelector('.identity-field-remove').addEventListener('click', () => {
+      docSettings.identityFields = fields.filter(f => f.id !== field.id);
+      renderIdentityFieldsUI(); saveSettings(); renderPreview();
+    });
+    list.appendChild(row);
+  });
+}
+
+function initHeaderSettingsUI(){
+  document.getElementById('headerEnabledToggle').checked = !!docSettings.headerEnabled;
+  document.getElementById('headerFieldsBlock').classList.toggle('hidden', !docSettings.headerEnabled);
+  document.getElementById('hdrAgencyInput').value = docSettings.agencyName || '';
+  document.getElementById('hdrSchoolInput').value = docSettings.schoolName || '';
+  document.getElementById('hdrAddressInput').value = docSettings.schoolAddress || '';
+  document.getElementById('identityEnabledToggle').checked = !!docSettings.identityEnabled;
+  document.getElementById('identityFieldsBlock').classList.toggle('hidden', !docSettings.identityEnabled);
+  if (!Array.isArray(docSettings.identityFields)) docSettings.identityFields = [];
+  renderIdentityFieldsUI();
+  document.getElementById('examDateEnabledToggle').checked = !!docSettings.examDateEnabled;
+  document.getElementById('examDateFieldBlock').classList.toggle('hidden', !docSettings.examDateEnabled);
+  document.getElementById('examDateInput').value = docSettings.examDate || '';
+  document.getElementById('instructionEnabledToggle').checked = !!docSettings.instructionEnabled;
+  document.getElementById('instructionFieldBlock').classList.toggle('hidden', !docSettings.instructionEnabled);
+  document.getElementById('instructionInput').value = docSettings.instructionText || '';
+  document.getElementById('sectionLabelsToggle').checked = !!docSettings.sectionLabelsEnabled;
+  renderLogoPreview('schoolLogo', 'schoolLogoUpload', 'schoolLogoPreview', 'schoolLogoImg');
+  renderLogoPreview('agencyLogo', 'agencyLogoUpload', 'agencyLogoPreview', 'agencyLogoImg');
+}
+
+function renderLogoPreview(settingKey, uploadId, previewId, imgId){
+  const has = !!docSettings[settingKey];
+  document.getElementById(uploadId).classList.toggle('hidden', has);
+  document.getElementById(previewId).classList.toggle('hidden', !has);
+  if (has) document.getElementById(imgId).src = docSettings[settingKey];
+}
+
+function bindLogoUploader(uploadId, fileInputId, previewId, imgId, removeBtnId, settingKey){
+  const uploadArea = document.getElementById(uploadId);
+  const fileInput = document.getElementById(fileInputId);
+  const handleFile = (file) => {
+    if (!file || !file.type.match(/image\/(png|jpeg|jpg)/)){ showToast(t('toast.logoFormat'), 'error'); return; }
+    if (file.size > 3 * 1024 * 1024){ showToast(t('toast.logoSize'), 'error'); return; }
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const compressed = await downscaleDataUrl(e.target.result, 600, 0.85);
+      docSettings[settingKey] = compressed;
+      const probe = new Image();
+      probe.onload = () => { docSettings[settingKey + 'W'] = probe.naturalWidth; docSettings[settingKey + 'H'] = probe.naturalHeight; saveSettings(); renderPreview(); };
+      probe.src = compressed;
+      renderLogoPreview(settingKey, uploadId, previewId, imgId);
+      saveSettings(); renderPreview();
+      showToast(t('toast.logoOk'), 'success');
+    };
+    reader.readAsDataURL(file);
+  };
+  uploadArea.addEventListener('click', () => fileInput.click());
+  uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+  uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+  uploadArea.addEventListener('drop', (e) => { e.preventDefault(); uploadArea.classList.remove('dragover'); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+  fileInput.addEventListener('change', (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+  document.getElementById(removeBtnId).addEventListener('click', () => {
+    docSettings[settingKey] = null; docSettings[settingKey + 'W'] = null; docSettings[settingKey + 'H'] = null;
+    renderLogoPreview(settingKey, uploadId, previewId, imgId); saveSettings(); renderPreview();
+  });
+}
+
+function setNav(nav){
+  const soalPages = ['home','all','mc','essay'];
+  if (soalPages.includes(nav) && !getActiveFile()){
+    if (filesStore.length){ setActiveFile(filesStore[0].id); }
+    else { nav = 'bank'; showToast(t('toast.needFile'), 'warning'); }
+  }
+  currentNav = nav;
+  document.querySelectorAll('.nav-item[data-nav]').forEach(b => b.classList.toggle('active', b.dataset.nav === nav));
+  closeMobileSidebar();
+  const pageHome = document.getElementById('pageHome'); const pageSettings = document.getElementById('pageSettings');
+  const pageBank = document.getElementById('pageBank'); const pagePrivacy = document.getElementById('pagePrivacy');
+  const pageTheme = document.getElementById('pageTheme'); const pageDownloads = document.getElementById('pageDownloads');
+  [pageHome, pageSettings, pageBank, pagePrivacy, pageTheme, pageDownloads].forEach(p => { if(p) p.classList.add('hidden'); });
+  if (nav === 'bank'){ pageBank.classList.remove('hidden'); document.getElementById('mobileTitle').textContent = t('nav.bank'); renderBankPage(); return; }
+  if (nav === 'downloads'){ pageDownloads.classList.remove('hidden'); document.getElementById('mobileTitle').textContent = t('nav.downloads'); renderDownloadsPage(); return; }
+  if (nav === 'privacy'){ pagePrivacy.classList.remove('hidden'); document.getElementById('mobileTitle').textContent = t('privacy.title'); return; }
+  if (nav === 'settings'){ pageSettings.classList.remove('hidden'); document.getElementById('mobileTitle').textContent = t('settings.title'); return; }
+  if (nav === 'theme'){
+    if(pageTheme){ pageTheme.classList.remove('hidden'); }
+    const themeLabel = (typeof currentLang !== 'undefined' && currentLang === 'en') ? 'Theme' : 'Tema';
+    document.getElementById('mobileTitle').textContent = themeLabel;
+    if(window.ThemeSystem){ window.ThemeSystem.renderThemePanel(); }
+    return;
+  }
+  pageHome.classList.remove('hidden');
+  const titleKeys = { home:'nav.home', all:'nav.all', mc:'nav.mc', essay:'nav.essay' };
+  const tk = titleKeys[nav] || titleKeys.home;
+  document.getElementById('pageTitle').textContent = t(tk + 'Title');
+  document.getElementById('pageDesc').textContent = t(tk + 'Desc');
+  document.getElementById('mobileTitle').textContent = t(tk + 'Title');
+  document.getElementById('quickActions').classList.toggle('hidden', nav === 'all');
+  updateActiveFileBar(); renderQuestionList();
+}
+
+function updateActiveFileBar(){
+  const bar = document.getElementById('activeFileBar'); const f = getActiveFile(); if (!bar) return;
+  bar.classList.toggle('hidden', !f); if (f) document.getElementById('activeFileName').textContent = f.name;
+}
+
+function formatRelativeTime(iso){
+  if (!iso) return '-';
+  const d = new Date(iso); const now = new Date();
+  const locale = currentLang === 'en' ? 'en-US' : 'id-ID';
+  const sameDay = (a,b) => a.getFullYear()===b.getFullYear() && a.getMonth()===b.getMonth() && a.getDate()===b.getDate();
+  const time = d.toLocaleTimeString(locale,{hour:'2-digit',minute:'2-digit'});
+  if (sameDay(d, now)) return t('time.today') + ', ' + time;
+  const y = new Date(now); y.setDate(now.getDate() - 1);
+  if (sameDay(d, y)) return t('time.yesterday') + ', ' + time;
+  return d.toLocaleDateString(locale,{day:'numeric',month:'short',year:'numeric'}) + ', ' + time;
+}
+
+function renderBankPage(){
+  document.getElementById('navCountFiles').textContent = filesStore.length;
+  const wrap = document.getElementById('bankFileList');
+  if (!filesStore.length){
+    wrap.innerHTML = `<div class="panel" style="grid-column:1/-1;"><div class="empty-state"><i class="fa-solid fa-folder-open"></i><h3>${t('bank.emptyTitle')}</h3><p>${t('bank.emptyDesc')}</p><div class="empty-actions"><button class="btn btn-primary btn-sm" onclick="openFileModal()"><i class="fa-solid fa-plus"></i>${t('bank.create')}</button></div></div></div>`;
+    return;
+  }
+  wrap.innerHTML = filesStore.map(f => {
+    const qs = Array.isArray(f.questions) ? f.questions : [];
+    const mc = qs.filter(q => q.type === 'multiple-choice').length;
+    const es = qs.filter(q => q.type === 'essay').length;
+    const isActive = f.id === activeFileId;
+    return `<div class="bank-card${isActive ? ' is-active' : ''}" data-fid="${f.id}"><div class="bank-card-top"><div class="bank-card-icon"><i class="fa-regular fa-file-lines"></i></div>${isActive ? '<span class="bank-badge-active"><i class="fa-solid fa-circle-check"></i>' + t('bank.active') + '</span>' : ''}</div><h3 class="bank-card-name">${escapeHtml(f.name)}</h3><div class="bank-card-stats"><span><i class="fa-solid fa-list-ol"></i>${mc} ${t('nav.mcTitle')}</span><span><i class="fa-regular fa-file-lines"></i>${es} ${t('nav.essayTitle')}</span></div><div class="bank-card-date"><i class="fa-regular fa-clock"></i>${t('bank.lastModified')} ${formatRelativeTime(f.updatedAt)}</div><div class="bank-card-actions"><button class="btn btn-primary btn-sm" data-action="open"><i class="fa-solid fa-folder-open"></i>${t('bank.open')}</button><button class="btn btn-ghost btn-sm" data-action="rename"><i class="fa-solid fa-pen"></i>${t('bank.rename')}</button><button class="btn btn-ghost btn-sm" data-action="duplicate"><i class="fa-solid fa-copy"></i>${t('common.duplicate')}</button><button class="btn btn-ghost btn-sm" data-action="delete" style="color:var(--danger);"><i class="fa-solid fa-trash"></i>${t('common.delete')}</button></div></div>`;
+  }).join('');
+}
+
+/*
+ * Download Center — memakai data filesStore yang SAMA dengan Bank Soal
+ * (tidak ada penyimpanan baru). "Kunci jawaban" belum ditampilkan sebagai
+ * status per-file karena field-nya belum ada di struktur soal — akan
+ * menyusul saat fitur kunci jawaban (jawaban benar tersimpan permanen)
+ * diimplementasikan.
+ */
+function renderDownloadsPage(){
+  const wrap = document.getElementById('downloadsFileList');
+  if (!filesStore.length){
+    wrap.innerHTML = `<div class="panel" style="grid-column:1/-1;"><div class="empty-state"><i class="fa-solid fa-download"></i><h3>${t('downloads.emptyTitle')}</h3><p>${t('downloads.emptyDesc')}</p></div></div>`;
+    return;
+  }
+  wrap.innerHTML = filesStore.map(f => {
+    const qs = Array.isArray(f.questions) ? f.questions : [];
+    const mc = qs.filter(q => q.type === 'multiple-choice').length;
+    const es = qs.filter(q => q.type === 'essay').length;
+    const jenis = (mc && es) ? (currentLang === 'en' ? 'Mixed' : 'Campuran') : (mc ? t('nav.mcTitle') : (es ? t('nav.essayTitle') : '—'));
+    return `<div class="bank-card" data-fid="${f.id}"><div class="bank-card-top"><div class="bank-card-icon"><i class="fa-regular fa-file-lines"></i></div></div><h3 class="bank-card-name">${escapeHtml(f.name)}</h3><div class="bank-card-stats"><span><i class="fa-solid fa-list-ol"></i>${mc} ${t('nav.mcTitle')}</span><span><i class="fa-regular fa-file-lines"></i>${es} ${t('nav.essayTitle')}</span><span><i class="fa-solid fa-tags"></i>${jenis}</span></div><div class="bank-card-date"><i class="fa-regular fa-clock"></i>${t('downloads.createdAt')} ${formatRelativeTime(f.createdAt)}</div><div class="bank-card-date"><i class="fa-regular fa-clock"></i>${t('bank.lastModified')} ${formatRelativeTime(f.updatedAt)}</div><div class="bank-card-date" style="opacity:.7;"><i class="fa-solid fa-key"></i>${t('downloads.answerKeySoon')}</div><div class="bank-card-actions"><button class="btn btn-primary btn-sm" data-action="openEdit"><i class="fa-solid fa-pen-to-square"></i>${t('downloads.openEdit')}</button><button class="btn btn-ghost btn-sm" data-action="pdf"><i class="fa-solid fa-file-pdf"></i>${t('downloads.pdf')}</button><button class="btn btn-ghost btn-sm" data-action="delete" style="color:var(--danger);"><i class="fa-solid fa-trash"></i>${t('common.delete')}</button></div></div>`;
+  }).join('');
+}
+
+function bindDownloadsEvents(){
+  document.getElementById('downloadsFileList').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action]'); if (!btn) return;
+    const card = btn.closest('.bank-card'); if (!card) return;
+    const id = card.dataset.fid; const action = btn.dataset.action;
+    const f = filesStore.find(x => x.id === id); if (!f) return;
+    if (action === 'openEdit'){ openSoalFile(id); return; }
+    if (action === 'delete'){ requestDeleteSoalFile(id); if (currentNav === 'downloads') setTimeout(renderDownloadsPage, 0); return; }
+    if (action === 'pdf'){
+      setActiveFile(id); renderAll();
+      openPdfNameModal();
+      return;
+    }
+  });
+}
+
+function bindBankEvents(){
+  const contactBtn = document.getElementById('btnContact'); if (contactBtn) contactBtn.addEventListener('click', () => { closeMobileSidebar(); window.location.href = 'mailto:ridhorizkiandrian50@gmail.com?subject=Bantuan%20Generate%20Soal%20Ujian'; });
+  document.getElementById('btnBackToBank').addEventListener('click', () => setNav('bank'));
+  document.getElementById('btnCreateFile').addEventListener('click', () => openFileModal());
+  document.getElementById('btnCreateFileMobile').addEventListener('click', () => openFileModal());
+  document.getElementById('btnSaveFile').addEventListener('click', submitFileModal);
+  const nameInput = document.getElementById('fileNameInput');
+  nameInput.addEventListener('keydown', (e) => { if (e.key === 'Enter'){ e.preventDefault(); submitFileModal(); } });
+  nameInput.addEventListener('input', () => clearFieldError('fileNameField'));
+  document.getElementById('bankFileList').addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-action]'); if (!btn) return;
+    const card = btn.closest('.bank-card'); if (!card) return;
+    const id = card.dataset.fid; const action = btn.dataset.action;
+    if (action === 'open') openSoalFile(id);
+    else if (action === 'rename') openFileModal(id);
+    else if (action === 'duplicate') duplicateSoalFile(id);
+    else if (action === 'delete') requestDeleteSoalFile(id);
+  });
+  document.getElementById('btnDeleteAllData').addEventListener('click', () => { openConfirmModal({ title: t('confirm.deleteAllTitle'), desc: t('confirm.deleteAllDesc'), actionLabel: t('confirm.deleteAllAction'), onConfirm: deleteAllLocalData }); });
+}
+
+let renamingFileId = null;
+function openFileModal(fileId){
+  renamingFileId = fileId || null;
+  const f = fileId ? filesStore.find(x => x.id === fileId) : null;
+  document.getElementById('fileModalTitle').textContent = f ? t('file.titleEdit') : t('file.titleAdd');
+  document.getElementById('fileModalSub').textContent = f ? t('file.subEdit') : t('file.subAdd');
+  document.getElementById('btnSaveFile').innerHTML = f ? '<i class="fa-solid fa-check"></i>' + t('common.save') : '<i class="fa-solid fa-plus"></i>' + t('file.create');
+  const input = document.getElementById('fileNameInput');
+  input.value = f ? f.name : ''; clearFieldError('fileNameField');
+  openModal(document.getElementById('fileModalOverlay'));
+  setTimeout(() => input.focus(), 200);
+}
+function submitFileModal(){
+  const input = document.getElementById('fileNameInput'); const name = input.value.trim();
+  if (!name){ setFieldError('fileNameField'); return; }
+  clearFieldError('fileNameField'); closeModal(document.getElementById('fileModalOverlay'));
+  if (renamingFileId){
+    const f = filesStore.find(x => x.id === renamingFileId);
+    if (f){ f.name = name; f.updatedAt = new Date().toISOString(); persistFiles(); }
+    renamingFileId = null;
+    showToast(t('toast.renamed'), 'success');
+    renderAll(); if (currentNav === 'bank') renderBankPage(); updateActiveFileBar();
+  } else { createSoalFile(name); }
+}
+function createSoalFile(name){
+  const now = new Date().toISOString();
+  const f = { id:'file-' + uid(), name, createdAt:now, updatedAt:now, questions:[], settings:defaultDocSettings() };
+  filesStore.push(f); persistFiles(); setActiveFile(f.id); renderAll();
+  showToast(tf('toast.fileCreated', { name: name }), 'success'); setNav('home');
+}
+function openSoalFile(id){
+  if (!filesStore.some(f => f.id === id)) return;
+  setActiveFile(id); renderAll(); showToast(t('toast.fileOpened'), 'success'); setNav('home');
+}
+function duplicateSoalFile(id){
+  const src = filesStore.find(f => f.id === id); if (!src) return;
+  const now = new Date().toISOString();
+  const copy = JSON.parse(JSON.stringify(src));
+  copy.id = 'file-' + uid(); copy.name = src.name + ' ' + t('bank.copySuffix');
+  copy.createdAt = now; copy.updatedAt = now;
+  filesStore.push(copy); persistFiles();
+  document.getElementById('navCountFiles').textContent = filesStore.length;
+  renderBankPage(); showToast(t('toast.fileDuplicated'), 'success');
+}
+function requestDeleteSoalFile(id){
+  const f = filesStore.find(x => x.id === id); if (!f) return;
+  openConfirmModal({
+    title: tf('confirm.deleteFileTitle', { name: f.name }),
+    desc: t('confirm.deleteFileDesc'),
+    actionLabel: t('common.delete'),
+    onConfirm: () => {
+      filesStore = filesStore.filter(x => x.id !== id);
+      if (activeFileId === id){ activeFileId = filesStore.length ? filesStore[0].id : null; persistActiveFile(); loadActiveFileIntoState(); }
+      persistFiles(); renderAll(); if (currentNav === 'bank') renderBankPage();
+      showToast(t('toast.fileDeleted'), 'success');
+    }
+  });
+}
+function deleteAllLocalData(){
+  filesStore = []; activeFileId = null;
+  localStorage.removeItem(FILES_KEY); localStorage.removeItem(ACTIVE_FILE_KEY);
+  questions = []; docSettings = defaultDocSettings(); initHeaderSettingsUI();
+  renderAll(); setNav('bank'); showToast(t('toast.allDataDeleted'), 'success');
+}
+function openMobileSidebar(){ document.getElementById('sidebar').classList.add('open'); document.getElementById('sidebarOverlay').classList.add('show'); }
+function closeMobileSidebar(){ document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('show'); }
+function openModal(overlay){ overlay.classList.add('show'); }
+function closeModal(overlay){ overlay.classList.remove('show'); if (overlay.id === 'mcModalOverlay') resetMcModal(); if (overlay.id === 'essayModalOverlay') resetEssayModal(); if (overlay.id === 'cropModalOverlay' && cropper){ cropper.destroy(); cropper = null; } }
+function setFieldError(fieldId, message){ const field = document.getElementById(fieldId); field.classList.add('has-error'); if (message) field.querySelector('.field-error span').textContent = message; }
+function clearFieldError(fieldId){ document.getElementById(fieldId).classList.remove('has-error'); }
+
+function openMcModal(existing = null){
+  if (!getActiveFile()){ setNav('bank'); showToast(t('toast.needFileOpen'), 'warning'); return; }
+  editingId = existing ? existing.id : null; editingType = 'multiple-choice';
+  document.getElementById('mcModalTitle').textContent = existing ? t('mc.titleEdit') : t('mc.titleAdd');
+  document.getElementById('mcModalSub').textContent = existing ? t('mc.subEdit') : t('mc.subAdd');
+  const qInput = document.getElementById('mcQuestionInput');
+  qInput.value = existing ? existing.question : '';
+  document.getElementById('mcQCounter').textContent = qInput.value.length + ' ' + t('form.chars');
+  mcImageData = existing ? (existing.image || null) : null;
+  mcImageDims = (existing && existing.imgW && existing.imgH) ? { w:existing.imgW, h:existing.imgH } : null;
+  mcImageSize = existing ? (existing.imageSize || 'medium') : (formPrefs.mcImageSize || 'medium');
+  document.querySelectorAll('#mcImageSizeToggle button').forEach(b => b.classList.toggle('active', b.dataset.size === mcImageSize));
+  updateImagePreviewUI();
+  mcOptions = existing ? existing.options.map(o => ({...o})) : (() => {
+    const n = Math.max(2, Math.min(26, parseInt(formPrefs.mcOptionCount, 10) || 5));
+    const arr = []; for (let i = 0; i < n; i++) arr.push({ label: labelFor(i), text: '' });
+    return arr;
+  })();
+  mcCorrectIndex = (existing && Number.isInteger(existing.correctIndex) && existing.correctIndex >= 0 && existing.correctIndex < mcOptions.length) ? existing.correctIndex : null;
+  document.getElementById('mcOptionCount').value = mcOptions.length; renderOptionInputs();
+  mcLayout = existing ? (existing.layout || '1-column') : (formPrefs.mcLayout || '1-column');
+  document.querySelectorAll('#mcLayoutToggle button').forEach(b => b.classList.toggle('active', b.dataset.layout === mcLayout));
+  mcQuestionLayout = existing ? (existing.questionLayout || '1-column') : (formPrefs.mcQuestionLayout || '1-column');
+  document.querySelectorAll('#mcQuestionLayoutToggle button').forEach(b => b.classList.toggle('active', b.dataset.qlayout === mcQuestionLayout));
+  mcPlacement = (existing && existing.forceNewPage) ? 'new' : 'current';
+  document.querySelectorAll('#mcPlacementToggle button').forEach(b => b.classList.toggle('active', b.dataset.placement === mcPlacement));
+  clearFieldError('mcQuestionField'); document.getElementById('mcOptionsError').style.display = 'none';
+  openModal(document.getElementById('mcModalOverlay'));
+  setTimeout(() => qInput.focus(), 200);
+}
+function resetMcModal(){ editingId = null; editingType = null; mcImageData = null; mcImageDims = null; mcPlacement = 'current'; mcCorrectIndex = null; }
+
+function renderOptionInputs(){
+  const list = document.getElementById('mcOptionsList'); list.innerHTML = '';
+  if (mcCorrectIndex !== null && (mcCorrectIndex < 0 || mcCorrectIndex >= mcOptions.length)) mcCorrectIndex = null;
+  mcOptions.forEach((opt, i) => {
+    opt.label = labelFor(i);
+    const row = document.createElement('div'); row.className = 'option-row';
+    row.innerHTML = `<label class="opt-correct-radio" title="${t('mc.markCorrect')}"><input type="radio" name="mcCorrectRadio" data-idx="${i}" ${mcCorrectIndex === i ? 'checked' : ''}><span class="opt-badge">${opt.label}</span></label><input type="text" data-idx="${i}" placeholder="${t('mc.optionPh')}" value="${escapeHtml(opt.text)}">`;
+    row.querySelector('input[type="text"]').addEventListener('input', (e) => { mcOptions[i].text = e.target.value; document.getElementById('mcOptionsError').style.display = 'none'; });
+    row.querySelector('input[type="radio"]').addEventListener('change', () => { mcCorrectIndex = i; });
+    list.appendChild(row);
+  });
+}
+function setOptionCount(newCount){
+  newCount = Math.max(2, Math.min(26, newCount));
+  const filledBeyond = mcOptions.slice(newCount).some(o => o.text.trim() !== '');
+  const applyChange = () => {
+    if (newCount > mcOptions.length){ for (let i = mcOptions.length; i < newCount; i++) mcOptions.push({label:labelFor(i), text:''}); }
+    else { mcOptions = mcOptions.slice(0, newCount); }
+    document.getElementById('mcOptionCount').value = newCount; renderOptionInputs();
+    formPrefs.mcOptionCount = newCount; saveFormPrefs();
+  };
+  if (newCount < mcOptions.length && filledBeyond){
+    openConfirmModal({ title: t('confirm.reduceTitle'), desc: t('confirm.reduceDesc'), actionLabel: t('confirm.reduceAction'), onConfirm: applyChange, onCancel: () => { document.getElementById('mcOptionCount').value = mcOptions.length; } });
+  } else { applyChange(); }
+}
+
+function handleImageFile(file){
+  if (!file.type.match(/image\/(png|jpeg|jpg)/)){ showToast(t('toast.imgFormat'), 'error'); return; }
+  if (file.size > 5 * 1024 * 1024){ showToast(t('toast.imgSize'), 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    mcImageData = await downscaleDataUrl(e.target.result, 1600, 0.85);
+    cropSourceData = mcImageData; mcImageDims = null;
+    const probe = new Image();
+    probe.onload = () => { mcImageDims = { w: probe.naturalWidth, h: probe.naturalHeight }; renderPreview(); };
+    probe.src = mcImageData; updateImagePreviewUI(); showToast(t('toast.imgOk'), 'success');
+  };
+  reader.readAsDataURL(file);
+}
+function removeMcImage(){ mcImageData = null; cropSourceData = null; mcImageDims = null; updateImagePreviewUI(); }
+function updateImagePreviewUI(){
+  const box = document.getElementById('mcImagePreviewBox'); const uploadArea = document.getElementById('mcUploadArea'); const sizeField = document.getElementById('mcImageSizeField');
+  if (mcImageData){ box.classList.remove('hidden'); uploadArea.classList.add('hidden'); sizeField.classList.remove('hidden'); document.getElementById('mcImagePreviewImg').src = mcImageData; }
+  else { box.classList.add('hidden'); uploadArea.classList.remove('hidden'); sizeField.classList.add('hidden'); }
+}
+function openCropModal(imageSrc){
+  if (!imageSrc) return;
+  const overlay = document.getElementById('cropModalOverlay'); const img = document.getElementById('cropImageEl');
+  img.src = imageSrc; openModal(overlay);
+  setTimeout(() => { if (cropper) cropper.destroy(); cropper = new Cropper(img, { viewMode:1, autoCropArea:0.9, background:false, responsive:true }); }, 80);
+}
+function applyCrop(){
+  if (!cropper) return;
+  const canvas = cropper.getCroppedCanvas({ maxWidth:1400, maxHeight:1400, imageSmoothingQuality:'high' });
+  mcImageData = canvas.toDataURL('image/jpeg', 0.85); mcImageDims = { w: canvas.width, h: canvas.height };
+  updateImagePreviewUI(); closeModal(document.getElementById('cropModalOverlay')); showToast(t('toast.cropOk'), 'success');
+}
+
+function saveMcQuestion(){
+  const qInput = document.getElementById('mcQuestionInput'); const question = qInput.value.trim();
+  let valid = true;
+  if (!question){ setFieldError('mcQuestionField'); valid = false; } else clearFieldError('mcQuestionField');
+  if (mcOptions.length < 2 || mcOptions.some(o => !o.text.trim())){ document.getElementById('mcOptionsError').style.display = 'flex'; valid = false; }
+  else { document.getElementById('mcOptionsError').style.display = 'none'; }
+  if (!valid){ showToast(t('toast.completeData'), 'warning'); return; }
+  const imgW = mcImageData && mcImageDims ? mcImageDims.w : null;
+  const imgH = mcImageData && mcImageDims ? mcImageDims.h : null;
+  const forceNewPage = mcPlacement === 'new'; const questionLayout = mcQuestionLayout;
+  if (editingId){
+    const q = questions.find(x => x.id === editingId);
+    q.question = question; q.image = mcImageData; q.imageSize = mcImageSize; q.imgW = imgW; q.imgH = imgH;
+    q.options = mcOptions.map(o => ({...o})); q.layout = mcLayout; q.questionLayout = questionLayout; q.forceNewPage = forceNewPage;
+    q.correctIndex = mcCorrectIndex;
+    showToast(t('toast.qUpdated'), 'success');
+  } else {
+    questions.push({ id: uid(), type:'multiple-choice', question, image: mcImageData, imageSize: mcImageSize,
+      imgW, imgH, options: mcOptions.map(o => ({...o})), layout: mcLayout, questionLayout, forceNewPage, correctIndex: mcCorrectIndex });
+    showToast(t('toast.qAdded'), 'success');
+  }
+  saveToStorage(); closeModal(document.getElementById('mcModalOverlay')); renderAll();
+}
+
+function openEssayModal(existing = null){
+  if (!getActiveFile()){ setNav('bank'); showToast(t('toast.needFileOpen'), 'warning'); return; }
+  editingId = existing ? existing.id : null; editingType = 'essay';
+  const qInput = document.getElementById('essayQuestionInput');
+  qInput.value = existing ? existing.question : '';
+  document.getElementById('essayQCounter').textContent = qInput.value.length + ' ' + t('form.chars');
+  const akInput = document.getElementById('essayAnswerKeyInput');
+  akInput.value = existing ? (existing.answerKey || '') : '';
+  document.getElementById('essayAnswerKeyCounter').textContent = akInput.value.length + ' ' + t('form.chars');
+  document.getElementById('essayModalTitle').textContent = existing ? t('essay.titleEdit') : t('essay.titleAdd');
+  document.getElementById('essayModalSub').textContent = t('essay.subAdd');
+  essayPlacement = (existing && existing.forceNewPage) ? 'new' : 'current';
+  document.querySelectorAll('#essayPlacementToggle button').forEach(b => b.classList.toggle('active', b.dataset.placement === essayPlacement));
+  clearFieldError('essayQuestionField'); openModal(document.getElementById('essayModalOverlay'));
+  setTimeout(() => qInput.focus(), 200);
+}
+function resetEssayModal(){ editingId = null; editingType = null; essayPlacement = 'current'; }
+
+function saveEssayQuestion(){
+  const qInput = document.getElementById('essayQuestionInput'); const question = qInput.value.trim();
+  const answerKey = document.getElementById('essayAnswerKeyInput').value.trim();
+  if (!question){ setFieldError('essayQuestionField'); showToast(t('toast.qEmpty'), 'warning'); return; }
+  clearFieldError('essayQuestionField');
+  const forceNewPage = essayPlacement === 'new';
+  if (editingId){ const q = questions.find(x => x.id === editingId); q.question = question; q.answerKey = answerKey; q.forceNewPage = forceNewPage; showToast(t('toast.qUpdated'), 'success'); }
+  else { questions.push({ id: uid(), type:'essay', question, answerKey, forceNewPage }); showToast(t('toast.qAdded'), 'success'); }
+  saveToStorage(); closeModal(document.getElementById('essayModalOverlay')); renderAll();
+}
+
+function editQuestion(id){
+  const q = questions.find(x => x.id === id); if (!q) return;
+  if (q.type === 'multiple-choice') openMcModal(q); else openEssayModal(q);
+}
+function duplicateQuestion(id){
+  const idx = questions.findIndex(x => x.id === id); if (idx === -1) return;
+  const copy = JSON.parse(JSON.stringify(questions[idx])); copy.id = uid();
+  questions.splice(idx + 1, 0, copy); saveToStorage(); renderAll(); showToast(t('toast.qDuplicated'), 'success');
+}
+function moveQuestion(id, dir){
+  const idx = questions.findIndex(x => x.id === id); const newIdx = idx + dir;
+  if (idx === -1 || newIdx < 0 || newIdx >= questions.length) return;
+  [questions[idx], questions[newIdx]] = [questions[newIdx], questions[idx]]; saveToStorage(); renderAll();
+}
+function requestDeleteQuestion(id){ deleteTargetId = id; resetPending = false; openConfirmModal({ title: t('confirm.deleteQTitle'), desc: t('confirm.deleteQDesc'), actionLabel: t('common.delete') }); }
+function openConfirmModal({title, desc, actionLabel, onConfirm, onCancel}){
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmDesc').textContent = desc;
+  document.getElementById('btnConfirmAction').innerHTML = `<i class="fa-solid fa-trash"></i>${actionLabel}`;
+  window._confirmCb = onConfirm || null; window._cancelCb = onCancel || null;
+  const overlay = document.getElementById('confirmModalOverlay'); openModal(overlay);
+  document.querySelectorAll('#confirmModalOverlay [data-close]').forEach(b => { b.onclick = () => { closeModal(overlay); if (window._cancelCb) window._cancelCb(); }; });
+}
+function handleConfirmAction(){
+  const overlay = document.getElementById('confirmModalOverlay');
+  if (window._confirmCb){ window._confirmCb(); closeModal(overlay); return; }
+  if (resetPending){ questions = []; saveToStorage(); renderAll(); showToast(t('toast.allQDeleted'), 'success'); resetPending = false; }
+  else if (deleteTargetId){ questions = questions.filter(x => x.id !== deleteTargetId); saveToStorage(); renderAll(); showToast(t('toast.qDeleted'), 'success'); deleteTargetId = null; }
+  closeModal(overlay);
+}
+
+function renderAll(){ updateNavCounts(); renderQuestionList(); renderPreview(); }
+function updateNavCounts(){
+  const elAll = document.getElementById('navCountAll'); if (elAll) elAll.textContent = questions.length;
+  const elMc = document.getElementById('navCountMc'); if (elMc) elMc.textContent = questions.filter(q => q.type === 'multiple-choice').length;
+  const elEssay = document.getElementById('navCountEssay'); if (elEssay) elEssay.textContent = questions.filter(q => q.type === 'essay').length;
+  const nf = document.getElementById('navCountFiles'); if (nf) nf.textContent = filesStore.length;
+}
+function renderQuestionList(){
+  const body = document.getElementById('questionListBody');
+  let list = questions;
+  if (currentNav === 'mc') list = questions.filter(q => q.type === 'multiple-choice');
+  else if (currentNav === 'essay') list = questions.filter(q => q.type === 'essay');
+  document.getElementById('listMeta').textContent = tf('home.questionCount', { n: list.length });
+  if (list.length === 0){
+    body.innerHTML = `<div class="empty-state"><i class="fa-regular fa-file-lines"></i><h3>${t('list.emptyTitle')}</h3><p>${t('list.emptyDesc')}</p><div class="empty-actions"><button class="btn btn-primary btn-sm" onclick="openMcModal()"><i class="fa-solid fa-plus"></i>${t('qa.mcTitle')}</button><button class="btn btn-outline btn-sm" onclick="openEssayModal()"><i class="fa-solid fa-plus"></i>${t('qa.essayTitle')}</button></div></div>`;
+    return;
+  }
+  body.innerHTML = list.map((q, i) => {
+    const globalIdx = questions.indexOf(q); const isFirst = globalIdx === 0, isLast = globalIdx === questions.length - 1;
+    const num = String(i + 1).padStart(2, '0');
+    if (q.type === 'multiple-choice'){
+      const hasKey = Number.isInteger(q.correctIndex);
+      const keyBadge = hasKey ? `<span class="q-key-badge" title="${t('mc.correctHint')}"><i class="fa-solid fa-key"></i>${escapeHtml(q.options[q.correctIndex].label)}</span>` : '';
+      return `<div class="q-card"><div class="q-card-top"><div class="q-index">${num}</div><span class="q-type-badge mc">${t('qa.mcTitle')}</span>${keyBadge}</div><p class="q-card-text">${escapeHtml(q.question) || '<em>' + t('list.emptyQuestion') + '</em>'}</p>${q.image ? `<img class="q-card-thumb" src="${q.image}" alt="">` : ''}<div class="q-card-options">${q.options.map((o, oi) => `<span${hasKey && oi === q.correctIndex ? ' class="q-opt-correct"' : ''}>${o.label}. ${escapeHtml(o.text).slice(0,18) || '—'}</span>`).join('')}</div><div class="q-card-actions"><button class="icon-btn btn-sm" style="width:30px;height:30px;" data-action="up" data-id="${q.id}" ${isFirst?'disabled':''} title="${t('list.up')}"><i class="fa-solid fa-arrow-up"></i></button><button class="icon-btn btn-sm" style="width:30px;height:30px;" data-action="down" data-id="${q.id}" ${isLast?'disabled':''} title="${t('list.down')}"><i class="fa-solid fa-arrow-down"></i></button><span class="spacer"></span><button class="btn btn-ghost btn-sm" data-action="edit" data-id="${q.id}"><i class="fa-solid fa-pen"></i>${t('common.edit')}</button><button class="btn btn-ghost btn-sm" data-action="duplicate" data-id="${q.id}"><i class="fa-solid fa-copy"></i>${t('common.duplicate')}</button><button class="btn btn-ghost btn-sm" data-action="delete" data-id="${q.id}" style="color:var(--danger);"><i class="fa-solid fa-trash"></i>${t('common.delete')}</button></div></div>`;
+    }
+    const essayKeyBadge = (q.answerKey && q.answerKey.trim()) ? `<span class="q-key-badge" title="${escapeHtml(q.answerKey)}"><i class="fa-solid fa-key"></i></span>` : '';
+    return `<div class="q-card"><div class="q-card-top"><div class="q-index">${num}</div><span class="q-type-badge essay">${t('qa.essayTitle')}</span>${essayKeyBadge}</div><p class="q-card-text">${escapeHtml(q.question) || '<em>' + t('list.emptyQuestion') + '</em>'}</p><div class="q-card-actions"><button class="icon-btn btn-sm" style="width:30px;height:30px;" data-action="up" data-id="${q.id}" ${isFirst?'disabled':''} title="${t('list.up')}"><i class="fa-solid fa-arrow-up"></i></button><button class="icon-btn btn-sm" style="width:30px;height:30px;" data-action="down" data-id="${q.id}" ${isLast?'disabled':''} title="${t('list.down')}"><i class="fa-solid fa-arrow-down"></i></button><span class="spacer"></span><button class="btn btn-ghost btn-sm" data-action="edit" data-id="${q.id}"><i class="fa-solid fa-pen"></i>${t('common.edit')}</button><button class="btn btn-ghost btn-sm" data-action="duplicate" data-id="${q.id}"><i class="fa-solid fa-copy"></i>${t('common.duplicate')}</button><button class="btn btn-ghost btn-sm" data-action="delete" data-id="${q.id}" style="color:var(--danger);"><i class="fa-solid fa-trash"></i>${t('common.delete')}</button></div></div>`;
+  }).join('');
+}
+
+function buildMcElement(q, number, showKey){
+  const wrap = document.createElement('div'); wrap.className = 'doc-question';
+  const optsClass = q.layout === '2-column' ? 'doc-options cols-2' : 'doc-options';
+  const isHalfCol = q.questionLayout === '2-column';
+  const hasKey = showKey && Number.isInteger(q.correctIndex) && q.options[q.correctIndex];
+  let imageHtml = '';
+  if (q.image){
+    let imgAttr = '';
+    if (q.imgW && q.imgH){
+      const maxH = (isHalfCol ? IMAGE_SIZE_MAX_MM_HALF : IMAGE_SIZE_MAX_MM)[q.imageSize || 'medium'];
+      const maxW = isHalfCol ? GRID_COL_W_MM : CONTENT_W_MM;
+      const { wmm, hmm } = computeImageBoxMm(q.imgW, q.imgH, maxH, maxW);
+      imgAttr = ` style="width:${wmm.toFixed(2)}mm;height:${hmm.toFixed(2)}mm;"`;
+    }
+    imageHtml = `<div class="doc-image size-${q.imageSize || 'medium'}"><img${imgAttr} src="${q.image}" alt=""></div>`;
+  }
+  const keyNote = hasKey ? `<div class="doc-answer-key">${t('doc.answerKeyLabel')} <strong>${escapeHtml(q.options[q.correctIndex].label)}</strong></div>` : '';
+  wrap.innerHTML = `<div class="q-num">${number}.</div><div class="q-body"><p class="doc-question-text">${escapeHtml(q.question)}</p>${imageHtml}<div class="${optsClass}">${q.options.map((o, oi) => `<div class="doc-option${hasKey && oi === q.correctIndex ? ' is-correct' : ''}"><span class="opt-label">${o.label.toLowerCase()}.</span><span>${escapeHtml(o.text)}</span></div>`).join('')}</div>${keyNote}</div>`;
+  if (q.layout === '2-column'){
+    const rows = Math.ceil(q.options.length / 2);
+    wrap.querySelector('.doc-options').style.gridTemplateRows = `repeat(${rows}, auto)`;
+  }
+  return wrap;
+}
+function buildEssayElement(q, number, showKey){
+  const wrap = document.createElement('div'); wrap.className = 'doc-question essay';
+  const hasKey = showKey && q.answerKey && q.answerKey.trim();
+  const keyNote = hasKey ? `<div class="doc-answer-key"><strong>${t('doc.answerKeyLabel')}</strong> ${escapeHtml(q.answerKey.trim())}</div>` : '';
+  wrap.innerHTML = `<div class="q-num">${number}.</div><div class="q-body"><p class="doc-question-text">${escapeHtml(q.question)}</p>${keyNote}</div>`;
+  return wrap;
+}
+function buildHeaderElement(){
+  const wrap = document.createElement('div'); wrap.className = 'doc-header';
+  const linesHtml = (text, cls) => (text || '').split('\n').map(l => l.trim()).filter(l => l !== '').map(l => `<div class="${cls}">${escapeHtml(l)}</div>`).join('');
+  const leftLogo = docSettings.schoolLogo ? `<img src="${docSettings.schoolLogo}" alt="">` : '';
+  const rightLogo = docSettings.agencyLogo ? `<img src="${docSettings.agencyLogo}" alt="">` : '';
+  let html = `<div class="doc-letterhead"><div class="doc-letterhead-logo">${leftLogo}</div><div class="doc-letterhead-text">${linesHtml(docSettings.agencyName, 'lh-agency')}${linesHtml(docSettings.schoolName, 'lh-school')}${linesHtml(docSettings.schoolAddress, 'lh-address')}</div><div class="doc-letterhead-logo">${rightLogo}</div></div><div class="doc-header-rule-outer"><div class="doc-header-rule-thick"></div><div class="doc-header-rule-thin"></div></div>`;
+  if (docSettings.identityEnabled || docSettings.examDateEnabled){
+    let idHtml = '<div class="doc-id-block">';
+    const fields = (docSettings.identityEnabled && Array.isArray(docSettings.identityFields)) ? docSettings.identityFields : [];
+    const leftFields = fields.filter(f => f.column !== 'right');
+    const rightFields = fields.filter(f => f.column === 'right');
+    if (leftFields.length || rightFields.length){
+      const rowHtml = f => `<div class="doc-id-row"><span class="id-label">${escapeHtml(f.label || '')}</span><span class="id-colon">:</span><span class="id-fill">${(f.value || '').trim() ? escapeHtml(f.value) : '&nbsp;'}</span></div>`;
+      idHtml += `<div class="doc-id-grid"><div>${leftFields.map(rowHtml).join('')}</div><div>${rightFields.map(rowHtml).join('')}</div></div>`;
+    }
+    if (docSettings.examDateEnabled){
+      idHtml += `<div class="doc-id-row" style="margin-top:${(leftFields.length || rightFields.length) ? '2pt' : '0'};"><span class="id-label">${t('doc.date')}</span><span class="id-colon">:</span><span class="id-fill">${docSettings.examDate ? escapeHtml(docSettings.examDate) : '&nbsp;'}</span></div>`;
+    }
+    idHtml += '</div>'; html += idHtml;
+  }
+  wrap.innerHTML = html; return wrap;
+}
+function buildInstructionElement(){ const wrap = document.createElement('p'); wrap.className = 'doc-instruction'; wrap.textContent = docSettings.instructionText || ''; return wrap; }
+function buildSectionLabel(text){ const el = document.createElement('h2'); el.className = 'doc-section-title'; el.textContent = text; return el; }
+function createPageEl(){ const page = document.createElement('div'); page.className = 'a4-page'; const content = document.createElement('div'); content.className = 'a4-content'; page.appendChild(content); return page; }
+
+/* ==========================================================================
+   CONTINUOUS DOCUMENT FLOW PAGINATION
+   ------------------------------------------------------------------------
+   Alih-alih memperlakukan satu soal sebagai satu blok atomik yang harus
+   dipindah utuh ke halaman berikutnya begitu tidak muat, mesin di bawah ini
+   memperlakukan setiap soal sebagai KONTEN YANG DAPAT MENGALIR (mirip Word/
+   PDF): teks pertanyaan dan pilihan jawaban boleh terpotong pada batas
+   halaman/kolom, lalu bagian sisanya dilanjutkan di halaman/kolom berikutnya.
+   Ruang kosong yang tersisa pada sebuah halaman selalu dicoba diisi terlebih
+   dahulu sebelum membuat halaman baru.
+   ========================================================================== */
+
+// Pisahkan sebuah paragraf (mis. teks pertanyaan / teks pilihan jawaban) di
+// titik kata terakhir yang masih muat dalam `limitHeight`. `hostEl` adalah
+// wadah yang SUDAH terpasang di DOM (jadi lebar/typografinya nyata) tempat
+// paragraf percobaan ditempelkan sementara untuk diukur, lalu dites terhadap
+// `measureEl.scrollHeight <= limitHeight`.
+function splitParagraphText(sourceEl, hostEl, measureEl, limitHeight){
+  const words = sourceEl.textContent.split(/\s+/).filter(Boolean);
+  if (!words.length) return { fitPart: null, restPart: null };
+  const trial = document.createElement(sourceEl.tagName.toLowerCase());
+  trial.className = sourceEl.className;
+  hostEl.appendChild(trial);
+  let lo = 0, hi = words.length, best = 0;
+  while (lo <= hi){
+    const mid = (lo + hi) >> 1;
+    trial.textContent = mid ? words.slice(0, mid).join(' ') : '';
+    if (measureEl.scrollHeight <= limitHeight){ best = mid; lo = mid + 1; } else { hi = mid - 1; }
+  }
+  if (best === 0){ hostEl.removeChild(trial); return { fitPart: null, restPart: sourceEl }; }
+  trial.textContent = words.slice(0, best).join(' ');
+  let restPart = null;
+  if (best < words.length){
+    restPart = document.createElement(sourceEl.tagName.toLowerCase());
+    restPart.className = sourceEl.className;
+    restPart.textContent = words.slice(best).join(' ');
+  }
+  return { fitPart: trial, restPart };
+}
+
+// Pisahkan teks di dalam SATU pilihan jawaban (label + isi) — hanya dipakai
+// sebagai jalan terakhir bila satu opsi saja sudah lebih panjang dari sisa
+// ruang yang ada.
+function splitOptionText(optEl, hostEl, measureEl, limitHeight){
+  const labelSpan = optEl.querySelector('.opt-label');
+  const textSpan = labelSpan ? labelSpan.nextElementSibling : null;
+  if (!labelSpan || !textSpan) return { fitPart: null, restPart: optEl };
+  const words = textSpan.textContent.split(/\s+/).filter(Boolean);
+  if (!words.length) return { fitPart: null, restPart: optEl };
+  const trialOpt = document.createElement('div'); trialOpt.className = 'doc-option';
+  const trialLabel = document.createElement('span'); trialLabel.className = 'opt-label'; trialLabel.textContent = labelSpan.textContent;
+  const trialText = document.createElement('span');
+  trialOpt.appendChild(trialLabel); trialOpt.appendChild(trialText);
+  hostEl.appendChild(trialOpt);
+  let lo = 0, hi = words.length, best = 0;
+  while (lo <= hi){
+    const mid = (lo + hi) >> 1;
+    trialText.textContent = mid ? words.slice(0, mid).join(' ') : '';
+    if (measureEl.scrollHeight <= limitHeight){ best = mid; lo = mid + 1; } else { hi = mid - 1; }
+  }
+  if (best === 0){ hostEl.removeChild(trialOpt); return { fitPart: null, restPart: optEl }; }
+  trialText.textContent = words.slice(0, best).join(' ');
+  let restPart = null;
+  if (best < words.length){
+    restPart = document.createElement('div'); restPart.className = 'doc-option';
+    const restLabel = document.createElement('span'); restLabel.className = 'opt-label'; restLabel.textContent = '';
+    const restText = document.createElement('span'); restText.textContent = words.slice(best).join(' ');
+    restPart.appendChild(restLabel); restPart.appendChild(restText);
+  }
+  return { fitPart: trialOpt, restPart };
+}
+
+// Pisahkan kontainer pilihan jawaban (.doc-options) per-opsi. Bila satu opsi
+// saja masih terlalu besar untuk sisa ruang, jatuh ke pemisahan kata via
+// splitOptionText().
+function splitOptionsContainer(optsEl, hostEl, measureEl, limitHeight){
+  const isCols2 = optsEl.classList.contains('cols-2');
+  const optChildren = Array.from(optsEl.children);
+  const trialOpts = document.createElement('div'); trialOpts.className = optsEl.className;
+  hostEl.appendChild(trialOpts);
+  const restChildren = [];
+  let anyFit = false;
+  for (let i = 0; i < optChildren.length; i++){
+    const opt = optChildren[i];
+    trialOpts.appendChild(opt);
+    if (measureEl.scrollHeight <= limitHeight){ anyFit = true; continue; }
+    trialOpts.removeChild(opt);
+    const { fitPart, restPart } = splitOptionText(opt, trialOpts, measureEl, limitHeight);
+    if (fitPart){ anyFit = true; if (restPart) restChildren.push(restPart); }
+    else { restChildren.push(opt); }
+    for (let j = i + 1; j < optChildren.length; j++) restChildren.push(optChildren[j]);
+    break;
+  }
+  if (isCols2){ trialOpts.style.gridTemplateRows = `repeat(${Math.ceil(trialOpts.children.length / 2)}, auto)`; }
+  if (!anyFit){
+    hostEl.removeChild(trialOpts);
+    // PENTING: opsi yang sempat dipindah untuk dites (appendChild) harus
+    // dikembalikan ke optsEl semula — kalau tidak, optsEl jadi cacat
+    // (kehilangan opsi pertama) saat dipakai ulang oleh pemanggil.
+    optChildren.forEach(o => optsEl.appendChild(o));
+    return { fitPart: null, restPart: optsEl };
+  }
+  let restPart = null;
+  if (restChildren.length){
+    restPart = document.createElement('div'); restPart.className = optsEl.className;
+    restChildren.forEach(o => restPart.appendChild(o));
+    if (isCols2){ restPart.style.gridTemplateRows = `repeat(${Math.ceil(restChildren.length / 2)}, auto)`; }
+  }
+  return { fitPart: trialOpts, restPart };
+}
+
+// Inti pemisahan satu elemen ".doc-question" (pilihan ganda ATAU essay) agar
+// muat ke dalam `limitHeight` pada wadah `destParent` (bisa berupa `.a4-content`
+// halaman penuh, atau `.doc-question-col` setengah halaman). Mengembalikan:
+//   { status:'none' }                → tidak ada satu pun bagian yang muat
+//   { status:'partial', restEl }     → sebagian sudah ditempel ke destParent,
+//                                       `restEl` adalah lanjutan untuk kolom/
+//                                       halaman berikutnya (atau null bila habis)
+function splitQuestionIntoBudget(qEl, destParent, limitHeight){
+  const qNumSrc = qEl.querySelector('.q-num');
+  const qNumText = qNumSrc ? qNumSrc.textContent : '';
+  const origQBody = qEl.querySelector('.q-body');
+  const bodyChildren = Array.from(origQBody.children);
+
+  const fitWrap = document.createElement('div');
+  fitWrap.className = qEl.className;
+  fitWrap.style.cssText = qEl.style.cssText;
+  const fitNum = document.createElement('div'); fitNum.className = 'q-num'; fitNum.textContent = qNumText;
+  const fitBody = document.createElement('div'); fitBody.className = 'q-body';
+  fitWrap.appendChild(fitNum); fitWrap.appendChild(fitBody);
+  destParent.appendChild(fitWrap);
+
+  const restChildren = [];
+  let anyFit = false;
+
+  for (let i = 0; i < bodyChildren.length; i++){
+    const child = bodyChildren[i];
+    fitBody.appendChild(child);
+    if (destParent.scrollHeight <= limitHeight){ anyFit = true; continue; }
+    fitBody.removeChild(child);
+    if (child.tagName === 'P' && child.classList.contains('doc-question-text')){
+      const { fitPart, restPart } = splitParagraphText(child, fitBody, destParent, limitHeight);
+      if (fitPart){ anyFit = true; if (restPart) restChildren.push(restPart); }
+      else { restChildren.push(child); }
+    } else if (child.classList.contains('doc-options')){
+      const { fitPart, restPart } = splitOptionsContainer(child, fitBody, destParent, limitHeight);
+      if (fitPart){ anyFit = true; if (restPart) restChildren.push(restPart); }
+      else { restChildren.push(child); }
+    } else {
+      // Elemen atomik (mis. gambar soal) — tidak bisa dipotong.
+      restChildren.push(child);
+    }
+    for (let j = i + 1; j < bodyChildren.length; j++) restChildren.push(bodyChildren[j]);
+    break;
+  }
+
+  if (!anyFit){
+    destParent.removeChild(fitWrap);
+    // PENTING: anak-anak yang sempat dipindah ke fitBody untuk dites (appendChild)
+    // harus dikembalikan ke q-body ASLI qEl — kalau tidak, qEl jadi cacat
+    // (mis. teks pertanyaan hilang, tersisa hanya pilihan jawaban) saat
+    // pemanggil mencoba ulang qEl ini di halaman/kolom berikutnya.
+    bodyChildren.forEach(c => origQBody.appendChild(c));
+    return { status: 'none' };
+  }
+  if (!restChildren.length){ return { status: 'full' }; }
+
+  const restWrap = document.createElement('div'); restWrap.className = qEl.className;
+  restWrap.style.cssText = qEl.style.cssText;
+  const restNum = document.createElement('div'); restNum.className = 'q-num'; restNum.textContent = '';
+  const restBody = document.createElement('div'); restBody.className = 'q-body';
+  restChildren.forEach(c => restBody.appendChild(c));
+  restWrap.appendChild(restNum); restWrap.appendChild(restBody);
+
+  return { status: 'partial', restEl: restWrap };
+}
+
+function buildPages(showKey){
+  showKey = !!showKey;
+  const maxHeight = mmToPx(PAGE_H_MM) + 2;
+  const pages = [];
+  let page = createPageEl(); let content = page.querySelector('.a4-content'); pages.push(page);
+  const staging = document.createElement('div');
+  staging.style.position = 'absolute'; staging.style.visibility = 'hidden'; staging.style.left = '-99999px'; staging.style.width = PAGE_W_MM + 'mm';
+  document.body.appendChild(staging); staging.appendChild(page);
+
+  // Blok non-soal (header, petunjuk, judul bagian) tetap diperlakukan atomik —
+  // ini pendek dan jarang melebihi satu halaman, jadi tidak perlu dipecah.
+  function pushEl(el){
+    content.appendChild(el);
+    if (content.scrollHeight > maxHeight && content.children.length > 1){
+      content.removeChild(el); page = createPageEl(); staging.appendChild(page); pages.push(page);
+      content = page.querySelector('.a4-content'); content.appendChild(el);
+    }
+  }
+  function forcePageBreak(){
+    if (content.children.length === 0) return;
+    page = createPageEl(); staging.appendChild(page); pages.push(page); content = page.querySelector('.a4-content');
+  }
+
+  // Alur 1 kolom (soal pilihan ganda 1-kolom & essay): coba tempel utuh dulu;
+  // bila tidak muat, potong sebanyak yang muat lalu lanjutkan sisanya ke
+  // halaman berikutnya — mengisi ruang kosong semaksimal mungkin, persis
+  // seperti aliran teks pada dokumen Word/PDF.
+  function flowSingleQuestion(qEl){
+    content.appendChild(qEl);
+    if (content.scrollHeight <= maxHeight) return;
+    content.removeChild(qEl);
+    const result = splitQuestionIntoBudget(qEl, content, maxHeight);
+    if (result.status === 'none'){
+      if (content.children.length === 0){ content.appendChild(qEl); return; } // halaman kosong tapi tetap tidak muat: paksa tampil (kasus ekstrem)
+      forcePageBreak();
+      flowSingleQuestion(qEl);
+      return;
+    }
+    forcePageBreak();
+    if (result.restEl) flowSingleQuestion(result.restEl);
+  }
+
+  /* ==========================================================================
+     LAYOUT SOAL 2 KOLOM — sistem COLUMN-FIRST (kiri → kanan → halaman baru).
+     -------------------------------------------------------------------------
+     Aturan pengisian (sesuai spesifikasi pengguna):
+       1. Secara visual kolom KIRI diisi terlebih dahulu dari atas ke bawah;
+          setelah penuh, lanjut ke kolom KANAN dari atas ke bawah; setelah itu
+          grid baru pada halaman berikutnya. TIDAK ADA pola alternating
+          (kiri→kanan→kiri→kanan).
+       2. Nomor soal SELALU berurutan secara global dan TIDAK pernah di-reset
+          saat berpindah halaman (halaman 1: 1–10, halaman 2: 11–20, dst).
+       3. Jumlah soal ganjil ditangani secara alami: kolom kiri boleh memuat
+          satu soal lebih banyak daripada kolom kanan (contoh 9 soal → kiri 5,
+          kanan 4; 7 soal → kiri 4, kanan 3).
+       4. Jika grid tidak dimulai dari atas halaman (mis. masih ada judul/
+          petunjuk di atasnya), sisa ruang di bawah grid TIDAK terbuang:
+          setelah grid, pengisian dilanjutkan pada area sisa tersebut mulai
+          dari kolom KIRI, lalu kolom KANAN (grid kedua dengan tinggi terbatas),
+          sebelum berpindah ke halaman baru.
+       5. Karena diukur berdasarkan TINGGI NYATA konten (bukan pembagian n/2
+          statis), hasil identik di preview maupun ekspor PDF (keduanya
+          memakai buildPages() yang sama).
+     ========================================================================== */
+  function flowTwoColumnQuestions(items){
+    if (!items.length) return;
+    let grid, leftCol, rightCol, colCap, filling, isFixedH;
+    // Tinggi minimum grid yang masih layak diisi; sisa ruang di bawah nilai
+    // ini dibiarkan kosong dan pengisian pindah ke halaman baru.
+    const MIN_GRID_H = 110;
+    function startGrid(){
+      grid = document.createElement('div'); grid.className = 'doc-question-grid';
+      leftCol = document.createElement('div'); leftCol.className = 'doc-question-col';
+      rightCol = document.createElement('div'); rightCol.className = 'doc-question-col';
+      grid.appendChild(leftCol); grid.appendChild(rightCol);
+      content.appendChild(grid);
+      let top = grid.offsetTop;                          // posisi atas grid relatif thd area konten halaman
+      let avail = maxHeight - top;                       // ruang vertikal yang tersedia untuk grid ini
+      if (avail < MIN_GRID_H){
+        // Sisa ruang di halaman ini terlalu kecil → pindah ke halaman baru.
+        content.removeChild(grid);
+        forcePageBreak();
+        content.appendChild(grid);
+        top = grid.offsetTop; avail = maxHeight - top;
+      }
+      if (avail < maxHeight - 4){
+        // Grid tidak memakai seluruh tinggi halaman → kunci tinggi grid agar
+        // kolom TIDAK mengalir melewati dasar halaman. Setelah grid penuh,
+        // pengisian dilanjutkan pada area sisa di bawah grid (advanceGrid).
+        grid.style.height = avail + 'px';
+        colCap = avail; isFixedH = true;
+      } else {
+        colCap = maxHeight; isFixedH = false;
+      }
+      filling = 'left';
+    }
+    function shrinkGrid(){
+      // Kembalikan tinggi grid terkunci ke tinggi konten nyatanya supaya
+      // konten berikutnya (grid baru / bagian essay) menempel tepat di bawahnya.
+      if (isFixedH && grid){
+        const usedH = Math.max(leftCol.scrollHeight, rightCol.scrollHeight);
+        grid.style.height = Math.max(0, usedH) + 'px';
+      }
+    }
+    startGrid();
+    const queue = items.slice();
+    while (queue.length){
+      const curCol = filling === 'left' ? leftCol : rightCol;
+      const qEl = queue.shift();
+      curCol.appendChild(qEl);
+      if (curCol.scrollHeight <= colCap) continue;
+      curCol.removeChild(qEl);
+      const result = splitQuestionIntoBudget(qEl, curCol, colCap);
+      if (result.status === 'none'){
+        if (curCol.children.length === 0){ curCol.appendChild(qEl); continue; } // kolom kosong tapi tetap tidak muat: paksa tampil (kasus ekstrem)
+        if (filling === 'left'){ filling = 'right'; } else { advanceGrid(); }
+        queue.unshift(qEl);
+        continue;
+      }
+      if (filling === 'left'){ filling = 'right'; } else { advanceGrid(); }
+      if (result.restEl) queue.unshift(result.restEl);
+    }
+    // Setelah seluruh soal 2-kolom teralirkan, susutkan grid terakhir agar
+    // konten setelahnya (mis. judul bagian Essay) menempel tepat di bawahnya.
+    shrinkGrid();
+    // Pindah ke wadah pengisian berikutnya SETELAH kolom kanan penuh:
+    //   - susutkan grid yang baru selesai ke tinggi konten nyatanya;
+    //   - jika masih ada sisa ruang layak di halaman ini → grid baru tepat di
+    //     bawahnya (tetap kiri dulu, baru kanan); jika tidak, startGrid()
+    //     otomatis berpindah ke halaman baru (nomor soal tetap berlanjut).
+    function advanceGrid(){
+      shrinkGrid();
+      startGrid();
+    }
+  }
+
+  if (docSettings.headerEnabled){ pushEl(buildHeaderElement()); }
+
+  const mcQuestions = questions.filter(q => q.type === 'multiple-choice');
+  const essayQuestions = questions.filter(q => q.type === 'essay');
+
+  if (mcQuestions.length){
+    if (docSettings.instructionEnabled && docSettings.instructionText.trim()){ pushEl(buildInstructionElement()); }
+    if (docSettings.sectionLabelsEnabled){ pushEl(buildSectionLabel(t('nav.mcTitle'))); }
+  }
+
+  // Kumpulkan soal 2-kolom yang berurutan menjadi satu "run" dan alirkan
+  // sekaligus (bukan dipotong per 6 soal secara arbitrer seperti sebelumnya —
+  // pemisahan berbasis tinggi nyata membuat batasan itu tidak diperlukan lagi).
+  let colBuffer = [];
+  function flushColBuffer(){ if (colBuffer.length){ flowTwoColumnQuestions(colBuffer); colBuffer = []; } }
+
+  mcQuestions.forEach((q, i) => {
+    const el = buildMcElement(q, i + 1, showKey);
+    const isTwoCol = q.questionLayout === '2-column';
+    if (isTwoCol){
+      if (q.forceNewPage){ flushColBuffer(); forcePageBreak(); }
+      colBuffer.push(el);
+    } else {
+      flushColBuffer();
+      if (q.forceNewPage) forcePageBreak();
+      flowSingleQuestion(el);
+    }
+  });
+  flushColBuffer();
+
+  if (essayQuestions.length && docSettings.sectionLabelsEnabled){
+    const label = buildSectionLabel(t('nav.essayTitle'));
+    if (mcQuestions.length) label.style.marginTop = '3cm';
+    pushEl(label);
+  }
+  essayQuestions.forEach((q, i) => {
+    const el = buildEssayElement(q, i + 1, showKey);
+    if (q.forceNewPage) forcePageBreak();
+    else if (i === 0 && mcQuestions.length && !docSettings.sectionLabelsEnabled){ el.style.marginTop = '3cm'; }
+    flowSingleQuestion(el);
+  });
+
+  document.body.removeChild(staging);
+  return pages;
+}
+
+function renderPreview(){
+  const container = document.getElementById('previewPages'); container.innerHTML = '';
+  if (questions.length === 0){
+    const page = createPageEl();
+    page.querySelector('.a4-content').innerHTML = `<div class="doc-empty"><i class="fa-regular fa-file-lines"></i><div>${t('preview.emptyDoc')}</div></div>`;
+    container.appendChild(page); currentPreviewPages = [page]; previewPageIndex = 0;
+    updatePaginationUI(); applyPreviewZoom(); return;
+  }
+  const pages = buildPages(); currentPreviewPages = pages;
+  previewPageIndex = Math.max(0, Math.min(previewPageIndex, pages.length - 1));
+  if (previewQuestionLayout === '2col'){
+    for (let i = 0; i < pages.length; i += 2){
+      const grid = document.createElement('div'); grid.className = 'doc-pages-grid';
+      grid.appendChild(pages[i]); if (pages[i + 1]) grid.appendChild(pages[i + 1]);
+      container.appendChild(grid);
+    }
+  } else {
+    pages.forEach((p, i) => { p.style.display = i === previewPageIndex ? 'block' : 'none'; container.appendChild(p); });
+  }
+  updatePaginationUI(); applyPreviewZoom();
+}
+
+function showPreviewPage(idx){
+  if (!currentPreviewPages.length || previewQuestionLayout === '2col') return;
+  previewPageIndex = Math.max(0, Math.min(currentPreviewPages.length - 1, idx));
+  currentPreviewPages.forEach((p, i) => { p.style.display = i === previewPageIndex ? 'block' : 'none'; });
+  updatePaginationUI(); applyPreviewZoom();
+}
+
+function updatePaginationUI(){
+  const total = currentPreviewPages.length; const hasQuestions = questions.length > 0; const is2col = previewQuestionLayout === '2col';
+  document.getElementById('previewPageIndicator').textContent = hasQuestions ? tf('preview.pageOf', { a: is2col ? '1-' + total : (previewPageIndex + 1), b: total }) : tf('preview.pageOf', { a: 0, b: 0 });
+  document.getElementById('previewPrevBtn').disabled = is2col || !hasQuestions || previewPageIndex <= 0;
+  document.getElementById('previewNextBtn').disabled = is2col || !hasQuestions || previewPageIndex >= total - 1;
+}
+
+function applyPreviewZoom(measureOnly){
+  const pagesWrap = document.getElementById('previewPages'); const viewport = document.getElementById('previewViewport'); const scroll = document.getElementById('previewScroll');
+  if (!pagesWrap.children.length) return 1;
+  pagesWrap.style.transform = 'none';
+  pagesWrap.style.transformOrigin = 'top left';
+  pagesWrap.style.margin = '0';
+  const firstChild = pagesWrap.children[0]; const prevDisplay = firstChild.style.display; firstChild.style.display = 'block';
+  const naturalWidth = firstChild.offsetWidth;
+  const naturalHeight = firstChild.offsetHeight;
+  firstChild.style.display = prevDisplay;
+
+  let zoom = previewZoom;
+  if (zoom === null || zoom === undefined){
+    // FIT-TO-WIDTH primary: halaman A4 punya lebar tetap (210mm) sehingga kita
+    // cukup paskan ke lebar panel. Tinggi halaman dibiarkan apa adanya — user
+    // bisa scroll vertikal bila konten melampaui tinggi panel. Ini mencegah
+    // halaman jadi "menyempit" ketika kop surat menambah tinggi konten.
+    const availW = Math.max(80, scroll.clientWidth - 16);
+    const availH = Math.max(80, scroll.clientHeight - 16);
+    const fitW = availW / Math.max(1, naturalWidth);
+    const fitH = availH / Math.max(1, naturalHeight);
+    // Default: paskan dengan lebar panel, scroll vertikal bila perlu
+    zoom = Math.min(1, fitW);
+    // Jika ternyata halaman benar-benar pendek, kita boleh pakai scale-up kecil
+    // (maks 1.2x) agar preview nampak proporsional — sebelumnya tidak dilakukan.
+    if (zoom < fitW && fitW <= 1.2) zoom = fitW;
+    zoom = Math.max(0.25, zoom);
+    // Jika halaman pendek dan muat di viewport: pakai min agar tidak ada empty space
+    if (naturalHeight * zoom <= availH) zoom = Math.min(zoom, fitH);
+  }
+  zoom = Math.max(0.25, Math.min(2, zoom));
+
+  if (measureOnly) return zoom;
+  pagesWrap.style.transform = 'scale(' + zoom + ')';
+  pagesWrap.style.width = naturalWidth + 'px';
+  viewport.style.width = '100%';
+  viewport.style.height = Math.round(naturalHeight * zoom) + 'px';
+  viewport.style.display = 'block';
+  viewport.style.textAlign = 'left';
+  document.getElementById('zoomPercent').textContent = Math.round(zoom * 100) + '%';
+  return zoom;
+}
+
+function openPdfNameModal(){
+  if (questions.length === 0){ showToast(t('toast.noExport'), 'warning'); return; }
+  const af = getActiveFile();
+  document.getElementById('pdfFileNameInput').value = af ? af.name : 'lembar-soal';
+  const withoutRadio = document.querySelector('input[name="pdfVersion"][value="without"]');
+  if (withoutRadio) withoutRadio.checked = true;
+  openModal(document.getElementById('pdfNameModalOverlay'));
+}
+
+function waitForImages(root){
+  const imgs = Array.from(root.querySelectorAll('img'));
+  return Promise.all(imgs.map(img => {
+    if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+    return new Promise(resolve => { const done = () => resolve(); img.addEventListener('load', done, { once:true }); img.addEventListener('error', done, { once:true }); setTimeout(done, 4000); });
+  }));
+}
+
+async function exportPDF(filename, withKey){
+  if (!window.jspdf || !window.jspdf.jsPDF){ showToast(t('toast.noJsPdf'), 'error'); return; }
+  if (typeof html2canvas !== 'function'){ showToast(t('toast.noH2c'), 'error'); return; }
+  showToast(t('toast.pdfPrep'), 'success');
+  const staging = document.createElement('div');
+  staging.style.position = 'fixed'; staging.style.top = '0'; staging.style.left = '-10000px'; staging.style.zIndex = '-1'; staging.style.background = '#ffffff';
+  document.body.appendChild(staging);
+  const pages = buildPages(withKey);
+  pages.forEach(p => { p.style.boxShadow = 'none'; p.style.margin = '0'; staging.appendChild(p); });
+  staging.querySelectorAll('.a4-page').forEach(p => { p.style.boxShadow = 'none'; p.style.margin = '0'; });
+
+  try{
+    await waitForImages(staging);
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    function encodeFast(canvas){
+      const webp = canvas.toDataURL('image/webp', 0.92);
+      if (typeof webp === 'string' && webp.startsWith('data:image/webp')) return { data: webp, fmt: 'WEBP' };
+      return { data: canvas.toDataURL('image/jpeg', 0.85), fmt: 'JPEG' };
+    }
+    const rendered = await Promise.all(pages.map(async (page) => {
+      let canvas;
+      try { canvas = await html2canvas(page, { scale: 2, useCORS: true, backgroundColor: '#ffffff', logging:false }); }
+      catch(renderErr){ canvas = await html2canvas(page, { scale: 1.5, useCORS: true, backgroundColor: '#ffffff', logging:false }); }
+      if (previewQuestionLayout === '2col'){
+        const half = Math.round(canvas.width / 2);
+        const left = document.createElement('canvas'); left.width = half; left.height = canvas.height; left.getContext('2d').drawImage(canvas, 0, 0);
+        const right = document.createElement('canvas'); right.width = canvas.width - half; right.height = canvas.height; right.getContext('2d').drawImage(canvas, -half, 0);
+        return [encodeFast(left), encodeFast(right)];
+      }
+      return [encodeFast(canvas)];
+    }));
+    const flatRendered = rendered.reduce((acc, item) => acc.concat(item), []);
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF('p', 'mm', 'a4', true);
+    flatRendered.forEach((img, i) => { if (i > 0) pdf.addPage(); pdf.addImage(img.data, img.fmt, 0, 0, 210, 297); });
+    const safeName = (filename || 'lembar-soal') + '.pdf';
+    const blob = pdf.output('blob'); const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = safeName;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+    showToast(t('toast.pdfOk'), 'success');
+  }catch(err){
+    console.error('Export PDF gagal:', err);
+    showToast(t('toast.pdfFail') + ' ' + (err && err.message ? err.message : 'kesalahan tidak diketahui'), 'error');
+  }finally{
+    document.body.removeChild(staging);
+  }
+}
+
+fetch('footer.html').then(res => { if (!res.ok) throw new Error('footer.html not found'); return res.text(); })
+  .then(html => { const fm = document.getElementById('footerMount'); fm.innerHTML = html; translateDom(fm); })
+  .catch(() => {});
+</script>
+</body>
+</html>
