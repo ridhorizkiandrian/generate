@@ -1,0 +1,16 @@
+{
+  "name": "Generate Soal Ujian",
+  "short_name": "Soal Ujian",
+  "description": "Buat soal ujian pilihan ganda dan essay dengan mudah — manual atau dengan bantuan AI. Gratis, tanpa akun.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2f4bdb",
+  "lang": "id",
+  "icons": [
+    { "src": "/app/images/favicon-32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/app/images/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/app/images/side.png", "sizes": "1080x1080", "type": "image/png" }
+  ]
+}
