@@ -104,28 +104,38 @@
 
   <!-- =========================
        GOOGLE ADSENSE
-       Dimuat setelah browser idle / halaman selesai render,
-       supaya tidak menghambat render pertama dan tidak menambah
-       waktu eksekusi JavaScript di awal load.
+       Dimuat hanya saat ada sinyal interaksi nyata dari pengguna
+       (scroll/tap/gerak) ATAU setelah jeda yang cukup lama pasca-load.
+       Ini mencegah script iklan yang berat membebani Total Blocking
+       Time & thread utama pada saat halaman pertama kali dibuka.
   ========================== -->
   <script>
     (function () {
+      var loaded = false;
+
       function loadAdsense() {
-        if (document.getElementById("adsbygoogle-js")) return;
+        if (loaded) return;
+        loaded = true;
         var s = document.createElement("script");
         s.id = "adsbygoogle-js";
         s.async = true;
         s.src = "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7945152467659655";
         s.crossOrigin = "anonymous";
         document.head.appendChild(s);
-      }
-      if ("requestIdleCallback" in window) {
-        requestIdleCallback(loadAdsense, { timeout: 4000 });
-      } else {
-        window.addEventListener("load", function () {
-          setTimeout(loadAdsense, 1500);
+        interactionEvents.forEach(function (evt) {
+          window.removeEventListener(evt, loadAdsense, { passive: true });
         });
       }
+
+      var interactionEvents = ["scroll", "touchstart", "mousemove", "keydown", "click"];
+
+      interactionEvents.forEach(function (evt) {
+        window.addEventListener(evt, loadAdsense, { passive: true, once: true });
+      });
+
+      window.addEventListener("load", function () {
+        setTimeout(loadAdsense, 6000);
+      });
     })();
   </script>
 
@@ -1739,25 +1749,39 @@
       ).matches
     ) {
 
+      let rafPending = false;
+      let lastEvent = null;
+
       mockWrap.addEventListener(
         "mousemove",
         event => {
 
-          const rect =
-            mockWrap.getBoundingClientRect();
+          lastEvent = event;
 
-          const x =
-            (event.clientX - rect.left)
-            / rect.width - .5;
+          if (rafPending) return;
+          rafPending = true;
 
-          const y =
-            (event.clientY - rect.top)
-            / rect.height - .5;
+          requestAnimationFrame(() => {
 
-          mockCard.style.transform =
-            `rotate(.5deg)
-             rotateX(${(-y * 8).toFixed(2)}deg)
-             rotateY(${(x * 8).toFixed(2)}deg)`;
+            const rect =
+              mockWrap.getBoundingClientRect();
+
+            const x =
+              (lastEvent.clientX - rect.left)
+              / rect.width - .5;
+
+            const y =
+              (lastEvent.clientY - rect.top)
+              / rect.height - .5;
+
+            mockCard.style.transform =
+              `rotate(.5deg)
+               rotateX(${(-y * 8).toFixed(2)}deg)
+               rotateY(${(x * 8).toFixed(2)}deg)`;
+
+            rafPending = false;
+
+          });
 
         }
       );
